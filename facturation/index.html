@@ -971,7 +971,7 @@ function couper(texte, police, taille, largeurMax){
 }
 
 /* ---------- Page : opérations de dessin (coordonnées depuis le HAUT de la page) ---------- */
-function PagePDF(){ this.ops = []; this.polices = {}; this.images = {}; }
+function PagePDF(w, h){ this.ops = []; this.polices = {}; this.images = {}; this.w = w || PDF_W; this.h = h || PDF_H; }
 PagePDF.prototype.couleur = function(c, trait){ return c.map(function(x){ return (+x).toFixed(3); }).join(" ") + (trait ? " RG" : " rg"); };
 PagePDF.prototype.texte = function(x, haut, s, o){
   o = o || {}; var p = o.police || "R", t = o.taille || 10, esp = o.espacement || 0;
@@ -980,20 +980,20 @@ PagePDF.prototype.texte = function(x, haut, s, o){
   if(o.align === "r") x -= w; else if(o.align === "c") x -= w / 2;
   this.polices[p] = 1;
   this.ops.push("BT " + this.couleur(o.couleur || [0.082, 0.082, 0.082]) + " /F" + p + " " + t + " Tf " + (esp ? esp.toFixed(2) + " Tc " : "") +
-    x.toFixed(2) + " " + (PDF_H - haut).toFixed(2) + " Td " + hexWin(s) + " Tj" + (esp ? " 0 Tc" : "") + " ET");
+    x.toFixed(2) + " " + (this.h - haut).toFixed(2) + " Td " + hexWin(s) + " Tj" + (esp ? " 0 Tc" : "") + " ET");
 };
 PagePDF.prototype.rect = function(x, haut, w, h, fond, trait, epaisseur){
-  var y = PDF_H - haut - h, op = x.toFixed(2) + " " + y.toFixed(2) + " " + w.toFixed(2) + " " + h.toFixed(2) + " re";
+  var y = this.h - haut - h, op = x.toFixed(2) + " " + y.toFixed(2) + " " + w.toFixed(2) + " " + h.toFixed(2) + " re";
   if(fond && trait) this.ops.push(this.couleur(fond) + " " + this.couleur(trait, true) + " " + (epaisseur || 0.6) + " w " + op + " B");
   else if(fond) this.ops.push(this.couleur(fond) + " " + op + " f");
   else this.ops.push(this.couleur(trait || [0, 0, 0], true) + " " + (epaisseur || 0.6) + " w " + op + " S");
 };
 PagePDF.prototype.trait = function(x1, h1, x2, h2, couleur, epaisseur){
-  this.ops.push(this.couleur(couleur || [0.8, 0.8, 0.78], true) + " " + (epaisseur || 0.6) + " w " + x1.toFixed(2) + " " + (PDF_H - h1).toFixed(2) + " m " + x2.toFixed(2) + " " + (PDF_H - h2).toFixed(2) + " l S");
+  this.ops.push(this.couleur(couleur || [0.8, 0.8, 0.78], true) + " " + (epaisseur || 0.6) + " w " + x1.toFixed(2) + " " + (this.h - h1).toFixed(2) + " m " + x2.toFixed(2) + " " + (this.h - h2).toFixed(2) + " l S");
 };
 PagePDF.prototype.image = function(nom, x, haut, w, h){
   this.images[nom] = 1;
-  this.ops.push("q " + w.toFixed(2) + " 0 0 " + h.toFixed(2) + " " + x.toFixed(2) + " " + (PDF_H - haut - h).toFixed(2) + " cm /" + nom + " Do Q");
+  this.ops.push("q " + w.toFixed(2) + " 0 0 " + h.toFixed(2) + " " + x.toFixed(2) + " " + (this.h - haut - h).toFixed(2) + " cm /" + nom + " Do Q");
 };
 
 /* ---------- Assemblage du fichier PDF ---------- */
@@ -1041,7 +1041,7 @@ async function assemblerPDF(pages, meta){
   for(var i = 0; i < pages.length; i++){
     var brutC = utf8(pages[i].ops.join("\n")), compC = await compresser(brutC);
     var nC = objet("<< /Length " + (compC || brutC).length + (compC ? " /Filter /FlateDecode" : "") + " >>", compC || brutC);
-    kids.push(objet("<< /Type /Page /Parent " + nPages + " 0 R /MediaBox [0 0 " + PDF_W + " " + PDF_H + "] /Resources " + res + " /Contents " + nC + " 0 R >>"));
+    kids.push(objet("<< /Type /Page /Parent " + nPages + " 0 R /MediaBox [0 0 " + pages[i].w + " " + pages[i].h + "] /Resources " + res + " /Contents " + nC + " 0 R >>"));
   }
   var d = new Date(), date = "D:" + d.getFullYear() + deux(d.getMonth() + 1) + deux(d.getDate()) + deux(d.getHours()) + deux(d.getMinutes()) + deux(d.getSeconds());
   var nInfo = objet("<< /Title " + chaineInfo(meta.titre || "") + " /Author " + chaineInfo(meta.auteur || "") + " /Creator " + chaineInfo("Facturation BF Conseil") +
@@ -1516,13 +1516,11 @@ VUES.planning = function(anUrl, m){
   }).join("") + '</div>';
   if(vueAnnee){
     document.title = "Planning " + anneeLongue(an);
-    h += '<div class="barre-actions pa-actions"><button class="btn' + (PA_MASQUE ? "" : " pri") + '" data-act="pa-imprimer" data-masque="0">' + ICO.imprimer + ' Imprimer</button>' +
-      '<button class="btn' + (PA_MASQUE ? " pri" : "") + '" data-act="pa-imprimer" data-masque="1">' + ICO.imprimer + ' Imprimer sans les établissements (ND*)</button>' +
-      (PA_MASQUE ? '<span class="pa-etat">Affichage sans les établissements <button class="lien" data-act="pa-masque" data-masque="0">Afficher les établissements</button></span>'
-        : '<span class="aide">Clique sur un jour pour ouvrir son mois et le modifier.</span>') + '</div>';
+    h += '<div class="barre-actions pa-actions"><button class="btn pri" data-act="pa-imprimer" data-an="' + idAnneeUrl(an) + '" data-masque="0">' + ICO.imprimer + ' Imprimer</button>' +
+      '<button class="btn" data-act="pa-imprimer" data-an="' + idAnneeUrl(an) + '" data-masque="1">' + ICO.imprimer + ' Imprimer sans les établissements (ND*)</button>' +
+      '<span class="aide">Clique sur un jour pour ouvrir son mois et le modifier.</span></div>';
     return h + planningAnneeHTML(an, A) + '</div>';
   }
-  PA_MASQUE = false;
   h += '<div class="pl-wrap"><div>' + calendrierHTML(m) + '</div><div class="pl-cote">' + coteMoisHTML(m, act) + '</div></div>';
   h += recapAnneeHTML(an, A);
   return h + '</div>';
@@ -1590,16 +1588,21 @@ function recapAnneeHTML(an, A){
   return h;
 }
 
-/* ---------- Toute l'année (écran et impression) ---------- */
-var PA_MASQUE = false;      // impression « sans les établissements » : chaque demi-journée occupée devient ND*
+/* ---------- Toute l'année : écran, puis PDF à imprimer (complet ou établissements masqués) ---------- */
 function anneeLongue(an){ var d = 2000 + +String(an).slice(0, 2); return d + "-" + (d + 1); }
 function demiAnnee(c, masque){
   if(!c || !c.c) return '<span class="pa-d"></span>';
   if(masque) return '<span class="pa-d nd">ND*</span>';
   return '<span class="pa-d" style="' + styleCode(c.c) + '">' + esc(cfaDe(c.c)) + '</span>';
 }
+// établissements présents au planning de l'année, avec un code (pour la couleur) et le client
+function cfasDeLAnnee(an){
+  var p = D.planning[an] || {}, vus = {};
+  Object.keys(p).forEach(function(jour){ ["m", "a"].forEach(function(k){ var c = p[jour][k]; if(c && c.c && !vus[cfaDe(c.c)]) vus[cfaDe(c.c)] = c.c; }); });
+  return Object.keys(vus).sort().map(function(cfa){ return {cfa: cfa, code: vus[cfa], client: clientDeCfa(cfa)}; });
+}
 function planningAnneeHTML(an, A){
-  var mois = moisDeLAnnee(an), auj = aujourdhui(), masque = PA_MASQUE, e = D.reglages.emetteur, p = D.planning[an] || {};
+  var mois = moisDeLAnnee(an), auj = aujourdhui(), masque = false, e = D.reglages.emetteur;
   var h = '<div class="pa-zone' + (masque ? " masque" : "") + '"><div class="pa-tete"><img src="' + DATA.logo + '" alt="BF Conseil"><div>' +
     '<h2>Planning ' + anneeLongue(an) + '</h2><p>' + esc([e.signature, e.nom].filter(plein).join(" · ")) + (masque ? "" : " · " + qte(A.total.h) + " h sur l’année") + '</p></div>' +
     '<p class="pa-date">Édité le ' + dateFr(auj) + '</p></div>';
@@ -1621,23 +1624,95 @@ function planningAnneeHTML(an, A){
   h += '</table></div><div class="pa-leg"><span>Dans chaque case : <b>matin</b> <span class="pa-ecran">en haut</span><span class="pa-papier">à gauche</span>, <b>après-midi</b> <span class="pa-ecran">en bas</span><span class="pa-papier">à droite</span>.</span>';
   if(masque) h += '<span>Case vide : disponible.</span><span class="pa-renvoi">* ND : non disponible</span>';
   else {
-    // établissements présents dans l'année, avec le nom du client
-    var vus = {};
-    Object.keys(p).forEach(function(jour){ ["m", "a"].forEach(function(k){ var c = p[jour][k]; if(c && c.c && !vus[cfaDe(c.c)]) vus[cfaDe(c.c)] = c.c; }); });
-    Object.keys(vus).sort().forEach(function(cfa){
-      var cl = D.clients.filter(function(x){ return (x.cfa || []).indexOf(cfa) >= 0; })[0];
-      h += '<span><span class="chip" style="' + styleCode(vus[cfa]) + '">' + esc(cfa) + '</span> ' + esc(cl ? cl.nom : "") + '</span>';
+    cfasDeLAnnee(an).forEach(function(o){
+      h += '<span><span class="chip" style="' + styleCode(o.code) + '">' + esc(o.cfa) + '</span> ' + esc(o.client ? o.client.nom : "") + '</span>';
     });
   }
   return h + '</div></div>';
 }
-// la version masquée reste affichée après l'impression (sur iPhone, l'aperçu se fait après le retour de window.print)
-ACTIONS["pa-imprimer"] = function(el){
-  PA_MASQUE = el.getAttribute("data-masque") === "1";
-  rendre();
-  window.print();
+function rgbPdf(hex){ var x = String(hex || "#000").replace("#", ""); return [0, 2, 4].map(function(i){ return parseInt(x.substr(i, 2), 16) / 255; }); }
+async function pdfPlanningAnnee(an, masque){
+  var W = PDF_H, H = PDF_W, MX = 22, p = new PagePDF(W, H), e = D.reglages.emetteur, A = activiteAnnee(an), mois = moisDeLAnnee(an);
+  var C_WE = [0.969, 0.969, 0.957], C_HORS = [0.925, 0.918, 0.898], C_ND = [0.851, 0.831, 0.788];
+  // en-tête : logo, titre, nom
+  var lw = 46, lh = lw * DATA.pdf.logo.h / DATA.pdf.logo.l;
+  p.image("Logo", MX, 14, lw, lh);
+  p.texte(MX + lw + 14, 33, "Planning " + anneeLongue(an), {police: "D", taille: 18});
+  p.texte(MX + lw + 14, 45, [e.signature, e.nom].filter(plein).join(" · ") + (masque ? "" : " · " + qte(A.total.h) + " h sur l'année"), {taille: 8, couleur: C_GRIS2});
+  p.texte(W - MX, 45, "Édité le " + dateFr(aujourdhui()), {taille: 7, couleur: C_GRIS, align: "r"});
+  // tableau : une colonne par mois, une ligne par jour, matin à gauche et après-midi à droite
+  var T0 = 58, TH = 15, RH = 14.6, NW = 16, MW = (W - 2 * MX - NW) / 12, T1 = T0 + TH, FIN = T1 + 31 * RH;
+  p.rect(MX, T0, W - 2 * MX, TH, C_ENCRE);
+  mois.forEach(function(m, i){ p.texte(MX + NW + i * MW + MW / 2, T0 + 10.3, MOIS_COURT[+m.slice(5) - 1] + " " + m.slice(2, 4), {police: "B", taille: 7.5, couleur: C_BLANC, align: "c"}); });
+  for(var j = 1; j <= 31; j++){
+    var y = T1 + (j - 1) * RH;
+    p.rect(MX, y, NW, RH, C_BEIGE3);
+    p.texte(MX + NW / 2, y + RH / 2 + 2.3, String(j), {taille: 6.5, couleur: C_GRIS, align: "c"});
+    mois.forEach(function(m, i){
+      var x = MX + NW + i * MW;
+      if(j > +finDeMois(m).slice(8)){ p.rect(x, y, MW, RH, C_HORS); return; }
+      var iso = m + "-" + deux(j), d = dateDe(iso).getDay();
+      if(d === 0 || d === 6) p.rect(x, y, MW, RH, C_WE);
+      p.texte(x + 4.2, y + RH / 2 + 2, JOURS[d].charAt(0), {taille: 5.5, couleur: C_GRIS, align: "c"});
+      var hw = (MW - 11.5) / 2;
+      ["m", "a"].forEach(function(k, n){
+        var c = cellule(iso, k); if(!c || !c.c) return;
+        var hx = x + 9 + n * (hw + 1.2), hy = y + 2, hh = RH - 4;
+        var fond = C_ND, encre = C_ENCRE, bord = null, txt = "ND*";
+        if(!masque){ var cc = couleurCfa(cfaDe(c.c)); fond = rgbPdf(cc.fond); encre = rgbPdf(cc.texte); bord = cc.bord ? rgbPdf(cc.bord) : null; txt = cfaDe(c.c); }
+        if(bord) p.rect(hx, hy, hw, hh, fond, bord, 0.5); else p.rect(hx, hy, hw, hh, fond);
+        var t = 6.2; while(t > 4 && largeurTexte(txt, "B", t) > hw - 2) t -= 0.2;
+        p.texte(hx + hw / 2, hy + hh / 2 + t * 0.36, txt, {police: "B", taille: t, couleur: encre, align: "c"});
+      });
+    });
+  }
+  // filets de la grille
+  for(var r = 0; r <= 31; r++) p.trait(MX, T1 + r * RH, W - MX, T1 + r * RH, C_FILET, 0.4);
+  for(var cI = 0; cI <= 12; cI++) p.trait(MX + NW + cI * MW, T0, MX + NW + cI * MW, FIN, cI === 0 ? C_FILET : C_FILET, 0.4);
+  p.trait(MX, T0, MX, FIN, C_FILET, 0.4); p.trait(W - MX, T0, W - MX, FIN, C_FILET, 0.4);
+  var bas = FIN;
+  if(!masque){
+    p.trait(MX, FIN, W - MX, FIN, C_ENCRE, 1.2);
+    p.texte(MX + NW / 2, FIN + 10, "h", {taille: 6.5, couleur: C_GRIS, align: "c"});
+    mois.forEach(function(m, i){ var t = A.mois[m].total.h; p.texte(MX + NW + i * MW + MW / 2, FIN + 10, t ? qte(t) + " h" : "-", {police: "B", taille: 7, align: "c"}); });
+    bas = FIN + 15;
+  }
+  // légende
+  var ly = bas + 14, lx = MX, phrase = "Dans chaque case : matin à gauche, après-midi à droite.";
+  p.texte(lx, ly, phrase, {taille: 7.5, couleur: C_GRIS2}); lx += largeurTexte(phrase, "R", 7.5) + 18;
+  if(masque){
+    p.texte(lx, ly, "Case vide : disponible.", {taille: 7.5, couleur: C_GRIS2});
+    p.texte(W - MX, ly, "* ND : non disponible", {taille: 7.5, couleur: C_GRIS2, align: "r"});
+  } else cfasDeLAnnee(an).forEach(function(o){
+    var cc = couleurCfa(o.cfa), nom = o.client ? o.client.nom : "", cw = largeurTexte(o.cfa, "B", 6.5) + 10, tw = largeurTexte(nom, "R", 7);
+    if(lx + cw + tw + 6 > W - MX){ lx = MX; ly += 14; }
+    if(cc.bord) p.rect(lx, ly - 7.5, cw, 10, rgbPdf(cc.fond), rgbPdf(cc.bord), 0.5); else p.rect(lx, ly - 7.5, cw, 10, rgbPdf(cc.fond));
+    p.texte(lx + cw / 2, ly, o.cfa, {police: "B", taille: 6.5, couleur: rgbPdf(cc.texte), align: "c"});
+    p.texte(lx + cw + 4, ly, nom, {taille: 7, couleur: C_GRIS2});
+    lx += cw + tw + 18;
+  });
+  return assemblerPDF([p], {titre: "Planning " + anneeLongue(an), auteur: e.signature || e.nom || ""});
+}
+// Imprimer : un vrai PDF (le navigateur n'y ajoute ni date, ni titre, ni adresse du site)
+ACTIONS["pa-imprimer"] = async function(el){
+  var masque = el.getAttribute("data-masque") === "1", an = idAnneeDeUrl(el.getAttribute("data-an"));
+  var nom = "Planning " + anneeLongue(an) + (masque ? "" : " complet") + ".pdf";
+  var blob = new Blob([await pdfPlanningAnnee(an, masque)], {type: "application/pdf"});
+  if(partageFichiersPossible()){            // téléphone, tablette : feuille de partage (Imprimer, Mail, Fichiers...)
+    try{ await navigator.share({files: [new File([blob], nom, {type: "application/pdf"})], title: nom.replace(/\.pdf$/, "")}); }
+    catch(err){ if(err.name !== "AbortError") telecharger(nom, blob); }
+    return;
+  }
+  var url = URL.createObjectURL(blob);
+  ouvrirModal('<div class="bloc-tete"><h2 style="margin:0">' + esc(nom.replace(/\.pdf$/, "")) + (masque ? ' <span class="muet">(établissements masqués)</span>' : '') + '</h2><div class="barre-actions">' +
+    '<button class="btn petit pri" id="pa-print">' + ICO.imprimer + ' Imprimer</button><button class="btn petit" id="pa-dl">' + ICO.telecharger + ' Télécharger le PDF</button><button class="btn petit" data-fermer>Fermer</button></div></div>' +
+    '<iframe class="apercu-pdf" id="pa-frame" data-blob="' + url + '" src="' + url + '#view=Fit" title="Aperçu du planning"></iframe>', true);
+  $("pa-dl").onclick = function(){ telecharger(nom, blob); };
+  $("pa-print").onclick = function(){
+    try{ var w = $("pa-frame").contentWindow; w.focus(); w.print(); }
+    catch(err){ toast("Clique sur l’icône d’impression de l’aperçu, en haut à droite"); }
+  };
 };
-ACTIONS["pa-masque"] = function(el){ PA_MASQUE = el.getAttribute("data-masque") === "1"; rendre(); };
 
 /* ---------- Saisie ---------- */
 function ecrireCellule(jour, k, c){
