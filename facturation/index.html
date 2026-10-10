@@ -344,14 +344,14 @@ table.pa tfoot td{text-align:center;font-size:11px;font-weight:700;border-top:2p
 .pa-papier{display:none}
 
 @media print{
-  @page{size:A4 landscape;margin:7mm}
+  @page{size:A4 landscape;margin:0}
   .topbar,.nav,.voile,#toast,.modal-fond{display:none!important}
   .layout{display:block}
   .main{padding:0}
   body{background:#fff}
   .pa-page{max-width:none}
   .pa-page > :not(.pa-zone){display:none!important}
-  .pa-zone{border:0;padding:0}
+  .pa-zone{border:0;padding:7mm 8mm}
   .pa-tete{margin-bottom:2.5mm}
   .pa-tete img{height:11mm}
   .pa-tete h2{font-size:15pt}
@@ -1290,6 +1290,7 @@ function rendre(){
     $("nav").innerHTML = ""; $("main").innerHTML = VUES.connexion(); fermerMenu(); majSauvegarde(); return;
   }
   var v = VUES[VUE.p] || VUES.accueil;
+  document.title = "Facturation BF Conseil";
   rendreNav();
   try{ $("main").innerHTML = v.apply(null, VUE.a); }
   catch(e){ console.error(e); $("main").innerHTML = '<div class="page"><div class="enc erreur"><b>Erreur d’affichage.</b> ' + esc(e.message) + '</div></div>'; }
@@ -1514,6 +1515,7 @@ VUES.planning = function(anUrl, m){
       '<small>' + (a.total.ca ? eurosCourt(a.total.ca) : "-") + '</small></button>';
   }).join("") + '</div>';
   if(vueAnnee){
+    document.title = "Planning " + anneeLongue(an);
     h += '<div class="barre-actions pa-actions"><button class="btn' + (PA_MASQUE ? "" : " pri") + '" data-act="pa-imprimer" data-masque="0">' + ICO.imprimer + ' Imprimer</button>' +
       '<button class="btn' + (PA_MASQUE ? " pri" : "") + '" data-act="pa-imprimer" data-masque="1">' + ICO.imprimer + ' Imprimer sans les établissements (ND*)</button>' +
       (PA_MASQUE ? '<span class="pa-etat">Affichage sans les établissements <button class="lien" data-act="pa-masque" data-masque="0">Afficher les établissements</button></span>'
