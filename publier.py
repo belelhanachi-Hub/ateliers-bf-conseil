@@ -10,6 +10,7 @@ Le script copie les pages en_ligne/index.html des ateliers dans ce dossier, puis
 Le site se met à jour en une à deux minutes, aux mêmes adresses :
     https://belelhanachi-hub.github.io/ateliers-bf-conseil/sourcing/
     https://belelhanachi-hub.github.io/ateliers-bf-conseil/pac-ntc/
+    https://belelhanachi-hub.github.io/ateliers-bf-conseil/mission-berthier/
     https://belelhanachi-hub.github.io/ateliers-bf-conseil/facturation/
 
 Seules les pages des étudiants sont publiées : jamais les codes, config.ini ou les corrigés formateur.
@@ -25,6 +26,7 @@ ICI = os.path.dirname(os.path.abspath(__file__))
 PAGES = {
     "sourcing": os.path.join(ICI, "..", "ateliers-sourcing-rh", "en_ligne", "index.html"),
     "pac-ntc": os.path.join(ICI, "..", "atelier-pac-ntc", "en_ligne", "index.html"),
+    "mission-berthier": os.path.join(ICI, "..", "mission-berthier", "en_ligne", "index.html"),
     "facturation": os.path.join(ICI, "..", "facturation-bf-conseil", "en_ligne", "index.html"),
 }
 # fichiers en plus de index.html (icônes de l'écran d'accueil du téléphone)
