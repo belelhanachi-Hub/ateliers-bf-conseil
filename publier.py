@@ -30,6 +30,8 @@ PAGES = {
     "etude-de-marche-ma28": os.path.join(ICI, "..", "ma28-etude-de-marche", "en_ligne", "index.html"),
     "fiches-ntc-foot": os.path.join(ICI, "..", "fiches-actions-ntc", "variantes", "foot", "en_ligne", "index.html"),
     "fiches-ntc-carrelage": os.path.join(ICI, "..", "fiches-actions-ntc", "variantes", "carrelage", "en_ligne", "index.html"),
+    "decrocher-un-rdv-foot": os.path.join(ICI, "..", "decrocher-un-rdv", "variantes", "foot", "en_ligne", "index.html"),
+    "decrocher-un-rdv-carrelage": os.path.join(ICI, "..", "decrocher-un-rdv", "variantes", "carrelage", "en_ligne", "index.html"),
     "facturation": os.path.join(ICI, "..", "facturation-bf-conseil", "en_ligne", "index.html"),
 }
 # fichiers en plus de index.html (icônes de l'écran d'accueil du téléphone)
