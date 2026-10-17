@@ -11,10 +11,8 @@ Le site se met à jour en une à deux minutes, aux mêmes adresses :
     https://belelhanachi-hub.github.io/ateliers-bf-conseil/sourcing/
     https://belelhanachi-hub.github.io/ateliers-bf-conseil/pac-ntc/
     https://belelhanachi-hub.github.io/ateliers-bf-conseil/mission-berthier/
-    https://belelhanachi-hub.github.io/ateliers-bf-conseil/facturation/
 
 Seules les pages des étudiants sont publiées : jamais les codes, config.ini ou les corrigés formateur.
-La facturation en ligne ne contient aucune donnée (elles sont dans le Google Drive BF Conseil).
 """
 import os
 import shutil
@@ -34,10 +32,7 @@ PAGES = {
     "decrocher-un-rdv-carrelage": os.path.join(ICI, "..", "decrocher-un-rdv", "variantes", "carrelage", "en_ligne", "index.html"),
     "decrocher-un-entretien": os.path.join(ICI, "..", "decrocher-un-rdv", "variantes", "entretien", "en_ligne", "index.html"),
     "grand-oral": os.path.join(ICI, "..", "grand-oral-en-ligne", "index.html"),
-    "facturation": os.path.join(ICI, "..", "facturation-bf-conseil", "en_ligne", "index.html"),
 }
-# fichiers en plus de index.html (icônes de l'écran d'accueil du téléphone)
-AUTRES = {"facturation": ["manifest.webmanifest", "icone-180.png", "icone-192.png", "icone-512.png"]}
 
 
 def git(*args):
@@ -50,8 +45,6 @@ def main():
             sys.exit("ERREUR : %s introuvable. Lance d'abord py -3 build.py dans le dossier de l'atelier." % source)
         os.makedirs(os.path.join(ICI, dossier), exist_ok=True)
         shutil.copyfile(source, os.path.join(ICI, dossier, "index.html"))
-        for nom in AUTRES.get(dossier, []):
-            shutil.copyfile(os.path.join(os.path.dirname(source), nom), os.path.join(ICI, dossier, nom))
     git("add", "-A")
     if not git("status", "--porcelain").stdout.strip():
         print("Rien de nouveau : le site est déjà à jour.")
