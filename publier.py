@@ -26,6 +26,7 @@ PAGES = {
     "pac-ntc": os.path.join(ICI, "..", "atelier-pac-ntc", "en_ligne", "index.html"),
     "mission-berthier": os.path.join(ICI, "..", "mission-berthier", "en_ligne", "index.html"),
     "etude-de-marche-ma28": os.path.join(ICI, "..", "ma28-etude-de-marche", "en_ligne", "index.html"),
+    "dossier-b1-ma28": os.path.join(ICI, "..", "ma28-dossier-b1", "en_ligne", "index.html"),
     "fiches-ntc-foot": os.path.join(ICI, "..", "fiches-actions-ntc", "variantes", "foot", "en_ligne", "index.html"),
     "fiches-ntc-carrelage": os.path.join(ICI, "..", "fiches-actions-ntc", "variantes", "carrelage", "en_ligne", "index.html"),
     "decrocher-un-rdv-foot": os.path.join(ICI, "..", "decrocher-un-rdv", "variantes", "foot", "en_ligne", "index.html"),
