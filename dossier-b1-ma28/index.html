@@ -887,7 +887,8 @@ textarea.elt-in:focus{background:#fff}
     if (!lire("g:prenom").trim() || !lire("g:nom").trim()) { $("#d-err").hidden = false; return; }
     $("#d-err").hidden = true;
     verifierDebut();
-    if (location.hash === "#strategie") aller(); else location.hash = "#strategie";
+    // arrivé par un lien direct (diapo du cours) : on y va ; sinon on commence par la stratégie
+    if (location.hash && location.hash !== "#accueil") aller(); else location.hash = "#strategie";
   });
 
   /* ---------------------------------------------------------------- ma stratégie */
@@ -1309,6 +1310,10 @@ textarea.elt-in:focus{background:#fff}
   function aller() {
     var h = decodeURIComponent(location.hash.slice(1)) || "accueil";
     var vue = document.getElementById("v-" + h);
+    if (!vue) {   // lien direct vers une question ou un bloc : #at1-q4, #p12-b2, #at1-rendre
+      var cible = document.getElementById(h);
+      if (cible && cible.closest && cible.closest(".vue")) { vue = cible.closest(".vue"); cibleEnAttente = h; }
+    }
     if (!vue) vue = document.getElementById("v-accueil");
     $$(".vue").forEach(function (v) { v.classList.toggle("on", v === vue); });
     var id = vue.getAttribute("data-vue");
