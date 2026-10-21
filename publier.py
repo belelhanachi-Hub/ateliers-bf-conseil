@@ -25,7 +25,8 @@ PAGES = {
     "sourcing": os.path.join(ICI, "..", "ateliers-sourcing-rh", "en_ligne", "index.html"),
     "pac-ntc": os.path.join(ICI, "..", "atelier-pac-ntc", "en_ligne", "index.html"),
     "mission-berthier": os.path.join(ICI, "..", "mission-berthier", "en_ligne", "index.html"),
-    "etude-de-marche-ma28": os.path.join(ICI, "..", "ma28-etude-de-marche", "en_ligne", "index.html"),
+    # l'ancien atelier est intégré à « Mon dossier Bloc 1 » : l'ancien lien redirige vers lui (les réponses sont reprises)
+    "etude-de-marche-ma28": os.path.join(ICI, "..", "ma28-dossier-b1", "redirection", "etude-de-marche-ma28.html"),
     "dossier-b1-ma28": os.path.join(ICI, "..", "ma28-dossier-b1", "en_ligne", "index.html"),
     "fiches-ntc-foot": os.path.join(ICI, "..", "fiches-actions-ntc", "variantes", "foot", "en_ligne", "index.html"),
     "fiches-ntc-carrelage": os.path.join(ICI, "..", "fiches-actions-ntc", "variantes", "carrelage", "en_ligne", "index.html"),
