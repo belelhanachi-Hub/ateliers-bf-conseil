@@ -28,6 +28,7 @@ PAGES = {
     # l'ancien atelier est intégré à « Mon dossier Bloc 1 » : l'ancien lien redirige vers lui (les réponses sont reprises)
     "etude-de-marche-ma28": os.path.join(ICI, "..", "ma28-dossier-b1", "redirection", "etude-de-marche-ma28.html"),
     "dossier-b1-ma28": os.path.join(ICI, "..", "ma28-dossier-b1", "en_ligne", "index.html"),
+    "cejm-theme4": os.path.join(ICI, "..", "td-theme4-cejm", "en_ligne", "index.html"),
     "fiches-ntc-foot": os.path.join(ICI, "..", "fiches-actions-ntc", "variantes", "foot", "en_ligne", "index.html"),
     "fiches-ntc-carrelage": os.path.join(ICI, "..", "fiches-actions-ntc", "variantes", "carrelage", "en_ligne", "index.html"),
     "decrocher-un-rdv-foot": os.path.join(ICI, "..", "decrocher-un-rdv", "variantes", "foot", "en_ligne", "index.html"),
