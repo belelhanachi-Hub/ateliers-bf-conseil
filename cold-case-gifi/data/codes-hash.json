@@ -1,0 +1,45 @@
+{
+  "_note": "Codes hachés en SHA-256 après normalisation (majuscules, sans espaces ni accents). Aucun code en clair.",
+  "codes": [
+    {
+      "piece": 1,
+      "sha256": "aa13fda43018c393de7088225497fee24270d428a9de0d2f8d0cc899f6687e69",
+      "ouvre": "piece-2"
+    },
+    {
+      "piece": 2,
+      "sha256": "f8c0a071f38cbea8b9272483bacfa2906ef0a39419a01ca8cc1776c040a8e353",
+      "ouvre": "piece-3"
+    },
+    {
+      "piece": 3,
+      "sha256": "b77d08756b6b3d8928cc8eed98eff30ecae7f2f52793aca58a46f588bdf9e9fc",
+      "ouvre": "piece-4"
+    },
+    {
+      "piece": 4,
+      "sha256": "c07222d65fd8d5a882617f53dbe943864459af662d9c20b67224aa5b9a88708b",
+      "ouvre": "piece-5"
+    },
+    {
+      "piece": 5,
+      "sha256": "8d23cf6c86e834a7aa6eded54c26ce2bb2e74903538c61bdd5d2197997ab2f72",
+      "ouvre": "piece-6"
+    },
+    {
+      "piece": 6,
+      "sha256": "b6602f58690ca41488e97cd28153671356747c951c55541b6c8d8b8493eb7143",
+      "ouvre": "piece-7"
+    },
+    {
+      "piece": 7,
+      "sha256": "a0d177b4967a6d99f4ff117defe1c0d23d4e78ca4630febcb948ee9e4520eff3",
+      "ouvre": "piece-8"
+    },
+    {
+      "piece": 8,
+      "sha256": "6b374eafa2c47641c91679ddf69547944f0b7b72d81a9289180d4b150d13aaef",
+      "ouvre": "finale"
+    }
+  ]
+}

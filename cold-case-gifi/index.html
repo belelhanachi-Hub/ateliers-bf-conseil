@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Cold case GiFi · L'enquête</title>
+<link rel="stylesheet" href="css/cc.css">
+<script src="js/config.js"></script>
+<script src="js/donnees.js"></script>
+<script src="js/commun.js"></script>
+<script src="js/une.js"></script>
+<style>
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:center;margin:18px 0 34px}
+.hero h1{font:900 clamp(46px,7.4vw,104px)/.92 var(--titre);text-transform:uppercase;letter-spacing:.02em;color:var(--papier)}
+.hero h1 span{color:var(--kraft)}
+.hero .sous{color:#e5d9bf;font-size:18px;margin:14px 0 18px;max-width:560px}
+.hero .tampon{font-size:clamp(20px,2.4vw,30px);background:rgba(244,236,216,.08);border-color:#d8473e;color:#ff8a80}
+.une-zone{transform:rotate(1.2deg)}
+.protag{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:center;padding:6px 0}
+.protag figure{margin:0;text-align:center}
+.protag figcaption{font:13px/1.3 var(--mono);color:var(--encre2);margin-top:6px;max-width:190px}
+.lettre{font-size:17.5px;line-height:1.7;max-width:760px;margin:0 auto}
+.lettre .sign{text-align:right;margin-top:14px}
+.noms{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:10px}
+.noms label{display:block;font:700 13px var(--mono);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.noms input{width:100%;padding:12px 14px;border:2px solid var(--encre);background:#fffdf6;font:700 20px var(--mono)}
+.ouvrir{display:flex;flex-wrap:wrap;gap:14px;margin-top:18px}
+.rules details{background:rgba(255,255,255,.4);border:1px solid #b9a77c;margin:8px 0;padding:8px 14px}
+.rules summary{font:900 20px var(--titre);text-transform:uppercase;letter-spacing:.03em;cursor:pointer}
+.form-liens{display:flex;flex-wrap:wrap;gap:10px}
+.section{margin:46px 0}
+.section > h2{font:900 clamp(26px,3vw,38px)/1 var(--titre);text-transform:uppercase;color:var(--papier);margin-bottom:22px;letter-spacing:.03em}
+@media (max-width:860px){.hero{grid-template-columns:1fr}.noms{grid-template-columns:1fr}}
+</style>
+</head>
+<body data-avec-logos data-sous-titre="L'enquête · Mastère MA28 · Bloc 1, C1.1">
+<header id="cc-top"></header>
+<main class="wrap">
+
+  <section class="hero">
+    <div>
+      <p class="kick" style="color:#cdbb92" id="meta-sous"></p>
+      <h1>Cold case<br><span>GiFi</span></h1>
+      <p class="sous">L’enquête d’une journée : huit pièces à conviction, deux cabinets, une question pour le tribunal.</p>
+      <span class="tampon">Affaire non élucidée</span>
+    </div>
+    <div class="une-zone" id="une"></div>
+  </section>
+
+  <section class="section">
+    <h2>Les protagonistes</h2>
+    <div class="feuille scotch"><div class="protag" id="protag"></div></div>
+  </section>
+
+  <section class="section">
+    <h2>La lettre de mission</h2>
+    <div class="feuille ligne trombone lettre" id="lettre"></div>
+  </section>
+
+  <section class="section">
+    <h2>Les deux cabinets</h2>
+    <div class="chemise"><span class="etiq">Constitution</span>
+      <p id="compo"></p>
+      <div class="noms">
+        <div><label for="nom1">Nom du cabinet 1</label><input id="nom1" maxlength="40" autocomplete="off" placeholder="Cabinet 1"></div>
+        <div><label for="nom2">Nom du cabinet 2</label><input id="nom2" maxlength="40" autocomplete="off" placeholder="Cabinet 2"></div>
+      </div>
+      <p style="font-size:14px;margin-top:8px">Les noms restent sur cet appareil. Rien n’est envoyé.</p>
+      <div class="ouvrir">
+        <a class="btn pri grand" id="go1" href="equipe.html?e=1">Ouvrir le dossier · Cabinet 1</a>
+        <a class="btn pri grand" id="go2" href="equipe.html?e=2">Ouvrir le dossier · Cabinet 2</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Les règles du jeu</h2>
+    <div class="feuille doc rules" id="regles"></div>
+  </section>
+
+  <section class="section">
+    <h2>Pour le formateur</h2>
+    <div class="feuille">
+      <p>Pages à projeter pendant la journée.</p>
+      <div class="form-liens">
+        <a class="btn" href="generique.html">Générique (8h30)</a>
+        <a class="btn" href="chrono.html">Chrono</a>
+        <a class="btn" href="tresorerie.html">Trésorerie</a>
+        <a class="btn" href="breaking.html">Breaking news</a>
+        <a class="btn" href="quiz.html">Quiz flash</a>
+        <a class="btn" href="proces.html">Le procès</a>
+        <a class="btn" href="badges.html">Badges et palmarès</a>
+        <a class="btn" href="imprimer.html">Tout imprimer</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer id="cc-pied"></footer>
+<script>
+(function () {
+  var D = CC.data;
+  CC.$("#meta-sous").textContent = D.meta.sous_titre;
+  CC.monterUne(CC.$("#une"));
+
+  var p = CC.$("#protag");
+  [["gifi", "L’enseigne placée en redressement judiciaire le 3 novembre 2026"],
+   ["action", "Le discounter concurrent"],
+   ["temu", "La plateforme lancée en France en avril 2023"]].forEach(function (m, i) {
+    var f = CC.el("figure");
+    var l = CC.logo(m[0], "grand");
+    f.appendChild(l);
+    f.appendChild(CC.el("figcaption", { text: m[1] }));
+    p.appendChild(f);
+    CC.anim(f, [{ opacity: 0, transform: "translateY(14px)" }, { opacity: 1, transform: "none" }], { duration: 600, delay: 150 * i, fill: "backwards", easing: "ease-out" });
+  });
+
+  function lettre() {
+    var n1 = CC.nomEquipe(1), n2 = CC.nomEquipe(2);
+    CC.$("#lettre").innerHTML = "<p><strong>" + CC.esc(n1) + " et " + CC.esc(n2) + ",</strong></p>" +
+      D.lettre.split(/(?<=[.?]) (?=[A-ZÀ-Ý])/).reduce(function (acc, phr, i) {
+        // regroupe en paragraphes comme dans la lettre d'origine
+        var coupe = /^(Huit|Votre|Après)/.test(phr);
+        if (coupe || i === 0) acc.push([phr]); else acc[acc.length - 1].push(phr);
+        return acc;
+      }, []).map(function (para) { return "<p>" + CC.esc(para.join(" ")) + "</p>"; }).join("") +
+      '<p class="sign">L’administrateur judiciaire<br><em>(lettre d’exercice)</em></p>';
+  }
+  lettre();
+  CC.$("#compo").textContent = D.equipes.composition + ". 4 rôles qui tournent à chaque pièce : " +
+    D.roles.map(function (r) { return r.role; }).join(", ") + ".";
+
+  var noms = CC.get("noms", ["", ""]);
+  ["nom1", "nom2"].forEach(function (id, i) {
+    var inp = CC.$("#" + id);
+    inp.value = noms[i] || "";
+    inp.addEventListener("input", function () {
+      noms[i] = inp.value; CC.set("noms", noms); lettre(); CC.entete(document.body.getAttribute("data-sous-titre"));
+      CC.$("#go" + (i + 1)).textContent = "Ouvrir le dossier · " + CC.nomEquipe(i + 1);
+      CC.activerSon(CC.son.actif);
+    });
+    CC.$("#go" + (i + 1)).textContent = "Ouvrir le dossier · " + CC.nomEquipe(i + 1);
+  });
+
+  CC.$("#regles").innerHTML = D.regles.map(function (r, i) {
+    return "<details" + (i === 0 ? " open" : "") + "><summary>" + CC.esc(r.titre) + "</summary>" + r.html + "</details>";
+  }).join("");
+})();
+</script>
+</body>
+</html>

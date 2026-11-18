@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Cold case GiFi · Espace du cabinet</title>
+<link rel="stylesheet" href="css/cc.css">
+<script src="js/config.js"></script>
+<script src="js/donnees.js"></script>
+<script src="js/commun.js"></script>
+<script src="js/une.js"></script>
+<style>
+.tete{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;margin:6px 0 26px}
+.tete h1{font:900 clamp(38px,5.6vw,72px)/.95 var(--titre);text-transform:uppercase;color:var(--papier);letter-spacing:.02em}
+.tete .kick{color:#cdbb92}
+.avance{font:700 18px var(--mono);color:var(--papier)}
+.avance b{font:900 34px var(--titre);color:var(--kraft)}
+.renommer{color:#e5d9bf;font-size:14px}
+.renommer input{padding:6px 8px;border:1.5px solid var(--kraft);background:#fffdf6;color:var(--encre);font:700 15px var(--mono);width:200px}
+
+/* Frise des pièces */
+.frise{list-style:none;margin:0 0 30px;padding:0;display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:8px;position:relative}
+.frise::before{content:"";position:absolute;left:2%;right:2%;top:50%;height:3px;background:repeating-linear-gradient(90deg,var(--kraft) 0 12px,transparent 12px 20px);z-index:0}
+.frise li{position:relative;z-index:1}
+.fr-btn{width:100%;min-height:92px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px 6px;
+  border:2px solid #5c4f3e;border-radius:4px;background:#4a4036;color:#cdbb92;font:700 13px/1.2 var(--mono);text-align:center}
+.fr-btn .n{font:900 26px/1 var(--titre)}
+.fr-btn svg{width:20px;height:24px}
+.fr-btn[data-etat="ouverte"]{background:var(--kraft);color:var(--encre);border-color:#8d6c3d}
+.fr-btn[data-etat="resolue"]{background:var(--papier);color:var(--encre);border-color:var(--vert)}
+.fr-btn[data-etat="resolue"] .etat{color:var(--vert)}
+.fr-btn[aria-current="true"]{outline:4px solid var(--papier);outline-offset:2px}
+.fr-btn:disabled{cursor:not-allowed}
+@media (max-width:900px){.frise{grid-template-columns:repeat(5,minmax(0,1fr))}.frise::before{display:none}}
+@media (max-width:480px){.frise{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+.plan{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(300px,1fr);gap:30px;align-items:start}
+@media (max-width:1000px){.plan{grid-template-columns:1fr}}
+
+/* Chemise de la pièce, avec couverture qui s'ouvre en 3D */
+.scene{perspective:1600px}
+.dossier{position:relative}
+.couv{position:absolute;inset:0;z-index:5;transform-origin:left center;background-color:var(--kraft);
+  background-image:var(--bruit),linear-gradient(160deg,#d3b27f,var(--kraft) 50%,#b8945d);border-radius:4px;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;box-shadow:0 10px 24px rgba(0,0,0,.35);backface-visibility:hidden}
+.couv b{font:900 clamp(30px,4vw,54px)/1 var(--titre);text-transform:uppercase;color:var(--encre)}
+.piece-feuille{padding:28px 30px 30px}
+.piece-feuille h2.pt{font:900 clamp(32px,4.2vw,52px)/1 var(--titre);text-transform:uppercase;margin:4px 0 10px;font-family:var(--titre)}
+.entete{font-size:15px;border-top:1px dashed #a89366;border-bottom:1px dashed #a89366;padding:8px 0;margin-bottom:14px}
+
+.chrono-p{display:flex;align-items:center;flex-wrap:wrap;gap:12px;background:var(--encre);color:var(--papier);padding:10px 14px;margin:6px 0 16px;font-family:var(--mono)}
+.chrono-p .t{font:900 40px/1 var(--titre);min-width:110px;letter-spacing:.04em}
+.chrono-p.orange .t{color:#ffb74d}
+.chrono-p.rouge .t{color:#ff8a80}
+.chrono-p .etiq-c{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--kraft3)}
+.chrono-p .btn{background:transparent;color:var(--papier);border-color:var(--papier)}
+
+.codebox{margin-top:22px;background:#efe2c2;border:2px solid var(--encre);padding:18px 20px;position:relative}
+.codebox h3{font:900 26px var(--titre);text-transform:uppercase;display:flex;align-items:center;gap:12px}
+.codebox .fmt{font-size:15px;margin:6px 0 12px}
+.code-ligne{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.code-ligne input{font:700 30px/1 var(--mono);letter-spacing:.24em;text-transform:uppercase;padding:10px 12px;width:min(320px,100%);border:2px solid var(--encre);background:#fffdf6}
+.msg{min-height:1.6em;margin-top:10px;font:700 18px var(--mono)}
+.msg.non{color:var(--rouge)}
+.msg.oui{color:var(--vert)}
+.essais{font-size:14px;color:var(--encre2);margin-top:2px}
+.cadenas{width:34px;height:40px;color:var(--encre);overflow:visible}
+.cadenas .anse{transform-box:fill-box;transform-origin:100% 100%}
+.cadenas.ouvert .anse{transform:translateY(-5px) rotate(-28deg)}
+.tampon-zone{position:absolute;right:16px;top:-26px;pointer-events:none}
+.tampon-zone .tampon{font-size:26px;background:rgba(244,236,216,.92)}
+.suite{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap}
+
+.debrief{margin-top:22px;border:3px solid var(--vert);background:#eef5e9;padding:16px 20px}
+.debrief h3{font:900 26px var(--titre);text-transform:uppercase;color:var(--vert2);margin-bottom:6px}
+
+/* La une en puzzle */
+.aside-bloc{margin-bottom:26px}
+.aside-bloc > h2{font:900 26px var(--titre);text-transform:uppercase;color:var(--papier);margin-bottom:10px;letter-spacing:.03em}
+.puzzle{position:relative}
+.puzzle .une{box-shadow:none}
+.caches{position:absolute;inset:0;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(2,1fr);z-index:3}
+.cache{background-color:var(--kraft2);background-image:var(--bruit),linear-gradient(135deg,#c09a62,#a8854f);border:1px dashed #6f5634;
+  display:flex;align-items:center;justify-content:center;font:900 28px var(--titre);color:#5b4527}
+.cache.vu{opacity:0}
+.vol{position:fixed;z-index:300;overflow:hidden;pointer-events:none;box-shadow:0 12px 30px rgba(0,0,0,.45);outline:2px solid var(--encre)}
+.vol .une-echelle{position:absolute}
+.une-pleine{position:fixed;inset:0;z-index:400;background:rgba(10,9,8,.86);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;padding:16px}
+.une-pleine .boite{width:min(94vw,1200px,calc((100vh - 110px) * 1.5))}
+.roles li{margin:4px 0}
+.reset{margin-top:30px;color:#cdbb92;font-size:14px}
+.reset button{color:#e5d9bf}
+</style>
+</head>
+<body data-sous-titre="Espace du cabinet · les 8 pièces à conviction">
+<header id="cc-top"></header>
+<main class="wrap large">
+  <div class="tete">
+    <div>
+      <p class="kick">Dossier d’enquête · Cold case GiFi</p>
+      <h1 id="nom-equipe">Cabinet</h1>
+      <p class="renommer"><label>Nom du cabinet : <input id="renommer" maxlength="40" autocomplete="off"></label></p>
+    </div>
+    <p class="avance" aria-live="polite"><b id="nb">0</b> / 8 pièces versées au dossier</p>
+  </div>
+
+  <ol class="frise" id="frise" aria-label="Les 8 pièces et la finale"></ol>
+
+  <div class="plan">
+    <section aria-live="off">
+      <div class="scene"><div class="dossier" id="dossier"></div></div>
+    </section>
+    <aside>
+      <div class="aside-bloc">
+        <h2>La une du dossier</h2>
+        <div class="puzzle" id="puzzle"></div>
+        <p style="color:#e5d9bf;font-size:14px;margin-top:8px">Chaque code trouvé révèle un morceau de la une. Complète à la fin de la pièce 8.</p>
+        <button class="btn petit" id="voir-une" hidden type="button">Voir la une en grand</button>
+      </div>
+      <div class="aside-bloc">
+        <h2>Les rôles</h2>
+        <div class="postit"><ul class="roles" id="roles" style="margin:0;padding-left:18px"></ul>
+          <p style="margin:8px 0 0"><strong>Règle :</strong> personne ne garde le même rôle deux pièces de suite. Dans un cabinet de 3, le chef d’enquête est aussi greffier.</p></div>
+      </div>
+    </aside>
+  </div>
+  <p class="reset no-print">Progression enregistrée sur cet appareil. <button type="button" class="lien" id="reset">Réinitialiser ce cabinet sur cet appareil</button></p>
+</main>
+<footer id="cc-pied"></footer>
+
+<template id="tpl-cadenas"><svg class="cadenas" viewBox="0 0 40 48" aria-hidden="true"><g class="anse"><path d="M11 22v-8a9 9 0 0 1 18 0v8" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></g><rect x="4" y="21" width="32" height="25" rx="4" fill="currentColor"/><circle cx="20" cy="31" r="3.6" fill="#f4ecd8"/><rect x="18.4" y="32" width="3.2" height="7.5" rx="1" fill="#f4ecd8"/></svg></template>
+
+<script>
+(function () {
+  "use strict";
+  var D = CC.data;
+  var E = /[?&]e=2\b/.test(location.search) ? 2 : 1;
+  var CLE = "equipe" + E;
+  var etat = CC.get(CLE, null) || { codes: {}, essais: {}, resolues: {}, vue: 1, ouvertes: {} };
+  ["codes", "essais", "resolues", "ouvertes"].forEach(function (k) { etat[k] = etat[k] || {}; });
+  function sauver() { CC.set(CLE, etat); }
+  var PIECES = D.pieces;
+  var cadenasHTML = CC.$("#tpl-cadenas").innerHTML;
+
+  /* ---------- Nom ---------- */
+  function majNom() {
+    var n = CC.nomEquipe(E);
+    CC.$("#nom-equipe").textContent = n;
+    document.title = "Cold case GiFi · " + n;
+  }
+  var inp = CC.$("#renommer");
+  inp.value = (CC.get("noms", []) || [])[E - 1] || "";
+  inp.placeholder = "Cabinet " + E;
+  inp.addEventListener("input", function () {
+    var noms = CC.get("noms", ["", ""]) || ["", ""]; noms[E - 1] = inp.value; CC.set("noms", noms);
+    majNom(); CC.entete(document.body.getAttribute("data-sous-titre")); CC.activerSon(CC.son.actif);
+  });
+  majNom();
+  CC.$("#roles").innerHTML = D.roles.map(function (r) { return "<li><strong>" + CC.esc(r.role) + "</strong> : " + CC.esc(r.mission) + "</li>"; }).join("");
+
+  /* ---------- États ---------- */
+  function resolue(n) { return !!etat.codes[n]; }
+  function ouverte(n) { return n === 1 || resolue(n - 1); }   // la pièce n s'ouvre avec le code de la pièce n-1
+  function nbResolues() { var k = 0; for (var i = 1; i <= 8; i++) if (resolue(i)) k++; return k; }
+
+  /* ---------- Frise ---------- */
+  function frise() {
+    var ol = CC.$("#frise");
+    ol.innerHTML = "";
+    PIECES.concat([{ id: 9, titre: "Le procès", seance: "Finale" }]).forEach(function (p) {
+      var n = p.id;
+      var ok = n === 9 ? resolue(8) : ouverte(n);
+      var st = n <= 8 && resolue(n) ? "resolue" : ok ? "ouverte" : "verrou";
+      var li = CC.el("li");
+      var b = CC.el("button", { type: "button", class: "fr-btn", "data-etat": st, "data-n": n });
+      if (!ok) b.disabled = true;
+      if (etat.vue === n) b.setAttribute("aria-current", "true");
+      var libEtat = st === "resolue" ? "versée ✓" : st === "ouverte" ? "ouverte" : "verrouillée";
+      b.innerHTML = '<span class="n">' + (n === 9 ? "⚖" : n) + "</span>" +
+        "<span>" + CC.esc(n === 9 ? "Finale" : p.titre) + "</span>" +
+        '<span class="etat">' + (st === "verrou" ? cadenasHTML.replace('class="cadenas"', 'class="cadenas" style="width:16px;height:20px;color:#cdbb92"') : "") + libEtat + "</span>";
+      b.setAttribute("aria-label", (n === 9 ? "Finale, le procès" : "Pièce " + n + ", " + p.titre) + ", " + libEtat);
+      b.addEventListener("click", function () { afficher(n); });
+      li.appendChild(b);
+      ol.appendChild(li);
+    });
+    CC.$("#nb").textContent = nbResolues();
+  }
+
+  /* ---------- Une en puzzle ---------- */
+  var une = CC.monterUne(CC.$("#puzzle"));
+  var caches = CC.el("div", { class: "caches", "aria-hidden": "true" });
+  for (var i = 1; i <= 8; i++) {
+    var c = CC.el("div", { class: "cache" + (resolue(i) ? " vu" : ""), "data-i": i, text: i });
+    caches.appendChild(c);
+  }
+  une.cadre.appendChild(caches);
+  function majUneBouton() { CC.$("#voir-une").hidden = nbResolues() < 8; }
+  majUneBouton();
+  CC.$("#voir-une").addEventListener("click", function () { unePleine(false); });
+
+  function voler(i, depuis) {
+    // le morceau i (1 à 8) vole depuis la zone du code vers sa place dans la une
+    var cache = caches.children[i - 1];
+    var r = cache.getBoundingClientRect();
+    var col = (i - 1) % 4, lig = Math.floor((i - 1) / 4);
+    var f = une.facteur;
+    var vol = CC.el("div", { class: "vol" });
+    vol.style.cssText += "left:" + r.left + "px;top:" + r.top + "px;width:" + r.width + "px;height:" + r.height + "px";
+    var ech = CC.el("div", { class: "une-echelle" });
+    ech.appendChild(CC.creerUne());
+    ech.style.transform = "scale(" + f + ")";
+    ech.style.left = -(col * CC.UNE_L / 4) * f + "px";
+    ech.style.top = -(lig * CC.UNE_H / 2) * f + "px";
+    vol.appendChild(ech);
+    document.body.appendChild(vol);
+    var s = depuis.getBoundingClientRect();
+    var dx = s.left + s.width / 2 - (r.left + r.width / 2), dy = s.top + s.height / 2 - (r.top + r.height / 2);
+    var a = CC.anim(vol, [
+      { transform: "translate(" + dx + "px," + dy + "px) rotate(-14deg) scale(1.6)", opacity: 0 },
+      { transform: "translate(" + dx * 0.5 + "px," + (dy * 0.5 - 60) + "px) rotate(-6deg) scale(1.3)", opacity: 1, offset: 0.35 },
+      { transform: "translate(0,0) rotate(0) scale(1.06)", opacity: 1, offset: 0.85 },
+      { transform: "none", opacity: 1 }
+    ], { duration: 1100, easing: "cubic-bezier(.3,.7,.3,1)", fill: "forwards" });
+    return a.finished.then(function () {
+      cache.classList.add("vu");
+      CC.cliquetis();
+      return CC.anim(vol, [{ opacity: 1 }, { opacity: 0 }], { duration: 250, fill: "forwards" }).finished;
+    }).then(function () { vol.remove(); });
+  }
+
+  function unePleine(tourne) {
+    var fond = CC.el("div", { class: "une-pleine", role: "dialog", "aria-modal": "true", "aria-label": "La une complète" });
+    var boite = CC.el("div", { class: "boite" });
+    fond.appendChild(boite);
+    var fermer = CC.el("button", { type: "button", class: "btn", text: "Fermer" });
+    document.body.appendChild(fond);
+    var u = CC.monterUne(boite);
+    fond.appendChild(fermer);
+    fermer.addEventListener("click", function () { fond.remove(); });
+    fond.addEventListener("keydown", function (e) { if (e.key === "Escape") fond.remove(); });
+    fermer.focus();
+    if (tourne) {
+      CC.coupSourd();
+      CC.anim(boite, [
+        { transform: "rotate(-1080deg) scale(.04)", opacity: 0 },
+        { transform: "rotate(-360deg) scale(.4)", opacity: 1, offset: .55 },
+        { transform: "rotate(0) scale(1)", opacity: 1 }
+      ], { duration: 1500, easing: "cubic-bezier(.2,.6,.3,1)" });
+    }
+  }
+
+  /* ---------- Chrono de la pièce ---------- */
+  var tick = null;
+  function chronoPiece(p, hote) {
+    var box = CC.el("div", { class: "chrono-p", role: "timer", "aria-label": "Chrono du travail en cabinet" });
+    box.innerHTML = '<span class="etiq-c">Travail en cabinet · ' + p.travail_min + ' min</span><span class="t">' + CC.mmss(p.travail_min * 60) + "</span>" +
+      '<button type="button" class="btn petit" data-a="go">Démarrer</button><button type="button" class="btn petit" data-a="raz">Remettre à zéro</button>';
+    hote.appendChild(box);
+    var ch = (etat.chrono && etat.chrono.piece === p.id) ? etat.chrono : { piece: p.id, reste: p.travail_min * 60, fin: null };
+    var t = box.querySelector(".t"), go = box.querySelector('[data-a="go"]');
+    var bip2 = false, bip0 = false;
+    function reste() { return ch.fin ? (ch.fin - Date.now()) / 1000 : ch.reste; }
+    function rendu() {
+      var r = reste();
+      t.textContent = CC.mmss(Math.max(0, Math.ceil(r)));
+      box.classList.toggle("orange", r <= 120 && r > 30);
+      box.classList.toggle("rouge", r <= 30);
+      go.textContent = ch.fin ? "Pause" : (r < p.travail_min * 60 ? "Reprendre" : "Démarrer");
+      if (ch.fin && r <= 120 && !bip2) { bip2 = true; CC.bipDouble(); }
+      if (ch.fin && r <= 0 && !bip0) { bip0 = true; CC.bipFin(); ch.reste = 0; ch.fin = null; etat.chrono = ch; sauver(); }
+    }
+    bip2 = reste() <= 120; bip0 = reste() <= 0;
+    go.addEventListener("click", function () {
+      if (ch.fin) { ch.reste = reste(); ch.fin = null; } else if (reste() > 0) { ch.fin = Date.now() + reste() * 1000; }
+      etat.chrono = ch; sauver(); rendu();
+    });
+    box.querySelector('[data-a="raz"]').addEventListener("click", function () {
+      ch = { piece: p.id, reste: p.travail_min * 60, fin: null }; bip2 = bip0 = false; etat.chrono = ch; sauver(); rendu();
+    });
+    clearInterval(tick);
+    tick = setInterval(rendu, 250);
+    rendu();
+  }
+
+  /* ---------- Affichage d'une pièce ---------- */
+  var jeton = 0;
+  function afficher(n, animer) {
+    etat.vue = n; sauver(); frise();
+    var mon = ++jeton;
+    var dos = CC.$("#dossier");
+    if (n === 9) return finale(dos);
+    var p = PIECES[n - 1];
+    var contenuP = p.contenu ? Promise.resolve(p.contenu)
+      : CC.dechiffrer(p.contenu_chiffre, etat.codes[n - 1]).then(function (t) { return t ? JSON.parse(t) : null; });
+    var debriefP = resolue(n) ? CC.dechiffrer(p.debrief, etat.codes[n]) : Promise.resolve(null);
+    Promise.all([contenuP, debriefP]).then(function (r) {
+      if (mon !== jeton) return;
+      var c = r[0], deb = r[1];
+      dos.innerHTML = "";
+      var ch = CC.el("div", { class: "chemise" });
+      ch.innerHTML = '<span class="etiq">Pièce ' + n + " · " + CC.esc(p.seance) + "</span>";
+      var f = CC.el("div", { class: "feuille doc piece-feuille trombone" });
+      ch.appendChild(f);
+      dos.appendChild(ch);
+      if (!c) { f.innerHTML = "<p>Cette pièce est encore scellée.</p>"; return; }
+      f.innerHTML = '<p class="kick">Pièce ' + n + " · séance " + CC.esc(p.seance.replace("S", "")) + " · lien dossier : " + CC.esc(p.lien_dossier) + "</p>" +
+        '<h2 class="pt">' + CC.esc(p.titre) + "</h2>" + '<div class="entete">' + c.entete + "</div>";
+      chronoPiece(p, f);
+      c.sections.forEach(function (s) {
+        var sec = CC.el("section");
+        sec.innerHTML = "<h2>" + CC.esc(s.titre) + "</h2>" + s.html;
+        f.appendChild(sec);
+      });
+      f.appendChild(boiteCode(p, deb));
+      if (deb) f.appendChild(blocDebrief(deb));
+      // la chemise s'ouvre (rotation 3D) la première fois qu'on ouvre une pièce déverrouillée
+      if (!etat.ouvertes[n] || animer) {
+        etat.ouvertes[n] = true; sauver();
+        var couv = CC.el("div", { class: "couv", "aria-hidden": "true" });
+        couv.innerHTML = '<span class="tampon vert">Pièce déverrouillée</span><b>Pièce ' + n + "</b><span style=\"font:700 18px var(--mono)\">" + CC.esc(p.titre) + "</span>";
+        ch.appendChild(couv);
+        CC.cliquetis();
+        var a = CC.reduit()
+          ? CC.anim(couv, [{ opacity: 1 }, { opacity: 0 }], { duration: 500, delay: 350, fill: "forwards" })
+          : couv.animate([{ transform: "rotateY(0)" }, { transform: "rotateY(-165deg)", opacity: 1, offset: .85 }, { transform: "rotateY(-180deg)", opacity: 0 }],
+            { duration: 1200, delay: 450, easing: "cubic-bezier(.5,0,.3,1)", fill: "forwards" });
+        a.finished.then(function () { couv.remove(); });
+      }
+    });
+  }
+
+  function blocDebrief(html) {
+    var d = CC.el("section", { class: "debrief" });
+    d.innerHTML = "<h3>Débrief du formateur</h3>" + html;
+    return d;
+  }
+
+  function boiteCode(p, deb) {
+    var n = p.id;
+    var box = CC.el("div", { class: "codebox", id: "codebox" });
+    var fait = resolue(n);
+    box.innerHTML = "<h3>" + cadenasHTML + (n < 8 ? "Le code de sortie" : "Le dernier code") + "</h3>" +
+      '<p class="fmt">' + CC.esc(p.code_format) + (n < 8 ? ". Il ouvre la pièce " + (n + 1) + "." : ". Il ouvre la finale.") + "</p>" +
+      '<form class="code-ligne" autocomplete="off"><label class="sr" for="code-in">Code de la pièce ' + n + '</label>' +
+      '<input id="code-in" inputmode="' + (/^\d/.test(p.code_format) ? "numeric" : "text") + '" maxlength="12" spellcheck="false" autocapitalize="characters">' +
+      '<button class="btn pri" type="submit">Valider le code</button></form>' +
+      '<p class="msg" role="status" aria-live="assertive"></p><p class="essais"></p><div class="suite"></div><div class="tampon-zone"></div>';
+    var form = box.querySelector("form"), input = box.querySelector("input"), msg = box.querySelector(".msg"), suite = box.querySelector(".suite");
+    var cad = box.querySelector(".cadenas");
+    function essais() {
+      var k = etat.essais[n] || 0;
+      box.querySelector(".essais").textContent = k ? "Codes refusés pour cette pièce : " + k : "";
+    }
+    essais();
+    function boutonsSuite() {
+      suite.innerHTML = "";
+      var b = CC.el("button", { type: "button", class: "btn vert grand", text: n < 8 ? "Ouvrir la pièce " + (n + 1) + " →" : "Ouvrir la finale →" });
+      b.addEventListener("click", function () { afficher(n + 1, true); window.scrollTo({ top: CC.$("#frise").offsetTop - 70, behavior: CC.reduit() ? "auto" : "smooth" }); });
+      suite.appendChild(b);
+    }
+    if (fait) {
+      cad.classList.add("ouvert");
+      input.value = etat.codes[n]; input.disabled = true; form.querySelector("button").disabled = true;
+      msg.className = "msg oui";
+      msg.textContent = "Code accepté" + (etat.resolues[n] ? " à " + etat.resolues[n] : "") + ". Pièce versée au dossier.";
+      box.querySelector(".tampon-zone").innerHTML = '<span class="tampon">Pièce versée au dossier</span>';
+      boutonsSuite();
+    }
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var v = input.value;
+      if (!CC.normaliser(v)) { input.focus(); return; }
+      CC.verifierCode(n, v).then(function (ok) {
+        if (!ok) {
+          etat.essais[n] = (etat.essais[n] || 0) + 1; sauver(); essais();
+          msg.className = "msg non"; msg.textContent = "Code refusé";
+          input.classList.remove("tremble"); void input.offsetWidth; input.classList.add("tremble");
+          CC.perte();
+          input.select();
+          return;
+        }
+        etat.codes[n] = CC.normaliser(v);
+        etat.resolues[n] = CC.heure();
+        sauver();
+        input.disabled = true; form.querySelector("button").disabled = true;
+        msg.className = "msg oui"; msg.textContent = "Code accepté à " + etat.resolues[n] + ". Pièce versée au dossier.";
+        deverrouiller(p, box, cad);
+      });
+    });
+    return box;
+  }
+
+  function deverrouiller(p, box, cad) {
+    var n = p.id;
+    // 1. le cadenas s'ouvre
+    CC.cliquetis();
+    var anse = cad.querySelector(".anse");
+    var a1 = CC.reduit() ? { finished: Promise.resolve() } : anse.animate(
+      [{ transform: "none" }, { transform: "translateY(-6px)", offset: .45 }, { transform: "translateY(-5px) rotate(-28deg)" }],
+      { duration: 600, easing: "ease-out", fill: "forwards" });
+    a1.finished.then(function () {
+      cad.classList.add("ouvert");
+      // 2. le tampon frappe
+      var tz = box.querySelector(".tampon-zone");
+      tz.innerHTML = '<span class="tampon">Pièce versée au dossier</span>';
+      CC.coupSourd();
+      CC.anim(tz.firstChild, [{ transform: "scale(2.4) rotate(-14deg)", opacity: 0 }, { transform: "scale(.94) rotate(-7deg)", opacity: 1, offset: .7 }, { transform: "scale(1) rotate(-7deg)", opacity: 1 }],
+        { duration: 380, easing: "cubic-bezier(.5,0,.8,.4)" });
+      CC.anim(CC.$("#dossier"), [{ transform: "none" }, { transform: "translate(3px,2px)" }, { transform: "translate(-2px,-1px)" }, { transform: "none" }], { duration: 220, delay: 260 });
+      return CC.attendre(450);
+    }).then(function () {
+      // 3. le morceau de puzzle vole vers la une
+      return voler(n, box);
+    }).then(function () {
+      frise(); majUneBouton();
+      // le débrief se révèle
+      return CC.dechiffrer(p.debrief, etat.codes[n]).then(function (deb) {
+        if (deb && !box.parentNode.querySelector(".debrief")) {
+          var d = blocDebrief(deb);
+          box.parentNode.appendChild(d);
+          CC.anim(d, [{ opacity: 0, transform: "translateY(10px)" }, { opacity: 1, transform: "none" }], { duration: 500 });
+        }
+        var suite = box.querySelector(".suite"); suite.innerHTML = "";
+        var b = CC.el("button", { type: "button", class: "btn vert grand", text: n < 8 ? "Ouvrir la pièce " + (n + 1) + " →" : "Ouvrir la finale →" });
+        b.addEventListener("click", function () { afficher(n + 1, true); window.scrollTo({ top: CC.$("#frise").offsetTop - 70, behavior: CC.reduit() ? "auto" : "smooth" }); });
+        suite.appendChild(b);
+        if (nbResolues() === 8) return CC.attendre(500).then(function () { unePleine(true); });
+      });
+    });
+  }
+
+  function finale(dos) {
+    var F = D.finale;
+    dos.innerHTML = "";
+    var ch = CC.el("div", { class: "chemise" });
+    ch.innerHTML = '<span class="etiq">Finale</span>';
+    var f = CC.el("div", { class: "feuille doc piece-feuille" });
+    f.innerHTML = '<p class="kick">Finale · 16h00</p><h2 class="pt">' + CC.esc(F.titre) + "</h2>" + '<div class="entete">' + F.entete + "</div>" +
+      F.sections.map(function (s) { return "<section><h2>" + CC.esc(s.titre) + "</h2>" + s.html + "</section>"; }).join("");
+    ch.appendChild(f);
+    dos.appendChild(ch);
+    if (!etat.ouvertes[9]) {
+      etat.ouvertes[9] = true; sauver();
+      CC.anim(ch, [{ opacity: 0, transform: "scale(.96)" }, { opacity: 1, transform: "none" }], { duration: 600 });
+    }
+  }
+
+  CC.$("#reset").addEventListener("click", function () {
+    if (confirm("Remettre à zéro la progression de « " + CC.nomEquipe(E) + " » sur cet appareil ?")) {
+      CC.suppr(CLE); location.reload();
+    }
+  });
+
+  frise();
+  var v = etat.vue || 1;
+  if (v === 9 ? !resolue(8) : !ouverte(v)) v = 1;
+  afficher(v);
+})();
+</script>
+</body>
+</html>
