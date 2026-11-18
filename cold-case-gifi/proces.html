@@ -10,60 +10,61 @@
 <script src="js/donnees.js"></script>
 <script src="js/commun.js"></script>
 <style>
-.tete{display:flex;flex-wrap:wrap;gap:20px;align-items:center;margin-bottom:10px}
-.tete h1{font:900 clamp(40px,6vw,84px)/.95 var(--titre);text-transform:uppercase;color:var(--papier)}
-.question{font:900 clamp(24px,3vw,42px)/1.15 var(--titre);color:var(--kraft);margin:6px 0 28px;max-width:1300px}
-.bloc{margin-bottom:30px}
-.bloc > h2{font:900 30px var(--titre);text-transform:uppercase;color:var(--papier);margin-bottom:12px;letter-spacing:.03em}
+.p-tete .lg{flex:none}
+.question{font:400 clamp(22px,2.6vw,34px)/1.2 var(--fd);margin:0 0 26px;max-width:1200px;padding:16px 20px;background:var(--beige3);border-left:3px solid var(--ink)}
+.etape{margin-bottom:22px}
+.etape > h2{font-size:19px;margin-bottom:12px}
 /* Tirage : la pièce qui tourne */
 .tirage{display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center}
 @media (max-width:760px){.tirage{grid-template-columns:1fr}}
-.piece-s{width:190px;height:190px;perspective:900px;margin:0 auto}
+.piece-s{width:180px;height:180px;perspective:900px;margin:0 auto}
 .piece-in{position:relative;width:100%;height:100%;transform-style:preserve-3d}
 .face{position:absolute;inset:0;border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;padding:18px;backface-visibility:hidden;
-  font:900 22px/1.05 var(--titre);text-transform:uppercase;border:8px double #7a5a2c;color:#3b2a12;
-  background:radial-gradient(circle at 35% 30%,#f4dca4,#c8a46e 55%,#9c7b49)}
-.face.b{transform:rotateY(180deg)}
-.camps{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  font:400 22px/1.1 var(--fd);border:6px double var(--ink);color:var(--ink);background:var(--beige)}
+.face.b{transform:rotateY(180deg);background:var(--paper)}
+.camps{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
 @media (max-width:760px){.camps{grid-template-columns:1fr}}
-.camp{padding:16px 18px}
-.camp .role{font:900 26px var(--titre);text-transform:uppercase}
-.camp .qui{font:900 34px/1 var(--titre);text-transform:uppercase;color:var(--rouge);margin:6px 0}
-.camp .these{font-family:var(--mono)}
+.camp{padding:14px 16px;border:1px solid var(--line);background:var(--soft)}
+.camp .role{font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);font-weight:700}
+.camp .qui{font:400 30px/1.05 var(--fd);margin:6px 0}
+.camp .these{color:var(--ink2);margin:0}
 /* Minuteurs */
 .minuteurs{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:20px;align-items:center}
 @media (max-width:860px){.minuteurs{grid-template-columns:1fr}}
 .m-liste{display:flex;flex-wrap:wrap;gap:6px}
-.m-liste button{border:2px solid var(--encre);background:#fffdf6;padding:7px 10px;font:700 14px var(--mono);text-align:left}
-.m-liste button[aria-pressed="true"]{background:var(--encre);color:#fff}
-.m-aff{background:var(--encre);color:var(--papier);text-align:center;padding:18px}
-.m-aff .lib{font:900 clamp(22px,2.4vw,34px) var(--titre);text-transform:uppercase;color:var(--kraft)}
-.m-aff .t{font:900 clamp(80px,11vw,170px)/1 var(--titre);font-variant-numeric:tabular-nums}
-.m-aff.orange .t{color:#ffb74d}.m-aff.rouge .t{color:#ff8a80;animation:cc-pulse 1s infinite}
-.m-aff .btn{background:transparent;color:var(--papier);border-color:var(--papier);margin:4px}
-/* Grille */
-.grille td select{font:700 18px var(--mono);padding:4px}
-.grille tfoot td{font:900 26px var(--titre)}
-.cess-l{display:flex;flex-wrap:wrap;gap:16px;margin:10px 0;font-size:15px}
-.verdict-zone{display:grid;grid-template-columns:auto 1fr auto;gap:26px;align-items:center;margin-top:16px}
+.m-liste button{border:1.5px solid var(--line2);background:#fff;padding:7px 10px;font-size:13.5px;text-align:left;border-radius:var(--r)}
+.m-liste button:hover{border-color:var(--ink)}
+.m-liste button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink);font-weight:700}
+.m-aff{border:1.5px solid var(--ink);border-radius:var(--r);text-align:center;padding:18px;background:#fff}
+.m-aff .lib{font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);font-weight:700}
+.m-aff .t{font:400 clamp(80px,10vw,150px)/1 var(--fd);font-variant-numeric:tabular-nums}
+.m-aff.orange{background:var(--warnb);border-color:var(--warn)}.m-aff.orange .t{color:var(--warn)}
+.m-aff.rouge{background:var(--errb);border-color:var(--err)}.m-aff.rouge .t{color:var(--err);animation:cc-pulse 1s infinite}
+.m-aff .btn{margin:4px}
+/* Grille et verdict */
+.grille td select{font-size:16px;font-weight:700;padding:4px 6px;border:1.5px solid var(--line2);border-radius:var(--r);background:#fff}
+.grille tfoot td{font:400 24px var(--fd);border-top:1.5px solid var(--ink)}
+.cess-l{display:flex;flex-wrap:wrap;gap:16px;margin:12px 0;font-size:14.5px;color:var(--ink2)}
+.verdict-zone{display:grid;grid-template-columns:auto 1fr auto;gap:26px;align-items:center;margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}
 @media (max-width:860px){.verdict-zone{grid-template-columns:1fr}}
-.marteau{width:150px;height:130px;overflow:visible}
+.marteau{width:140px;height:122px;overflow:visible}
 .marteau .tete-m{transform-box:view-box;transform-origin:110px 112px}
-.annonce{font:900 clamp(30px,4vw,58px)/1.05 var(--titre);text-transform:uppercase;min-height:1.1em}
-.annonce small{display:block;font:700 18px/1.4 var(--mono);text-transform:none;color:var(--encre2);margin-top:6px}
-.jauge{width:90px;height:260px;border:3px solid var(--encre);background:#fffdf6;position:relative;overflow:hidden}
-.jauge i{position:absolute;left:0;right:0;bottom:0;height:100%;background:var(--vert);transform:scaleY(0);transform-origin:bottom}
-.jauge-l{text-align:center;font:900 28px var(--titre);margin-top:6px}
-.regles details summary{cursor:pointer;font:900 22px var(--titre);text-transform:uppercase}
+.annonce{font:400 clamp(26px,3.2vw,44px)/1.1 var(--fd);min-height:1.1em;margin:12px 0 0}
+.annonce small{display:block;font:15px/1.45 var(--f);color:var(--ink2);margin-top:6px}
+.jauge{width:80px;height:230px;border:1.5px solid var(--ink);background:#fff;position:relative;overflow:hidden;border-radius:var(--r)}
+.jauge i{position:absolute;left:0;right:0;bottom:0;height:100%;background:var(--ok);transform:scaleY(0);transform-origin:bottom}
+.jauge-l{text-align:center;font:400 24px var(--fd);margin-top:6px;font-variant-numeric:tabular-nums}
+.regles details{border-bottom:1px solid var(--line);padding:10px 0}
+.regles details summary{cursor:pointer;font-weight:700}
 </style>
 </head>
 <body data-avec-logos data-sous-titre="La finale · le procès de GiFi">
 <header id="cc-top"></header>
 <main class="wrap large">
-  <div class="tete"><span id="logo-gifi"></span><h1>Le procès de GiFi</h1></div>
+  <div class="p-tete"><span class="lg" id="logo-gifi"></span><div><p class="kick">La finale · 16h00 · 25 minutes</p><h1 class="p-titre">Le procès de GiFi</h1><p class="p-sous">Deux camps tirés au sort, des preuves datées, un jury, un verdict.</p></div></div>
   <p class="question" id="question"></p>
 
-  <section class="bloc">
+  <section class="etape">
     <h2>1. Le tirage au sort des camps</h2>
     <div class="chemise tirage">
       <div>
@@ -71,13 +72,13 @@
         <p style="text-align:center;margin-top:12px"><button class="btn pri" type="button" id="tirer">Lancer la pièce</button></p>
       </div>
       <div>
-        <p style="font-family:var(--mono)">La face visible désigne l’accusation. Le camp ne dépend pas de ce que pense l’équipe : on plaide la thèse qu’on a tirée, avec des preuves.</p>
+        <p style="color:var(--ink2)">La face visible désigne l’accusation. Le camp ne dépend pas de ce que pense l’équipe : on plaide la thèse qu’on a tirée, avec des preuves.</p>
         <div class="camps" id="camps" aria-live="polite"></div>
       </div>
     </div>
   </section>
 
-  <section class="bloc">
+  <section class="etape">
     <h2>2. Les minuteurs</h2>
     <div class="feuille minuteurs">
       <div class="m-liste" id="m-liste" aria-label="Choisir l'étape"></div>
@@ -86,7 +87,7 @@
     </div>
   </section>
 
-  <section class="bloc">
+  <section class="etape">
     <h2>3. La grille du jury (sur 20)</h2>
     <div class="feuille">
       <div class="tbl"><table class="cc grille"><thead><tr><th>Critère</th><th>Points</th><th id="th-acc">Accusation</th><th id="th-def">Défense</th></tr></thead>
@@ -94,21 +95,21 @@
       <div class="cess-l" id="cess"></div>
       <div class="verdict-zone">
         <svg class="marteau" viewBox="0 0 150 130" aria-hidden="true">
-          <rect x="20" y="112" width="110" height="14" rx="3" fill="#5b4527"/>
-          <g class="tete-m" id="tete-m"><rect x="104" y="20" width="12" height="95" rx="4" fill="#7a5a2c"/><rect x="72" y="4" width="76" height="30" rx="6" fill="#3b2a12"/><rect x="66" y="8" width="8" height="22" rx="2" fill="#c8a46e"/><rect x="146" y="8" width="6" height="22" rx="2" fill="#c8a46e"/></g>
+          <rect x="20" y="112" width="110" height="14" rx="3" fill="#7d7d78"/>
+          <g class="tete-m" id="tete-m"><rect x="104" y="20" width="12" height="95" rx="4" fill="#484845"/><rect x="72" y="4" width="76" height="30" rx="6" fill="#151515"/><rect x="66" y="8" width="8" height="22" rx="2" fill="#d9d4c9"/><rect x="146" y="8" width="6" height="22" rx="2" fill="#d9d4c9"/></g>
         </svg>
         <div>
           <button class="btn rouge grand" type="button" id="verdict">Rendre le verdict</button>
           <p class="annonce" id="annonce" aria-live="assertive"></p>
           <div id="egalite" hidden style="margin-top:8px"></div>
-          <p style="margin-top:10px"><button class="btn" type="button" id="inscrire" hidden>Inscrire dans la trésorerie</button> <span id="inscrit" style="font-family:var(--mono)"></span></p>
+          <p style="margin-top:10px"><button class="btn" type="button" id="inscrire" hidden>Inscrire dans la trésorerie</button> <span id="inscrit" style="color:var(--ok);font-weight:700"></span></p>
         </div>
         <div><div class="jauge" aria-hidden="true"><i id="jauge"></i></div><div class="jauge-l" id="jauge-l">0 €</div></div>
       </div>
     </div>
   </section>
 
-  <section class="bloc regles">
+  <section class="etape regles">
     <h2>Le déroulé et les règles</h2>
     <div class="feuille doc" id="regles"></div>
   </section>
@@ -135,7 +136,7 @@
     var h = "";
     [["acc", "L’accusation", F.camps.accusation], ["def", "La défense", F.camps.defense]].forEach(function (c) {
       var e = equipeDe(c[0]);
-      h += '<div class="feuille camp"><div class="role">' + c[1] + '</div><div class="qui">' + (e ? CC.esc(CC.nomEquipe(e)) : "?") + '</div><p class="these">« ' + CC.esc(c[2]) + " »</p></div>";
+      h += '<div class="camp"><div class="role">' + c[1] + '</div><div class="qui">' + (e ? CC.esc(CC.nomEquipe(e)) : "?") + '</div><p class="these">« ' + CC.esc(c[2]) + " »</p></div>";
     });
     CC.$("#camps").innerHTML = h;
     CC.$("#th-acc").textContent = "Accusation" + (st.acc ? " · " + CC.nomEquipe(equipeDe("acc")) : "");

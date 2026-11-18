@@ -10,30 +10,28 @@
 <script src="js/donnees.js"></script>
 <script src="js/commun.js"></script>
 <style>
-h1.q-h{font:900 clamp(34px,4.6vw,60px)/1 var(--titre);text-transform:uppercase;color:var(--papier);margin-bottom:6px}
-.aide{color:#e5d9bf;margin-bottom:16px}
 .onglets{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
-.onglets button{border:2px solid var(--kraft);background:transparent;color:var(--papier);padding:8px 12px;font:700 15px var(--mono)}
-.onglets button[aria-selected="true"]{background:var(--kraft);color:var(--encre)}
-.carte-q{min-height:52vh;display:flex;flex-direction:column;justify-content:space-between;gap:22px;padding:34px 40px}
-.carte-q .num{font:700 16px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--encre3)}
-.carte-q .theme{font:900 22px var(--titre);text-transform:uppercase;color:var(--encre2)}
-.carte-q .question{font:900 clamp(32px,4.4vw,68px)/1.08 var(--titre);font-family:var(--titre)}
-.reponse{border-top:3px dashed var(--encre);padding-top:16px;font:700 clamp(22px,2.6vw,38px)/1.3 var(--mono)}
-.reponse .vf{display:inline-block;font:900 clamp(34px,4vw,60px)/1 var(--titre);padding:4px 14px;margin-right:10px;color:#fff}
-.reponse .vf.v{background:var(--vert)}.reponse .vf.f{background:var(--rouge)}
-.reponse strong{font-weight:900}
+.onglets button{border:1.5px solid var(--line2);background:#fff;padding:7px 12px;font-size:14px;font-weight:700;border-radius:var(--r)}
+.onglets button:hover{border-color:var(--ink)}
+.onglets button[aria-selected="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.carte-q{min-height:52vh;display:flex;flex-direction:column;justify-content:space-between;gap:22px;padding:30px 36px;border-top:3px solid var(--ink)}
+.carte-q .num{font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);font-weight:700;margin:0}
+.carte-q .theme{font-size:17px;font-weight:700;color:var(--ink2);margin:4px 0 0}
+.carte-q .question{font:400 clamp(30px,4vw,60px)/1.12 var(--fd);letter-spacing:-.01em;margin:0}
+.reponse{border-top:1px solid var(--line);padding-top:16px;font-size:clamp(20px,2.3vw,32px);line-height:1.35}
+.reponse .vf{display:inline-block;font:400 clamp(30px,3.6vw,52px)/1 var(--fd);padding:4px 14px;margin-right:12px;color:#fff;border-radius:var(--r)}
+.reponse .vf.v{background:var(--ok)}.reponse .vf.f{background:var(--err)}
+.reponse strong{font-weight:700}
 .nav-q{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-.raccourcis{color:#a99b80;font-size:13px;margin-top:12px}
+.raccourcis{color:var(--ink3);font-size:12.5px;margin-top:12px}
 </style>
 </head>
 <body data-sous-titre="Les quiz flash · à projeter">
 <header id="cc-top"></header>
 <main class="wrap">
-  <h1 class="q-h">Quiz flash</h1>
-  <p class="aide">Une question à la fois, vote à main levée. +500 € par bonne réponse au premier cabinet qui répond juste. Aucune réponse n’est collectée.</p>
+  <div class="p-tete"><div><p class="kick">Entre les pièces · à projeter</p><h1 class="p-titre">Quiz flash</h1><p class="p-sous">Une question à la fois, vote à main levée. +500 € par bonne réponse au premier cabinet qui répond juste. Aucune réponse n’est collectée.</p></div></div>
   <div class="onglets" role="tablist" id="onglets"></div>
-  <section class="feuille carte-q" id="carte" aria-live="polite"></section>
+  <section class="bloc carte-q" id="carte" aria-live="polite"></section>
   <p class="raccourcis">Flèches : question précédente / suivante · Entrée ou R : révéler la réponse</p>
 </main>
 <footer id="cc-pied"></footer>

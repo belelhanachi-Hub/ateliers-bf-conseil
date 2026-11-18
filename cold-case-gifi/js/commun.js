@@ -195,7 +195,7 @@
     var ici = location.pathname.split("/").pop() || "index.html";
     var q = location.search;
     h.className = "topbar no-print";
-    h.innerHTML = '<a class="tb-logo" href="../"><img src="img/bf-conseil.png" alt="BF Conseil" width="54" height="40"></a>' +
+    h.innerHTML = '<a class="tb-logo" href="../"><img src="img/bf-conseil.png" alt="BF Conseil" width="57" height="42"></a>' +
       '<div class="tb-t"><b>Cold case GiFi</b>' + CC.esc(sousTitre || "L'enquête · Mastère MA28 · Bloc 1") + "</div>" +
       '<nav class="tb-nav" aria-label="Pages de l\'atelier">' + NAV.map(function (n) {
         var cible = n[0].split("?");
@@ -211,7 +211,7 @@
     f.className = "pied no-print";
     var m = avecLogos && CC.logosActifs() && D.logos ? '<span class="mention">' + CC.esc(D.logos.mention) + "</span>" : "";
     f.innerHTML = "Belel Hanachi · BF Conseil · " + CC.esc((D.meta && D.meta.groupe) || "") +
-      ' · <a href="sources.html">Sources</a><br>Un redressement judiciaire n’est pas une liquidation : on analyse un marché et des décisions, avec respect pour les 6 000 salariés de GiFi.' + m;
+      ' · <a href="sources.html">Sources</a> · Rien n’est envoyé : tout reste sur cet appareil.<br>Un redressement judiciaire n’est pas une liquidation : on analyse un marché et des décisions, avec respect pour les 6 000 salariés de GiFi.' + m;
   };
 
   document.addEventListener("DOMContentLoaded", function () {

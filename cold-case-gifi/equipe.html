@@ -11,86 +11,86 @@
 <script src="js/commun.js"></script>
 <script src="js/une.js"></script>
 <style>
-.tete{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;margin:6px 0 26px}
-.tete h1{font:900 clamp(38px,5.6vw,72px)/.95 var(--titre);text-transform:uppercase;color:var(--papier);letter-spacing:.02em}
-.tete .kick{color:#cdbb92}
-.avance{font:700 18px var(--mono);color:var(--papier)}
-.avance b{font:900 34px var(--titre);color:var(--kraft)}
-.renommer{color:#e5d9bf;font-size:14px}
-.renommer input{padding:6px 8px;border:1.5px solid var(--kraft);background:#fffdf6;color:var(--encre);font:700 15px var(--mono);width:200px}
+.tete{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;padding-bottom:20px;border-bottom:2px solid var(--ink);margin-bottom:24px}
+.tete h1{font:400 clamp(34px,4.4vw,48px)/1.05 var(--fd);letter-spacing:-.01em;margin:6px 0 10px}
+.avance{font-size:14px;color:var(--ink2);margin:0;text-align:right}
+.avance b{display:block;font-size:30px;color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums}
+.renommer{font-size:13.5px;color:var(--ink2);margin:0}
+.renommer input{padding:7px 10px;border:1.5px solid var(--line2);border-radius:var(--r);background:#fff;font-size:15px;width:220px;margin-left:6px}
+.renommer input:focus{outline:none;border-color:var(--ink)}
 
 /* Frise des pièces */
-.frise{list-style:none;margin:0 0 30px;padding:0;display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:8px;position:relative}
-.frise::before{content:"";position:absolute;left:2%;right:2%;top:50%;height:3px;background:repeating-linear-gradient(90deg,var(--kraft) 0 12px,transparent 12px 20px);z-index:0}
-.frise li{position:relative;z-index:1}
+.frise{list-style:none;margin:0 0 26px;padding:0;display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:8px}
 .fr-btn{width:100%;min-height:92px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px 6px;
-  border:2px solid #5c4f3e;border-radius:4px;background:#4a4036;color:#cdbb92;font:700 13px/1.2 var(--mono);text-align:center}
-.fr-btn .n{font:900 26px/1 var(--titre)}
-.fr-btn svg{width:20px;height:24px}
-.fr-btn[data-etat="ouverte"]{background:var(--kraft);color:var(--encre);border-color:#8d6c3d}
-.fr-btn[data-etat="resolue"]{background:var(--papier);color:var(--encre);border-color:var(--vert)}
-.fr-btn[data-etat="resolue"] .etat{color:var(--vert)}
-.fr-btn[aria-current="true"]{outline:4px solid var(--papier);outline-offset:2px}
+  border:1px solid var(--line);border-radius:var(--r);background:var(--soft);color:var(--ink3);font-size:13px;line-height:1.25;text-align:center}
+.fr-btn .n{font:400 28px/1 var(--fd);color:inherit}
+.fr-btn .etat{font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;display:inline-flex;align-items:center;gap:4px}
+.fr-btn[data-etat="ouverte"]{background:var(--paper);color:var(--ink);border:1.5px solid var(--ink)}
+.fr-btn[data-etat="resolue"]{background:var(--okb);color:var(--ink);border:1.5px solid var(--ok)}
+.fr-btn[data-etat="resolue"] .etat{color:var(--ok)}
+.fr-btn[aria-current="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.fr-btn[aria-current="true"] .etat{color:#fff}
 .fr-btn:disabled{cursor:not-allowed}
-@media (max-width:900px){.frise{grid-template-columns:repeat(5,minmax(0,1fr))}.frise::before{display:none}}
+@media (max-width:900px){.frise{grid-template-columns:repeat(5,minmax(0,1fr))}}
 @media (max-width:480px){.frise{grid-template-columns:repeat(3,minmax(0,1fr))}}
 
-.plan{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(300px,1fr);gap:30px;align-items:start}
+.plan{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(300px,1fr);gap:26px;align-items:start}
 @media (max-width:1000px){.plan{grid-template-columns:1fr}}
 
-/* Chemise de la pièce, avec couverture qui s'ouvre en 3D */
+/* La pièce, avec une couverture qui s'ouvre en 3D */
 .scene{perspective:1600px}
 .dossier{position:relative}
-.couv{position:absolute;inset:0;z-index:5;transform-origin:left center;background-color:var(--kraft);
-  background-image:var(--bruit),linear-gradient(160deg,#d3b27f,var(--kraft) 50%,#b8945d);border-radius:4px;
-  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;box-shadow:0 10px 24px rgba(0,0,0,.35);backface-visibility:hidden}
-.couv b{font:900 clamp(30px,4vw,54px)/1 var(--titre);text-transform:uppercase;color:var(--encre)}
-.piece-feuille{padding:28px 30px 30px}
-.piece-feuille h2.pt{font:900 clamp(32px,4.2vw,52px)/1 var(--titre);text-transform:uppercase;margin:4px 0 10px;font-family:var(--titre)}
-.entete{font-size:15px;border-top:1px dashed #a89366;border-bottom:1px dashed #a89366;padding:8px 0;margin-bottom:14px}
+.couv{position:absolute;inset:0;z-index:5;transform-origin:left center;background:var(--beige);border:1.5px solid var(--ink);
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;backface-visibility:hidden}
+.couv b{font:400 clamp(34px,4vw,52px)/1 var(--fd)}
+.couv span:last-child{font-size:18px;color:var(--ink2)}
+.piece-feuille{padding:0;border:0}
+.piece-feuille h2.pt{font:400 clamp(30px,3.6vw,40px)/1.1 var(--fd);letter-spacing:-.01em;margin:6px 0 10px;text-transform:none;color:var(--ink)}
+.entete{font-size:14.5px;color:var(--ink2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:8px 0;margin-bottom:14px}
+.entete p{margin:0}
 
-.chrono-p{display:flex;align-items:center;flex-wrap:wrap;gap:12px;background:var(--encre);color:var(--papier);padding:10px 14px;margin:6px 0 16px;font-family:var(--mono)}
-.chrono-p .t{font:900 40px/1 var(--titre);min-width:110px;letter-spacing:.04em}
-.chrono-p.orange .t{color:#ffb74d}
-.chrono-p.rouge .t{color:#ff8a80}
-.chrono-p .etiq-c{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--kraft3)}
-.chrono-p .btn{background:transparent;color:var(--papier);border-color:var(--papier)}
+.chrono-p{display:flex;align-items:center;flex-wrap:wrap;gap:10px;background:var(--paper);border:1.5px solid var(--ink);border-radius:var(--r);padding:8px 10px 8px 12px;margin:4px 0 14px}
+.chrono-p .t{font-size:24px;font-weight:700;font-variant-numeric:tabular-nums;min-width:74px}
+.chrono-p .etiq-c{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);font-weight:700}
+.chrono-p.orange{background:var(--warnb);border-color:var(--warn)}
+.chrono-p.orange .t{color:var(--warn)}
+.chrono-p.rouge{background:var(--errb);border-color:var(--err)}
+.chrono-p.rouge .t{color:var(--err)}
 
-.codebox{margin-top:22px;background:#efe2c2;border:2px solid var(--encre);padding:18px 20px;position:relative}
-.codebox h3{font:900 26px var(--titre);text-transform:uppercase;display:flex;align-items:center;gap:12px}
-.codebox .fmt{font-size:15px;margin:6px 0 12px}
+.codebox{margin-top:24px;background:var(--beige3);border:1.5px solid var(--ink);border-radius:var(--r);padding:18px 20px;position:relative}
+.codebox h3{font-size:18px;display:flex;align-items:center;gap:10px}
+.codebox .fmt{font-size:15px;color:var(--ink2);margin:6px 0 12px}
 .code-ligne{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-.code-ligne input{font:700 30px/1 var(--mono);letter-spacing:.24em;text-transform:uppercase;padding:10px 12px;width:min(320px,100%);border:2px solid var(--encre);background:#fffdf6}
-.msg{min-height:1.6em;margin-top:10px;font:700 18px var(--mono)}
-.msg.non{color:var(--rouge)}
-.msg.oui{color:var(--vert)}
-.essais{font-size:14px;color:var(--encre2);margin-top:2px}
-.cadenas{width:34px;height:40px;color:var(--encre);overflow:visible}
+.code-ligne input{padding:12px 14px;border:1.5px solid var(--line2);border-radius:var(--r);font-size:22px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;width:min(300px,100%);background:#fff}
+.code-ligne input:focus{outline:none;border-color:var(--ink)}
+.msg{min-height:1.5em;margin:10px 0 0;font-weight:700;font-size:16px}
+.msg.non{color:var(--err)}
+.msg.oui{color:var(--ok)}
+.essais{font-size:13.5px;color:var(--ink3);margin:2px 0 0}
+.cadenas{width:22px;height:26px;color:var(--ink);overflow:visible}
 .cadenas .anse{transform-box:fill-box;transform-origin:100% 100%}
 .cadenas.ouvert .anse{transform:translateY(-5px) rotate(-28deg)}
-.tampon-zone{position:absolute;right:16px;top:-26px;pointer-events:none}
-.tampon-zone .tampon{font-size:26px;background:rgba(244,236,216,.92)}
+.tampon-zone{position:absolute;right:16px;top:-16px;pointer-events:none}
 .suite{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap}
 
-.debrief{margin-top:22px;border:3px solid var(--vert);background:#eef5e9;padding:16px 20px}
-.debrief h3{font:900 26px var(--titre);text-transform:uppercase;color:var(--vert2);margin-bottom:6px}
+.debrief{margin-top:20px;background:var(--okb);border-left:3px solid var(--ok);padding:16px 20px}
+.debrief h3{font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--ok);margin-bottom:8px}
+.debrief ul{margin:0;padding-left:20px}
 
 /* La une en puzzle */
-.aside-bloc{margin-bottom:26px}
-.aside-bloc > h2{font:900 26px var(--titre);text-transform:uppercase;color:var(--papier);margin-bottom:10px;letter-spacing:.03em}
+.aside-bloc{margin-bottom:20px}
+.aside-bloc .note{font-size:13.5px;color:var(--ink3);margin:10px 0 8px}
 .puzzle{position:relative}
-.puzzle .une{box-shadow:none}
 .caches{position:absolute;inset:0;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(2,1fr);z-index:3}
-.cache{background-color:var(--kraft2);background-image:var(--bruit),linear-gradient(135deg,#c09a62,#a8854f);border:1px dashed #6f5634;
-  display:flex;align-items:center;justify-content:center;font:900 28px var(--titre);color:#5b4527}
+.cache{background:var(--beige);border:1px dashed var(--line2);display:flex;align-items:center;justify-content:center;font:400 28px var(--fd);color:var(--ink3)}
 .cache.vu{opacity:0}
-.vol{position:fixed;z-index:300;overflow:hidden;pointer-events:none;box-shadow:0 12px 30px rgba(0,0,0,.45);outline:2px solid var(--encre)}
+.vol{position:fixed;z-index:300;overflow:hidden;pointer-events:none;box-shadow:0 10px 30px rgba(0,0,0,.2);outline:1.5px solid var(--ink)}
 .vol .une-echelle{position:absolute}
-.une-pleine{position:fixed;inset:0;z-index:400;background:rgba(10,9,8,.86);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;padding:16px}
-.une-pleine .boite{width:min(94vw,1200px,calc((100vh - 110px) * 1.5))}
+.une-pleine{position:fixed;inset:0;z-index:400;background:rgba(21,21,21,.55);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;padding:16px}
+.une-pleine .boite{width:min(94vw,1200px,calc((100vh - 110px) * 1.5));box-shadow:0 10px 40px rgba(0,0,0,.25)}
+.roles{margin:0;padding-left:18px;font-size:14.5px}
 .roles li{margin:4px 0}
-.reset{margin-top:30px;color:#cdbb92;font-size:14px}
-.reset button{color:#e5d9bf}
+.reset{margin-top:28px;color:var(--ink3);font-size:13.5px}
 </style>
 </head>
 <body data-sous-titre="Espace du cabinet · les 8 pièces à conviction">
@@ -112,15 +112,15 @@
       <div class="scene"><div class="dossier" id="dossier"></div></div>
     </section>
     <aside>
-      <div class="aside-bloc">
-        <h2>La une du dossier</h2>
+      <div class="aside-bloc bloc">
+        <p class="lib-sec">La une du dossier</p>
         <div class="puzzle" id="puzzle"></div>
-        <p style="color:#e5d9bf;font-size:14px;margin-top:8px">Chaque code trouvé révèle un morceau de la une. Complète à la fin de la pièce 8.</p>
+        <p class="note">Chaque code trouvé révèle un morceau de la une. Complète à la fin de la pièce 8.</p>
         <button class="btn petit" id="voir-une" hidden type="button">Voir la une en grand</button>
       </div>
-      <div class="aside-bloc">
-        <h2>Les rôles</h2>
-        <div class="postit"><ul class="roles" id="roles" style="margin:0;padding-left:18px"></ul>
+      <div class="aside-bloc bloc beige">
+        <p class="lib-sec">Les rôles</p>
+        <div><ul class="roles" id="roles"></ul>
           <p style="margin:8px 0 0"><strong>Règle :</strong> personne ne garde le même rôle deux pièces de suite. Dans un cabinet de 3, le chef d’enquête est aussi greffier.</p></div>
       </div>
     </aside>
@@ -129,7 +129,7 @@
 </main>
 <footer id="cc-pied"></footer>
 
-<template id="tpl-cadenas"><svg class="cadenas" viewBox="0 0 40 48" aria-hidden="true"><g class="anse"><path d="M11 22v-8a9 9 0 0 1 18 0v8" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></g><rect x="4" y="21" width="32" height="25" rx="4" fill="currentColor"/><circle cx="20" cy="31" r="3.6" fill="#f4ecd8"/><rect x="18.4" y="32" width="3.2" height="7.5" rx="1" fill="#f4ecd8"/></svg></template>
+<template id="tpl-cadenas"><svg class="cadenas" viewBox="0 0 40 48" aria-hidden="true"><g class="anse"><path d="M11 22v-8a9 9 0 0 1 18 0v8" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></g><rect x="4" y="21" width="32" height="25" rx="4" fill="currentColor"/><circle cx="20" cy="31" r="3.6" fill="#fff"/><rect x="18.4" y="32" width="3.2" height="7.5" rx="1" fill="#fff"/></svg></template>
 
 <script>
 (function () {
@@ -179,7 +179,7 @@
       var libEtat = st === "resolue" ? "versée ✓" : st === "ouverte" ? "ouverte" : "verrouillée";
       b.innerHTML = '<span class="n">' + (n === 9 ? "⚖" : n) + "</span>" +
         "<span>" + CC.esc(n === 9 ? "Finale" : p.titre) + "</span>" +
-        '<span class="etat">' + (st === "verrou" ? cadenasHTML.replace('class="cadenas"', 'class="cadenas" style="width:16px;height:20px;color:#cdbb92"') : "") + libEtat + "</span>";
+        '<span class="etat">' + (st === "verrou" ? cadenasHTML.replace('class="cadenas"', 'class="cadenas" style="width:12px;height:15px;color:currentColor"') : "") + libEtat + "</span>";
       b.setAttribute("aria-label", (n === 9 ? "Finale, le procès" : "Pièce " + n + ", " + p.titre) + ", " + libEtat);
       b.addEventListener("click", function () { afficher(n); });
       li.appendChild(b);
@@ -300,8 +300,8 @@
       var c = r[0], deb = r[1];
       dos.innerHTML = "";
       var ch = CC.el("div", { class: "chemise" });
-      ch.innerHTML = '<span class="etiq">Pièce ' + n + " · " + CC.esc(p.seance) + "</span>";
-      var f = CC.el("div", { class: "feuille doc piece-feuille trombone" });
+
+      var f = CC.el("div", { class: "feuille doc piece-feuille" });
       ch.appendChild(f);
       dos.appendChild(ch);
       if (!c) { f.innerHTML = "<p>Cette pièce est encore scellée.</p>"; return; }
@@ -319,7 +319,7 @@
       if (!etat.ouvertes[n] || animer) {
         etat.ouvertes[n] = true; sauver();
         var couv = CC.el("div", { class: "couv", "aria-hidden": "true" });
-        couv.innerHTML = '<span class="tampon vert">Pièce déverrouillée</span><b>Pièce ' + n + "</b><span style=\"font:700 18px var(--mono)\">" + CC.esc(p.titre) + "</span>";
+        couv.innerHTML = '<span class="tampon vert">Pièce déverrouillée</span><b>Pièce ' + n + "</b><span>" + CC.esc(p.titre) + "</span>";
         ch.appendChild(couv);
         CC.cliquetis();
         var a = CC.reduit()
@@ -435,7 +435,7 @@
     var F = D.finale;
     dos.innerHTML = "";
     var ch = CC.el("div", { class: "chemise" });
-    ch.innerHTML = '<span class="etiq">Finale</span>';
+
     var f = CC.el("div", { class: "feuille doc piece-feuille" });
     f.innerHTML = '<p class="kick">Finale · 16h00</p><h2 class="pt">' + CC.esc(F.titre) + "</h2>" + '<div class="entete">' + F.entete + "</div>" +
       F.sections.map(function (s) { return "<section><h2>" + CC.esc(s.titre) + "</h2>" + s.html + "</section>"; }).join("");

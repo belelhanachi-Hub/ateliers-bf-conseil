@@ -10,56 +10,57 @@
 <script src="js/donnees.js"></script>
 <script src="js/commun.js"></script>
 <style>
-.tete{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:10px;margin-bottom:22px}
-.tete h1{font:900 clamp(36px,5vw,64px)/1 var(--titre);text-transform:uppercase;color:var(--papier)}
-.horloge{font:900 clamp(30px,3.6vw,48px)/1 var(--titre);color:var(--kraft)}
+.tete{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:10px;padding-bottom:20px;border-bottom:2px solid var(--ink);margin-bottom:24px}
+.tete h1{font:400 clamp(34px,4.4vw,52px)/1.05 var(--fd);letter-spacing:-.01em;margin-top:8px}
+.horloge{font:400 clamp(30px,3.6vw,46px)/1 var(--fd);font-variant-numeric:tabular-nums}
 .compte{position:relative;overflow:hidden}
-.compte .nom{font:900 clamp(30px,3.8vw,52px)/1 var(--titre);text-transform:uppercase;margin-bottom:8px}
-.solde{display:flex;align-items:center;justify-content:flex-end;font:900 clamp(56px,8vw,118px)/1 var(--titre);letter-spacing:.02em;
-  background:var(--encre);color:var(--papier);padding:14px 18px;border-radius:4px;position:relative;font-variant-numeric:tabular-nums;overflow:hidden}
+.compte .nom{font:400 clamp(28px,3.2vw,42px)/1.05 var(--fd);margin-bottom:12px}
+.solde{display:flex;align-items:center;justify-content:flex-end;font:400 clamp(56px,7.6vw,112px)/1 var(--fd);
+  background:var(--ink);color:#fff;padding:16px 20px;border-radius:var(--r);position:relative;font-variant-numeric:tabular-nums;overflow:hidden}
 .solde .sg{display:inline-block;width:.55em;text-align:center}
-.reel{display:inline-block;height:1em;overflow:hidden;width:.62em;text-align:center;vertical-align:top}
+.reel{display:inline-block;height:1em;overflow:hidden;width:.6em;text-align:center;vertical-align:top}
 .reel .col{display:block;transition:transform .9s cubic-bezier(.25,.8,.3,1)}
 .reel .col span{display:block;height:1em;line-height:1}
 .reel.zero{display:none}
 .sp{display:inline-block;width:.25em}
 .eur{margin-left:.15em}
-.solde.neg{color:#ff8a80}
+.solde.neg{color:#ff9b93}
 @media (prefers-reduced-motion:reduce){.reel .col{transition:none}}
 .flash{position:absolute;inset:0;pointer-events:none;opacity:0}
-.flash.v{background:var(--vert)}.flash.r{background:var(--rouge)}
-.flotte{position:absolute;right:24px;top:30px;font:900 clamp(30px,4vw,54px)/1 var(--titre);pointer-events:none;padding:4px 10px;border-radius:4px}
-.flotte.v{color:#fff;background:var(--vert)}.flotte.r{color:#fff;background:var(--rouge)}
-.statut{margin:10px 0 4px;font:700 16px var(--mono);min-height:1.4em}
-.cessation{background:var(--rouge);color:#fff;font:900 clamp(24px,3vw,40px)/1.1 var(--titre);text-transform:uppercase;text-align:center;padding:10px;letter-spacing:.06em;
-  animation:cc-pulse 1s ease-in-out infinite;margin:10px 0}
-.cessation small{display:block;font:700 14px/1.3 var(--mono);text-transform:none;letter-spacing:0}
-.groupes h3{font:900 18px var(--titre);text-transform:uppercase;letter-spacing:.06em;margin:14px 0 6px}
+.flash.v{background:var(--ok)}.flash.r{background:var(--err)}
+.flotte{position:absolute;right:24px;top:70px;font:700 clamp(26px,3.4vw,44px)/1 var(--f);pointer-events:none;padding:4px 12px;border-radius:var(--r);color:#fff}
+.flotte.v{background:var(--ok)}.flotte.r{background:var(--err)}
+.statut{margin:10px 0 4px;font-size:14px;color:var(--ink2);min-height:1.4em}
+.cessation{background:var(--err);color:#fff;font:400 clamp(24px,2.8vw,36px)/1.1 var(--fd);text-align:center;padding:12px;border-radius:var(--r);
+  animation:cc-pulse 1s ease-in-out infinite;margin:12px 0}
+.cessation small{display:block;font:14px/1.35 var(--f);margin-top:4px}
+.groupes h3{font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);margin:16px 0 8px}
 .ops{display:flex;flex-wrap:wrap;gap:6px}
-.op{border:2px solid var(--encre);background:#fffdf6;padding:6px 9px;font:700 13.5px/1.25 var(--ui);text-align:left;border-radius:3px;max-width:100%}
-.op b{font-family:var(--mono);white-space:nowrap}
-.op.g{border-color:var(--vert2)}.op.g b{color:var(--vert2)}
-.op.p{border-color:var(--rouge2)}.op.p b{color:var(--rouge2)}
-.op.a{border-color:#5a4a2a;background:#f1e3c0}
-.op:hover{background:#fff}
-.op:disabled{opacity:.4;cursor:not-allowed}
+.op{border:1.5px solid var(--line2);background:var(--paper);padding:6px 10px;font-size:13.5px;line-height:1.25;text-align:left;border-radius:var(--r);max-width:100%}
+.op b{white-space:nowrap;font-variant-numeric:tabular-nums}
+.op:hover{border-color:var(--ink)}
+.op.g b{color:var(--ok)}
+.op.p b{color:var(--err)}
+.op.a{background:var(--beige3);border-color:var(--beige2)}
+.op:disabled{opacity:.35;cursor:not-allowed}
 .libre{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;align-items:center}
-.libre input{padding:7px 8px;border:2px solid var(--encre);background:#fffdf6;font:700 15px var(--mono)}
-.libre input[type=number]{width:120px}
+.libre input{padding:8px 10px;border:1.5px solid var(--line2);border-radius:var(--r);background:#fff;font-size:15px}
+.libre input:focus{outline:none;border-color:var(--ink)}
+.libre input[type=number]{width:130px}
 .libre input[type=text]{flex:1;min-width:160px}
-.histo{margin-top:30px}
+.histo{margin-top:26px}
 .histo-tete{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:10px}
-.histo h2{font:900 30px var(--titre);text-transform:uppercase}
-.histo table td.m{font-family:var(--mono);font-weight:700;white-space:nowrap;text-align:right}
-.histo .vide{font-family:var(--mono)}
-.details-ops > summary{cursor:pointer;font:700 15px var(--mono);margin-top:10px}
+.histo h2{font-size:19px}
+.histo table td.m{font-weight:700;white-space:nowrap;text-align:right;font-variant-numeric:tabular-nums}
+.histo .vide{color:var(--ink3)}
+.details-ops > summary{cursor:pointer;font-size:14px;font-weight:700;margin-top:12px}
 </style>
 </head>
 <body data-sous-titre="Le tableau des trésoreries · à projeter">
 <header id="cc-top"></header>
 <main class="wrap large">
   <div class="tete">
-    <div><p class="kick" style="color:#cdbb92">Départ : <span id="depart"></span> par cabinet · cessation de paiements sous 0 €</p>
+    <div><p class="kick">Départ : <span id="depart"></span> par cabinet · cessation de paiements sous 0 €</p>
       <h1>Trésorerie des cabinets</h1></div>
     <div class="horloge" id="horloge" aria-hidden="true"></div>
   </div>

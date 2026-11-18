@@ -10,36 +10,37 @@
 <script src="js/donnees.js"></script>
 <script src="js/commun.js"></script>
 <style>
-h1.h{font:900 clamp(38px,5vw,68px)/1 var(--titre);text-transform:uppercase;color:var(--papier);margin-bottom:6px}
-.aide{color:#e5d9bf;margin-bottom:20px}
-.bloc > h2{font:900 32px var(--titre);text-transform:uppercase;color:var(--papier);margin:34px 0 14px}
+.etape{margin-bottom:28px}
+.etape > h2{font-size:19px;margin-bottom:12px}
 /* Podium */
-.podium{display:flex;justify-content:center;align-items:flex-end;gap:30px;min-height:380px;padding:20px 10px 0;background:rgba(0,0,0,.18)}
-.marche{width:min(300px,42vw);display:flex;flex-direction:column;align-items:center;gap:8px}
-.marche .nom{font:900 clamp(24px,3vw,40px)/1 var(--titre);text-transform:uppercase;color:var(--papier);text-align:center}
-.marche .montant{font:900 clamp(26px,3vw,44px)/1 var(--titre);color:var(--kraft)}
-.marche .col{width:100%;height:260px;transform-origin:bottom;transform:scaleY(0);background-color:var(--kraft);background-image:var(--bruit),linear-gradient(#d3b27f,#a8854f);
-  display:flex;align-items:flex-start;justify-content:center;padding-top:14px;font:900 64px var(--titre);color:var(--encre);border:3px solid #6f5634;border-bottom:0}
-.marche.un .col{height:300px}
-.marche.deux .col{height:190px}
-.gagne{text-align:center;font:900 clamp(24px,3vw,40px)/1.15 var(--titre);color:var(--papier);margin-top:16px;min-height:1.2em}
-.gagne small{display:block;font:700 17px/1.4 var(--mono);color:#e5d9bf;margin-top:6px}
+.podium{display:flex;justify-content:center;align-items:flex-end;gap:30px;min-height:360px;padding:20px 10px 0;background:var(--paper);border:1px solid var(--line);border-bottom:2px solid var(--ink)}
+.marche{width:min(280px,42vw);display:flex;flex-direction:column;align-items:center;gap:6px}
+.marche .nom{font:400 clamp(24px,2.8vw,36px)/1.05 var(--fd);text-align:center}
+.marche .montant{font-size:clamp(20px,2.2vw,28px);font-weight:700;font-variant-numeric:tabular-nums;color:var(--ink2)}
+.marche .col{width:100%;height:240px;transform-origin:bottom;transform:scaleY(0);background:var(--beige);border:1.5px solid var(--ink);border-bottom:0;
+  display:flex;align-items:flex-start;justify-content:center;padding-top:12px;font:400 60px var(--fd)}
+.marche.un .col{height:280px;background:var(--ink);color:#fff}
+.marche.deux .col{height:180px}
+.gagne{text-align:center;font:400 clamp(24px,2.8vw,38px)/1.15 var(--fd);margin-top:16px;min-height:1.2em}
+.gagne small{display:block;font:15px/1.45 var(--f);color:var(--ink2);margin-top:6px}
 /* Badges : cartes qui se retournent */
-.badges{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.badges{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
 @media (max-width:900px){.badges{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:560px){.badges{grid-template-columns:1fr}}
 .b-carte{perspective:1200px}
-.b-in{position:relative;height:300px;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.3,.7,.3,1)}
+.b-in{position:relative;height:290px;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.3,.7,.3,1)}
 .b-carte.tourne .b-in{transform:rotateY(180deg)}
-.b-face{position:absolute;inset:0;backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:18px;gap:8px;border-radius:6px}
-.b-dos{background-color:var(--kraft);background-image:var(--bruit),linear-gradient(150deg,#d3b27f,#a8854f);border:3px solid #6f5634;font:900 30px var(--titre);text-transform:uppercase;color:#3b2a12}
-.b-recto{transform:rotateY(180deg);background:var(--papier);border:3px solid var(--encre)}
-.rond{width:110px;height:110px;border-radius:50%;border:5px double var(--rouge);display:flex;align-items:center;justify-content:center;font:900 17px/1 var(--titre);text-transform:uppercase;color:var(--rouge);padding:10px;transform:rotate(-8deg)}
-.b-recto b{font:900 26px/1 var(--titre);text-transform:uppercase}
-.b-recto .pour{font:14px/1.35 var(--mono)}
-.b-recto .qui{font:700 20px var(--mono);border-top:2px dashed var(--encre);padding-top:6px;min-width:70%}
+.b-face{position:absolute;inset:0;backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:18px;gap:8px;border-radius:var(--r)}
+.b-dos{background:var(--beige);border:1.5px solid var(--beige2);font:400 28px/1.15 var(--fd);color:var(--ink2)}
+.b-dos span{font-size:56px}
+.b-recto{transform:rotateY(180deg);background:var(--paper);border:1.5px solid var(--ink)}
+.rond{width:104px;height:104px;border-radius:50%;border:2px solid var(--ink);outline:5px solid var(--beige);display:flex;align-items:center;justify-content:center;font:700 13px/1.15 var(--f);letter-spacing:.06em;text-transform:uppercase;padding:10px}
+.b-recto b{font:400 26px/1.05 var(--fd)}
+.b-recto .pour{font-size:14px;line-height:1.35;color:var(--ink2)}
+.b-recto .qui{font-size:18px;font-weight:700;border-top:1px solid var(--line2);padding-top:6px;min-width:70%}
 .b-ctrl{display:flex;gap:6px;margin-top:10px}
-.b-ctrl input{flex:1;min-width:0;padding:8px;border:2px solid var(--kraft);background:#fffdf6;font:700 15px var(--mono)}
+.b-ctrl input{flex:1;min-width:0;padding:8px 10px;border:1.5px solid var(--line2);border-radius:var(--r);background:#fff;font-size:15px}
+.b-ctrl input:focus{outline:none;border-color:var(--ink)}
 #confetti{position:fixed;inset:0;pointer-events:none;z-index:300}
 @media (prefers-reduced-motion:reduce){.b-in{transition:none}}
 /* Impression des badges attribués */
@@ -47,27 +48,26 @@ h1.h{font:900 clamp(38px,5vw,68px)/1 var(--titre);text-transform:uppercase;color
 @media print{
   .ecran-seul{display:none!important}
   .imp{display:grid;grid-template-columns:1fr 1fr;gap:8mm;padding:10mm}
-  .imp .b{border:2pt solid #000;border-radius:3mm;padding:8mm;text-align:center;break-inside:avoid;font-family:var(--mono)}
-  .imp .b b{display:block;font:900 24pt var(--titre);text-transform:uppercase;margin:3mm 0}
-  .imp .b .r{width:28mm;height:28mm;margin:0 auto;border-radius:50%;border:2.5pt double #b3261e;display:flex;align-items:center;justify-content:center;font:900 12pt var(--titre);color:#b3261e;text-transform:uppercase}
-  .imp .b .q{font:700 15pt var(--mono);border-top:1px dotted #000;margin-top:4mm;padding-top:2mm;min-height:10mm}
+  .imp .b{border:1.5pt solid #000;border-radius:2mm;padding:8mm;text-align:center;break-inside:avoid;font-family:var(--f)}
+  .imp .b b{display:block;font:400 24pt var(--fd);margin:3mm 0}
+  .imp .b .r{width:26mm;height:26mm;margin:0 auto;border-radius:50%;border:1.5pt solid #000;display:flex;align-items:center;justify-content:center;font:700 9pt var(--f);text-transform:uppercase;letter-spacing:.06em;padding:2mm}
+  .imp .b .q{font:700 15pt var(--f);border-top:1px solid #999;margin-top:4mm;padding-top:2mm;min-height:10mm}
 }
 </style>
 </head>
 <body data-sous-titre="Badges et palmarès · 16h25">
 <header id="cc-top"></header>
 <main class="wrap ecran-seul">
-  <h1 class="h">Palmarès et badges</h1>
-  <p class="aide">Le cabinet le plus riche à 16h30 remporte la mission. Six badges individuels : tout le monde peut repartir avec quelque chose. Les noms restent sur cet appareil.</p>
+  <div class="p-tete"><div><p class="kick">16h25 · la clôture</p><h1 class="p-titre">Palmarès et badges</h1><p class="p-sous">Le cabinet le plus riche à 16h30 remporte la mission. Six badges individuels : tout le monde peut repartir avec quelque chose. Les noms restent sur cet appareil.</p></div></div>
 
-  <section class="bloc">
+  <section class="etape">
     <h2>Le podium des cabinets</h2>
     <div class="podium" id="podium"></div>
     <p class="gagne" id="gagne" aria-live="polite"></p>
     <p style="text-align:center;margin-top:14px"><button class="btn pri grand" type="button" id="reveler">Révéler le palmarès</button></p>
   </section>
 
-  <section class="bloc">
+  <section class="etape">
     <h2>Les 6 badges</h2>
     <div class="badges" id="badges"></div>
     <p style="margin-top:20px"><button class="btn" type="button" id="imprimer">Imprimer les badges attribués</button></p>
@@ -86,7 +86,7 @@ h1.h{font:900 clamp(38px,5vw,68px)/1 var(--titre);text-transform:uppercase;color
   function confettis(x, y) {
     if (CC.reduit()) return;
     cv.width = innerWidth; cv.height = innerHeight;
-    var cols = ["#c8a46e", "#b3261e", "#2e7d32", "#f4ecd8", "#1b1b1b"];
+    var cols = ["#151515", "#E9E6DF", "#1c7a4a", "#a8262f", "#1f4fd1", "#d9d4c9"];
     var P = [];
     for (var i = 0; i < 90; i++) P.push({ x: x, y: y, vx: (Math.random() - .5) * 9, vy: -Math.random() * 10 - 3, r: Math.random() * 6.28, vr: (Math.random() - .5) * .3, c: cols[i % cols.length], w: 6 + Math.random() * 6 });
     var t0 = performance.now();
@@ -148,7 +148,7 @@ h1.h{font:900 clamp(38px,5vw,68px)/1 var(--titre);text-transform:uppercase;color
   var zone = CC.$("#badges");
   D.badges.forEach(function (b, i) {
     var c = CC.el("div", { class: "b-carte" });
-    c.innerHTML = '<div class="b-in"><div class="b-face b-dos" aria-hidden="true">Badge<br>n° ' + (i + 1) + '<span style="font-size:60px">?</span></div>' +
+    c.innerHTML = '<div class="b-in"><div class="b-face b-dos" aria-hidden="true">Badge<br>n° ' + (i + 1) + '<span>?</span></div>' +
       '<div class="b-face b-recto"><div class="rond">' + CC.esc(b.badge) + "</div><b>" + CC.esc(b.badge) + '</b><span class="pour">' + CC.esc(b.pour) + '</span><span class="qui" data-qui></span></div></div>' +
       '<div class="b-ctrl"><label class="sr" for="bn' + i + '">Décerné à</label><input id="bn' + i + '" placeholder="Décerné à…" maxlength="60" autocomplete="off" value="' + CC.esc(noms[i] || "") + '">' +
       '<button type="button" class="btn petit" data-r>Remettre</button></div>';

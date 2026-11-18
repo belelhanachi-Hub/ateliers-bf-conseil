@@ -10,44 +10,46 @@
 <script src="js/donnees.js"></script>
 <script src="js/commun.js"></script>
 <style>
-.liste{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+.liste{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
 @media (max-width:900px){.liste{grid-template-columns:1fr}}
-.liste h1{grid-column:1/-1;font:900 clamp(36px,5vw,64px)/1 var(--titre);text-transform:uppercase;color:var(--papier)}
-.news-carte{display:flex;flex-direction:column;align-items:flex-start;gap:10px;text-align:left;border:0;cursor:pointer;font-family:var(--mono)}
-.news-carte .h{font:900 46px/1 var(--titre);color:var(--rouge)}
-.news-carte .t{font:900 28px/1.05 var(--titre);text-transform:uppercase}
-.news-carte:hover{transform:translateY(-3px)}
-/* Écran plein */
-.bn{position:fixed;inset:0;z-index:100;background:#0f0f12;color:#fff;overflow:hidden;display:flex;flex-direction:column}
-.bn-haut{display:flex;justify-content:space-between;align-items:center;padding:14px 22px;background:#1c1c22;font:700 clamp(16px,1.8vw,24px) var(--mono)}
-.bn-haut .direct{background:var(--rouge);padding:4px 10px;letter-spacing:.12em}
-.bn-heure{font:900 clamp(24px,3vw,40px)/1 var(--titre);letter-spacing:.04em}
-.bandeau{background:var(--rouge);color:#fff;font:900 clamp(48px,9vw,140px)/1 var(--titre);letter-spacing:.04em;padding:14px 26px;white-space:nowrap;
-  box-shadow:0 8px 0 #7d140f}
-.bn-corps{flex:1;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:28px;padding:28px 34px;align-items:start;overflow:auto}
-.bn-titre{font:900 clamp(38px,5.5vw,86px)/1 var(--titre);text-transform:uppercase;margin-bottom:18px}
-.bn-texte{font:clamp(20px,2.1vw,32px)/1.45 var(--ui);max-width:1200px}
-.bn-source{margin-top:18px;font:700 clamp(15px,1.5vw,22px)/1.4 var(--mono);color:#e5d9bf}
-.bn-source a{color:#ffd08a}
+.liste .p-tete{grid-column:1/-1;margin-bottom:6px}
+.news-carte{display:flex;flex-direction:column;align-items:flex-start;gap:8px;text-align:left;cursor:pointer;border-top:3px solid var(--err)}
+.news-carte:hover{border-color:var(--ink);border-top-color:var(--err)}
+.news-carte .h{font:400 40px/1 var(--fd);font-variant-numeric:tabular-nums}
+.news-carte .t{font-size:19px;font-weight:700;line-height:1.25}
+.news-carte .s{font-size:13.5px;color:var(--ink2)}
+.aide{font-size:14.5px;color:var(--ink2);margin-top:18px}
+/* Écran plein : bandeau d'information */
+.bn{position:fixed;inset:0;z-index:100;background:var(--ink);color:#fff;overflow:hidden;display:flex;flex-direction:column}
+.bn-haut{display:flex;justify-content:space-between;align-items:center;padding:14px 26px;border-bottom:1px solid #333;font-size:clamp(14px,1.5vw,20px);font-weight:700;letter-spacing:.06em}
+.bn-haut .direct{background:var(--err);padding:4px 10px;border-radius:var(--r);letter-spacing:.14em;text-transform:uppercase;font-size:.85em}
+.bn-heure{font:400 clamp(24px,2.8vw,38px)/1 var(--fd);font-variant-numeric:tabular-nums}
+.bandeau{background:var(--err);color:#fff;font:400 clamp(48px,8.6vw,132px)/1 var(--fd);letter-spacing:-.01em;padding:16px 28px;white-space:nowrap}
+.bn-corps{flex:1;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:28px;padding:30px 36px;align-items:start;overflow:auto}
+.bn-titre{font:400 clamp(38px,5vw,78px)/1.04 var(--fd);letter-spacing:-.01em;margin-bottom:18px}
+.bn-texte{font-size:clamp(20px,2vw,30px);line-height:1.45;max-width:1200px;color:#e9e9e6}
+.bn-source{margin-top:18px;font-size:clamp(14px,1.4vw,20px);color:var(--beige2)}
+.bn-source a{color:#fff}
 .bn-logo .logo-marque{--h:80px}
-.bn-question{position:absolute;inset:0;background:#0f0f12;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:4vw 6vw;gap:24px}
-.bn-question .q-et{font:900 clamp(22px,2.4vw,34px) var(--titre);color:var(--kraft);letter-spacing:.1em;text-transform:uppercase}
-.bn-question .q{font:900 clamp(40px,5.6vw,92px)/1.05 var(--titre);max-width:1500px}
-.bn-question .q-min{font:900 clamp(40px,5vw,80px)/1 var(--titre);color:#ffd08a;font-variant-numeric:tabular-nums}
-.ticker{background:#fff;color:#111;font:700 clamp(18px,2vw,28px)/1 var(--mono);white-space:nowrap;overflow:hidden;display:flex;align-items:stretch}
-.ticker .lbl{background:var(--rouge);color:#fff;padding:12px 16px;flex:none;position:relative;z-index:2}
+.bn-question{position:absolute;inset:0;background:var(--ink);display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:4vw 6vw;gap:24px}
+.bn-question .q-et{font-size:clamp(14px,1.5vw,20px);font-weight:700;color:var(--beige2);letter-spacing:.14em;text-transform:uppercase}
+.bn-question .q{font:400 clamp(38px,5.2vw,86px)/1.08 var(--fd);max-width:1500px;letter-spacing:-.01em}
+.bn-question .q-min{font:400 clamp(40px,5vw,78px)/1 var(--fd);color:var(--beige);font-variant-numeric:tabular-nums}
+.ticker{background:#fff;color:var(--ink);font-size:clamp(17px,1.8vw,26px);font-weight:700;white-space:nowrap;overflow:hidden;display:flex;align-items:stretch}
+.ticker .lbl{background:var(--err);color:#fff;padding:12px 16px;flex:none;position:relative;z-index:2;letter-spacing:.1em}
 .ticker .piste{flex:1;overflow:hidden;position:relative}
 .ticker .defile{display:inline-block;padding:12px 0;will-change:transform}
 .bn-ctrl{position:absolute;right:18px;bottom:72px;display:flex;gap:8px;z-index:5}
-.bn-ctrl .btn{background:rgba(255,255,255,.9)}
+.bn .btn{background:transparent;color:#fff;border-color:#fff}
+.bn .btn:hover{background:#fff;color:var(--ink)}
 @media (max-width:760px){.bn-corps{grid-template-columns:1fr}}
 </style>
 </head>
 <body data-avec-logos data-sous-titre="Les Breaking news · à projeter">
 <header id="cc-top"></header>
 <main class="wrap">
-  <div class="liste" id="liste"><h1>Breaking news</h1></div>
-  <p style="color:#e5d9bf;margin-top:20px">Cliquez sur une news pour l’afficher en plein écran. Les cabinets ont 5 minutes pour répondre. Bonne réponse argumentée : +2 000 €. Échap pour revenir.</p>
+  <div class="liste" id="liste"><div class="p-tete"><div><p class="kick">Rebondissements · à projeter</p><h1 class="p-titre">Breaking news</h1><p class="p-sous">Trois faits réels, datés et sourcés, qui tombent pendant la journée.</p></div></div></div>
+  <p class="aide">Cliquez sur une news pour l’afficher en plein écran. Les cabinets ont 5 minutes pour répondre. Bonne réponse argumentée : +2 000 €. Échap pour revenir.</p>
 </main>
 <footer id="cc-pied"></footer>
 <script>
@@ -59,9 +61,9 @@
 
   var liste = CC.$("#liste");
   D.breaking_news.forEach(function (n) {
-    var b = CC.el("button", { type: "button", class: "feuille news-carte scotch" });
+    var b = CC.el("button", { type: "button", class: "feuille news-carte" });
     b.innerHTML = '<span class="kick">News n° ' + n.n + "</span><span class=\"h\">" + n.heure.replace(":", "h") + '</span><span class="t">' + CC.esc(n.titre) + "</span>" +
-      "<span>Source : " + CC.esc(n.source) + "</span>";
+      "<span class=\"s\">Source : " + CC.esc(n.source) + "</span>";
     b.addEventListener("click", function () { ouvrir(n); });
     liste.appendChild(b);
   });
@@ -117,7 +119,7 @@
     if (!ecran || ecran.querySelector(".bn-question")) return;
     var q = CC.el("div", { class: "bn-question" });
     q.innerHTML = '<p class="q-et">La question · News n° ' + n.n + " · " + CC.esc(n.titre) + '</p><p class="q">' + CC.esc(n.question) + '</p><p class="q-min" role="timer">5:00</p>' +
-      '<div style="display:flex;gap:10px"><button type="button" class="btn" data-go>Lancer les 5 minutes</button><button type="button" class="btn" data-ret>Revoir la news</button><button type="button" class="btn" data-x>Fermer (Échap)</button></div>';
+      '<div style="display:flex;gap:10px;flex-wrap:wrap"><button type="button" class="btn" data-go>Lancer les 5 minutes</button><button type="button" class="btn" data-ret>Revoir la news</button><button type="button" class="btn" data-x>Fermer (Échap)</button></div>';
     ecran.appendChild(q);
     CC.anim(q, [{ opacity: 0, transform: "scale(1.03)" }, { opacity: 1, transform: "none" }], { duration: 500 });
     var fin = null, reste = 300, it = null, bip2 = false;

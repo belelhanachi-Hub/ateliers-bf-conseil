@@ -11,90 +11,92 @@
 <script src="js/commun.js"></script>
 <script src="js/une.js"></script>
 <style>
-.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:center;margin:18px 0 34px}
-.hero h1{font:900 clamp(46px,7.4vw,104px)/.92 var(--titre);text-transform:uppercase;letter-spacing:.02em;color:var(--papier)}
-.hero h1 span{color:var(--kraft)}
-.hero .sous{color:#e5d9bf;font-size:18px;margin:14px 0 18px;max-width:560px}
-.hero .tampon{font-size:clamp(20px,2.4vw,30px);background:rgba(244,236,216,.08);border-color:#d8473e;color:#ff8a80}
-.une-zone{transform:rotate(1.2deg)}
-.protag{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:center;padding:6px 0}
-.protag figure{margin:0;text-align:center}
-.protag figcaption{font:13px/1.3 var(--mono);color:var(--encre2);margin-top:6px;max-width:190px}
-.lettre{font-size:17.5px;line-height:1.7;max-width:760px;margin:0 auto}
-.lettre .sign{text-align:right;margin-top:14px}
-.noms{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:10px}
-.noms label{display:block;font:700 13px var(--mono);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
-.noms input{width:100%;padding:12px 14px;border:2px solid var(--encre);background:#fffdf6;font:700 20px var(--mono)}
-.ouvrir{display:flex;flex-wrap:wrap;gap:14px;margin-top:18px}
-.rules details{background:rgba(255,255,255,.4);border:1px solid #b9a77c;margin:8px 0;padding:8px 14px}
-.rules summary{font:900 20px var(--titre);text-transform:uppercase;letter-spacing:.03em;cursor:pointer}
+.d-chiffres{display:flex;gap:30px;margin-top:16px;flex-wrap:wrap}
+.d-chiffres div{font-size:13.5px;color:var(--ink2);line-height:1.25}
+.d-chiffres b{display:block;font-size:24px;color:var(--ink);font-weight:700}
+.d-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:28px;align-items:start}
+@media (max-width:900px){.d-grid{grid-template-columns:1fr}}
+.section{margin:30px 0}
+.protag{display:flex;flex-wrap:wrap;gap:22px;align-items:flex-start;justify-content:space-around}
+.protag figure{margin:0;text-align:center;max-width:220px}
+.protag figcaption{font-size:13.5px;color:var(--ink2);margin-top:8px}
+.lettre{font-size:16.5px;line-height:1.65}
+.lettre .sign{text-align:right;margin-top:12px;color:var(--ink2)}
+.noms{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:6px}
+.champ span{display:block;font-size:13.5px;font-weight:700;margin-bottom:5px}
+.champ input{width:100%;padding:11px 12px;border:1.5px solid var(--line2);border-radius:var(--r);background:#fff;font-size:16px}
+.champ input:focus{outline:none;border-color:var(--ink)}
+.ouvrir{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px}
+.consignes{margin:0;padding:0;list-style:none;counter-reset:c}
+.consignes li{position:relative;padding:0 0 12px 38px;font-size:15px;color:var(--ink2)}
+.consignes li b{color:var(--ink)}
+.consignes li::before{counter-increment:c;content:counter(c);position:absolute;left:0;top:0;width:25px;height:25px;border:1.5px solid var(--ink);border-radius:50%;display:grid;place-items:center;font-size:12.5px;font-weight:700;color:var(--ink)}
+.rules details{border-bottom:1px solid var(--line);padding:10px 0}
+.rules details:last-child{border-bottom:0}
+.rules summary{font-weight:700;font-size:16px;cursor:pointer}
 .form-liens{display:flex;flex-wrap:wrap;gap:10px}
-.section{margin:46px 0}
-.section > h2{font:900 clamp(26px,3vw,38px)/1 var(--titre);text-transform:uppercase;color:var(--papier);margin-bottom:22px;letter-spacing:.03em}
-@media (max-width:860px){.hero{grid-template-columns:1fr}.noms{grid-template-columns:1fr}}
+@media (max-width:640px){.noms{grid-template-columns:1fr}}
 </style>
 </head>
-<body data-avec-logos data-sous-titre="L'enquête · Mastère MA28 · Bloc 1, C1.1">
+<body data-avec-logos data-sous-titre="L’enquête · Mastère MA28 · Bloc 1, C1.1">
 <header id="cc-top"></header>
 <main class="wrap">
-
-  <section class="hero">
+  <div class="p-tete">
+    <img src="img/bf-conseil.png" alt="BF Conseil" width="140" height="103">
     <div>
-      <p class="kick" style="color:#cdbb92" id="meta-sous"></p>
-      <h1>Cold case<br><span>GiFi</span></h1>
-      <p class="sous">L’enquête d’une journée : huit pièces à conviction, deux cabinets, une question pour le tribunal.</p>
-      <span class="tampon">Affaire non élucidée</span>
+      <p class="kick" id="meta-sous"></p>
+      <h1 class="p-titre">Cold case GiFi : l’enquête</h1>
+      <p class="p-sous">Une journée pour comprendre ce que l’étude de marché et la veille n’ont pas vu : huit pièces à conviction, deux cabinets, une question pour le tribunal.</p>
+      <div class="d-chiffres"><div><b>8</b>pièces à conviction</div><div><b>2</b>cabinets d’enquête</div><div><b>30 000 €</b>de trésorerie au départ</div><div><b>16h00</b>le procès</div></div>
     </div>
-    <div class="une-zone" id="une"></div>
+  </div>
+
+  <div class="d-grid">
+    <section class="bloc"><p class="lib-sec">La une du dossier</p><div id="une"></div></section>
+    <section class="bloc"><p class="lib-sec">La lettre de mission</p><div class="lettre" id="lettre"></div></section>
+  </div>
+
+  <section class="section bloc">
+    <p class="lib-sec">Les protagonistes</p>
+    <div class="protag" id="protag"></div>
   </section>
 
-  <section class="section">
-    <h2>Les protagonistes</h2>
-    <div class="feuille scotch"><div class="protag" id="protag"></div></div>
-  </section>
-
-  <section class="section">
-    <h2>La lettre de mission</h2>
-    <div class="feuille ligne trombone lettre" id="lettre"></div>
-  </section>
-
-  <section class="section">
-    <h2>Les deux cabinets</h2>
-    <div class="chemise"><span class="etiq">Constitution</span>
-      <p id="compo"></p>
-      <div class="noms">
-        <div><label for="nom1">Nom du cabinet 1</label><input id="nom1" maxlength="40" autocomplete="off" placeholder="Cabinet 1"></div>
-        <div><label for="nom2">Nom du cabinet 2</label><input id="nom2" maxlength="40" autocomplete="off" placeholder="Cabinet 2"></div>
-      </div>
-      <p style="font-size:14px;margin-top:8px">Les noms restent sur cet appareil. Rien n’est envoyé.</p>
-      <div class="ouvrir">
-        <a class="btn pri grand" id="go1" href="equipe.html?e=1">Ouvrir le dossier · Cabinet 1</a>
-        <a class="btn pri grand" id="go2" href="equipe.html?e=2">Ouvrir le dossier · Cabinet 2</a>
-      </div>
+  <section class="section chemise">
+    <span class="etiq">Les deux cabinets</span>
+    <p id="compo" style="color:var(--ink2)"></p>
+    <div class="noms">
+      <label class="champ"><span>Nom du cabinet 1</span><input id="nom1" maxlength="40" autocomplete="off" placeholder="Cabinet 1"></label>
+      <label class="champ"><span>Nom du cabinet 2</span><input id="nom2" maxlength="40" autocomplete="off" placeholder="Cabinet 2"></label>
+    </div>
+    <p style="font-size:13.5px;color:var(--ink3);margin-top:8px">Les noms restent sur cet appareil. Rien n’est envoyé.</p>
+    <div class="ouvrir">
+      <a class="btn pri grand" id="go1" href="equipe.html?e=1">Ouvrir le dossier · Cabinet 1</a>
+      <a class="btn pri grand" id="go2" href="equipe.html?e=2">Ouvrir le dossier · Cabinet 2</a>
     </div>
   </section>
 
-  <section class="section">
-    <h2>Les règles du jeu</h2>
-    <div class="feuille doc rules" id="regles"></div>
-  </section>
-
-  <section class="section">
-    <h2>Pour le formateur</h2>
-    <div class="feuille">
-      <p>Pages à projeter pendant la journée.</p>
+  <div class="d-grid">
+    <section class="bloc rules"><p class="lib-sec">Les règles du jeu</p><div class="doc" id="regles"></div></section>
+    <section class="bloc beige">
+      <p class="lib-sec">Pour le formateur</p>
+      <ol class="consignes">
+        <li><b>8h30 : le générique</b>, projeté, puis les cabinets ouvrent leur dossier.</li>
+        <li><b>Toute la journée :</b> le chrono et la trésorerie au tableau.</li>
+        <li><b>Rebondissements :</b> Breaking news et quiz flash.</li>
+        <li><b>16h00 : le procès</b>, puis badges et palmarès.</li>
+      </ol>
       <div class="form-liens">
-        <a class="btn" href="generique.html">Générique (8h30)</a>
-        <a class="btn" href="chrono.html">Chrono</a>
-        <a class="btn" href="tresorerie.html">Trésorerie</a>
-        <a class="btn" href="breaking.html">Breaking news</a>
-        <a class="btn" href="quiz.html">Quiz flash</a>
-        <a class="btn" href="proces.html">Le procès</a>
-        <a class="btn" href="badges.html">Badges et palmarès</a>
-        <a class="btn" href="imprimer.html">Tout imprimer</a>
+        <a class="btn petit" href="generique.html">Générique</a>
+        <a class="btn petit" href="chrono.html">Chrono</a>
+        <a class="btn petit" href="tresorerie.html">Trésorerie</a>
+        <a class="btn petit" href="breaking.html">Breaking news</a>
+        <a class="btn petit" href="quiz.html">Quiz flash</a>
+        <a class="btn petit" href="proces.html">Le procès</a>
+        <a class="btn petit" href="badges.html">Badges et palmarès</a>
+        <a class="btn petit" href="imprimer.html">Tout imprimer</a>
       </div>
-    </div>
-  </section>
+    </section>
+  </div>
 </main>
 <footer id="cc-pied"></footer>
 <script>
@@ -143,7 +145,7 @@
   });
 
   CC.$("#regles").innerHTML = D.regles.map(function (r, i) {
-    return "<details" + (i === 0 ? " open" : "") + "><summary>" + CC.esc(r.titre) + "</summary>" + r.html + "</details>";
+    return "<details" + "><summary>" + CC.esc(r.titre) + "</summary>" + r.html + "</details>";
   }).join("");
 })();
 </script>
