@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Cold case GiFi · Quiz flash</title>
+<link rel="stylesheet" href="css/cc.css">
+<script src="js/config.js"></script>
+<script src="js/donnees.js"></script>
+<script src="js/commun.js"></script>
+<style>
+h1.q-h{font:900 clamp(34px,4.6vw,60px)/1 var(--titre);text-transform:uppercase;color:var(--papier);margin-bottom:6px}
+.aide{color:#e5d9bf;margin-bottom:16px}
+.onglets{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+.onglets button{border:2px solid var(--kraft);background:transparent;color:var(--papier);padding:8px 12px;font:700 15px var(--mono)}
+.onglets button[aria-selected="true"]{background:var(--kraft);color:var(--encre)}
+.carte-q{min-height:52vh;display:flex;flex-direction:column;justify-content:space-between;gap:22px;padding:34px 40px}
+.carte-q .num{font:700 16px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--encre3)}
+.carte-q .theme{font:900 22px var(--titre);text-transform:uppercase;color:var(--encre2)}
+.carte-q .question{font:900 clamp(32px,4.4vw,68px)/1.08 var(--titre);font-family:var(--titre)}
+.reponse{border-top:3px dashed var(--encre);padding-top:16px;font:700 clamp(22px,2.6vw,38px)/1.3 var(--mono)}
+.reponse .vf{display:inline-block;font:900 clamp(34px,4vw,60px)/1 var(--titre);padding:4px 14px;margin-right:10px;color:#fff}
+.reponse .vf.v{background:var(--vert)}.reponse .vf.f{background:var(--rouge)}
+.reponse strong{font-weight:900}
+.nav-q{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.raccourcis{color:#a99b80;font-size:13px;margin-top:12px}
+</style>
+</head>
+<body data-sous-titre="Les quiz flash · à projeter">
+<header id="cc-top"></header>
+<main class="wrap">
+  <h1 class="q-h">Quiz flash</h1>
+  <p class="aide">Une question à la fois, vote à main levée. +500 € par bonne réponse au premier cabinet qui répond juste. Aucune réponse n’est collectée.</p>
+  <div class="onglets" role="tablist" id="onglets"></div>
+  <section class="feuille carte-q" id="carte" aria-live="polite"></section>
+  <p class="raccourcis">Flèches : question précédente / suivante · Entrée ou R : révéler la réponse</p>
+</main>
+<footer id="cc-pied"></footer>
+<script>
+(function () {
+  "use strict";
+  var D = CC.data;
+  var SERIES = [{ id: "vf", lib: "Vrai ou faux ? (8h35)", titre: "Le « Vrai ou faux ? » d’ouverture",
+    questions: D.vrai_faux.map(function (v) {
+      return { q: CC.esc(v.affirmation), r: '<span class="vf ' + (v.reponse ? "v" : "f") + '">' + (v.reponse ? "Vrai" : "Faux") + "</span>" + CC.esc(v.explication) };
+    }) }].concat(D.quiz.map(function (s) {
+      return { id: s.seance, lib: "Séance " + s.seance.slice(1), titre: s.titre, questions: s.questions };
+    }));
+  var st = CC.get("quiz", { s: 0, q: 0 });
+  if (!SERIES[st.s]) st = { s: 0, q: 0 };
+  var revele = false;
+
+  var ong = CC.$("#onglets");
+  SERIES.forEach(function (s, i) {
+    var b = CC.el("button", { type: "button", role: "tab", text: s.lib });
+    b.addEventListener("click", function () { st = { s: i, q: 0 }; rendu(); });
+    ong.appendChild(b);
+  });
+
+  function rendu(anim) {
+    CC.set("quiz", st);
+    revele = false;
+    CC.$$("#onglets button").forEach(function (b, i) { b.setAttribute("aria-selected", i === st.s ? "true" : "false"); });
+    var S = SERIES[st.s], Q = S.questions[st.q];
+    var c = CC.$("#carte");
+    c.innerHTML = '<div><p class="num">' + CC.esc(S.lib) + " · question " + (st.q + 1) + " / " + S.questions.length + '</p><p class="theme">' + CC.esc(S.titre) + "</p></div>" +
+      '<p class="question">' + Q.q + "</p>" +
+      '<div class="reponse" hidden id="rep">' + Q.r + "</div>" +
+      '<div class="nav-q"><button type="button" class="btn" id="prec"' + (st.q === 0 ? " disabled" : "") + '>← Précédente</button>' +
+      '<button type="button" class="btn pri grand" id="rev">Révéler la réponse</button>' +
+      '<button type="button" class="btn" id="suiv"' + (st.q === S.questions.length - 1 ? " disabled" : "") + ">Suivante →</button></div>";
+    CC.$("#prec").addEventListener("click", function () { aller(-1); });
+    CC.$("#suiv").addEventListener("click", function () { aller(1); });
+    CC.$("#rev").addEventListener("click", reveler);
+    if (anim) CC.anim(c.querySelector(".question"), [{ opacity: 0, transform: "translateX(" + (anim * 30) + "px)" }, { opacity: 1, transform: "none" }], { duration: 350 });
+  }
+  function aller(d) {
+    var S = SERIES[st.s];
+    var q = st.q + d;
+    if (q < 0 || q >= S.questions.length) return;
+    st.q = q; rendu(d);
+  }
+  function reveler() {
+    if (revele) return;
+    revele = true;
+    var r = CC.$("#rep"); r.hidden = false;
+    CC.$("#rev").disabled = true;
+    CC.bip(660, .2);
+    CC.anim(r, [{ opacity: 0, transform: "translateY(12px)" }, { opacity: 1, transform: "none" }], { duration: 400 });
+  }
+  document.addEventListener("keydown", function (e) {
+    if (e.ctrlKey || e.metaKey || e.altKey || /INPUT|SELECT|TEXTAREA/.test(e.target.tagName)) return;
+    if (e.key === "ArrowRight") aller(1);
+    else if (e.key === "ArrowLeft") aller(-1);
+    else if ((e.key === "Enter" && e.target.tagName !== "BUTTON") || e.key === "r" || e.key === "R") reveler();
+  });
+  rendu();
+})();
+</script>
+</body>
+</html>

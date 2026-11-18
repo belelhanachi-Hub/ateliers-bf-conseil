@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Cold case GiFi · Breaking news</title>
+<link rel="stylesheet" href="css/cc.css">
+<script src="js/config.js"></script>
+<script src="js/donnees.js"></script>
+<script src="js/commun.js"></script>
+<style>
+.liste{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+@media (max-width:900px){.liste{grid-template-columns:1fr}}
+.liste h1{grid-column:1/-1;font:900 clamp(36px,5vw,64px)/1 var(--titre);text-transform:uppercase;color:var(--papier)}
+.news-carte{display:flex;flex-direction:column;align-items:flex-start;gap:10px;text-align:left;border:0;cursor:pointer;font-family:var(--mono)}
+.news-carte .h{font:900 46px/1 var(--titre);color:var(--rouge)}
+.news-carte .t{font:900 28px/1.05 var(--titre);text-transform:uppercase}
+.news-carte:hover{transform:translateY(-3px)}
+/* Écran plein */
+.bn{position:fixed;inset:0;z-index:100;background:#0f0f12;color:#fff;overflow:hidden;display:flex;flex-direction:column}
+.bn-haut{display:flex;justify-content:space-between;align-items:center;padding:14px 22px;background:#1c1c22;font:700 clamp(16px,1.8vw,24px) var(--mono)}
+.bn-haut .direct{background:var(--rouge);padding:4px 10px;letter-spacing:.12em}
+.bn-heure{font:900 clamp(24px,3vw,40px)/1 var(--titre);letter-spacing:.04em}
+.bandeau{background:var(--rouge);color:#fff;font:900 clamp(48px,9vw,140px)/1 var(--titre);letter-spacing:.04em;padding:14px 26px;white-space:nowrap;
+  box-shadow:0 8px 0 #7d140f}
+.bn-corps{flex:1;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:28px;padding:28px 34px;align-items:start;overflow:auto}
+.bn-titre{font:900 clamp(38px,5.5vw,86px)/1 var(--titre);text-transform:uppercase;margin-bottom:18px}
+.bn-texte{font:clamp(20px,2.1vw,32px)/1.45 var(--ui);max-width:1200px}
+.bn-source{margin-top:18px;font:700 clamp(15px,1.5vw,22px)/1.4 var(--mono);color:#e5d9bf}
+.bn-source a{color:#ffd08a}
+.bn-logo .logo-marque{--h:80px}
+.bn-question{position:absolute;inset:0;background:#0f0f12;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:4vw 6vw;gap:24px}
+.bn-question .q-et{font:900 clamp(22px,2.4vw,34px) var(--titre);color:var(--kraft);letter-spacing:.1em;text-transform:uppercase}
+.bn-question .q{font:900 clamp(40px,5.6vw,92px)/1.05 var(--titre);max-width:1500px}
+.bn-question .q-min{font:900 clamp(40px,5vw,80px)/1 var(--titre);color:#ffd08a;font-variant-numeric:tabular-nums}
+.ticker{background:#fff;color:#111;font:700 clamp(18px,2vw,28px)/1 var(--mono);white-space:nowrap;overflow:hidden;display:flex;align-items:stretch}
+.ticker .lbl{background:var(--rouge);color:#fff;padding:12px 16px;flex:none;position:relative;z-index:2}
+.ticker .piste{flex:1;overflow:hidden;position:relative}
+.ticker .defile{display:inline-block;padding:12px 0;will-change:transform}
+.bn-ctrl{position:absolute;right:18px;bottom:72px;display:flex;gap:8px;z-index:5}
+.bn-ctrl .btn{background:rgba(255,255,255,.9)}
+@media (max-width:760px){.bn-corps{grid-template-columns:1fr}}
+</style>
+</head>
+<body data-avec-logos data-sous-titre="Les Breaking news · à projeter">
+<header id="cc-top"></header>
+<main class="wrap">
+  <div class="liste" id="liste"><h1>Breaking news</h1></div>
+  <p style="color:#e5d9bf;margin-top:20px">Cliquez sur une news pour l’afficher en plein écran. Les cabinets ont 5 minutes pour répondre. Bonne réponse argumentée : +2 000 €. Échap pour revenir.</p>
+</main>
+<footer id="cc-pied"></footer>
+<script>
+(function () {
+  "use strict";
+  var D = CC.data;
+  // l'entreprise concernée par chaque news (logo affiché à côté de la news)
+  var MARQUE = { 2: "action", 3: "gifi" };
+
+  var liste = CC.$("#liste");
+  D.breaking_news.forEach(function (n) {
+    var b = CC.el("button", { type: "button", class: "feuille news-carte scotch" });
+    b.innerHTML = '<span class="kick">News n° ' + n.n + "</span><span class=\"h\">" + n.heure.replace(":", "h") + '</span><span class="t">' + CC.esc(n.titre) + "</span>" +
+      "<span>Source : " + CC.esc(n.source) + "</span>";
+    b.addEventListener("click", function () { ouvrir(n); });
+    liste.appendChild(b);
+  });
+
+  var ecran = null, tick = null, ticker = null;
+  function fermer() {
+    if (!ecran) return;
+    clearInterval(tick); if (ticker) ticker.cancel();
+    ecran.remove(); ecran = null;
+    document.removeEventListener("keydown", touches);
+  }
+  function touches(e) {
+    if (e.key === "Escape") fermer();
+    else if ((e.key === "Enter" || e.key === "ArrowRight") && ecran && !ecran.querySelector(".bn-question")) { e.preventDefault(); question(); }
+  }
+  var courante = null;
+  function ouvrir(n) {
+    courante = n;
+    fermer();
+    CC.jingle();
+    ecran = CC.el("div", { class: "bn", role: "dialog", "aria-modal": "true", "aria-label": "Breaking news n° " + n.n });
+    var lien = n.url ? ' · <a href="' + CC.esc(n.url) + '" target="_blank" rel="noopener">lire la source</a>' : "";
+    ecran.innerHTML =
+      '<div class="bn-haut"><span><span class="direct">En direct</span> · Cold case GiFi · News n° ' + n.n + '</span><span class="bn-heure" aria-label="Heure"></span></div>' +
+      '<div class="bandeau">BREAKING NEWS</div>' +
+      '<div class="bn-corps"><div><h2 class="bn-titre">' + CC.esc(n.titre) + '</h2><p class="bn-texte">' + CC.esc(n.texte) + "</p>" +
+      '<p class="bn-source">Source : ' + CC.esc(n.source) + lien + "</p></div><div class=\"bn-logo\"></div></div>" +
+      '<div class="ticker" aria-hidden="true"><span class="lbl">INFO</span><div class="piste"><span class="defile"></span></div></div>' +
+      '<div class="bn-ctrl"><button type="button" class="btn" data-q>Afficher la question (Entrée)</button><button type="button" class="btn" data-x>Fermer (Échap)</button></div>';
+    document.body.appendChild(ecran);
+    if (MARQUE[n.n]) ecran.querySelector(".bn-logo").appendChild(CC.logo(MARQUE[n.n], "grand"));
+    ecran.querySelector("[data-q]").addEventListener("click", question);
+    ecran.querySelector("[data-x]").addEventListener("click", fermer);
+    document.addEventListener("keydown", touches);
+    ecran.querySelector("[data-q]").focus();
+    function heure() { var d = new Date(); var h = ecran && ecran.querySelector(".bn-heure"); if (h) h.textContent = CC.heure(d) + ":" + String(d.getSeconds()).padStart(2, "0"); }
+    heure(); tick = setInterval(heure, 1000);
+    // bandeau rouge qui balaie l'écran
+    CC.anim(ecran.querySelector(".bandeau"), [{ transform: "translateX(-105%)" }, { transform: "translateX(0)" }], { duration: 700, easing: "cubic-bezier(.2,.8,.2,1)" });
+    CC.anim(ecran.querySelector(".bn-corps"), [{ opacity: 0, transform: "translateY(16px)" }, { opacity: 1, transform: "none" }], { duration: 600, delay: 500, fill: "backwards" });
+    // texte défilant en bas
+    var def = ecran.querySelector(".defile");
+    var txt = (n.titre + " — " + n.texte + " (Source : " + n.source + ")").toUpperCase() + "     ●     ";
+    def.textContent = txt + txt;
+    requestAnimationFrame(function () {
+      var w = def.scrollWidth / 2;
+      if (CC.reduit()) return;
+      ticker = def.animate([{ transform: "translateX(0)" }, { transform: "translateX(" + (-w) + "px)" }], { duration: w * 14, iterations: Infinity });
+    });
+  }
+  function question() {
+    var n = courante;
+    if (!ecran || ecran.querySelector(".bn-question")) return;
+    var q = CC.el("div", { class: "bn-question" });
+    q.innerHTML = '<p class="q-et">La question · News n° ' + n.n + " · " + CC.esc(n.titre) + '</p><p class="q">' + CC.esc(n.question) + '</p><p class="q-min" role="timer">5:00</p>' +
+      '<div style="display:flex;gap:10px"><button type="button" class="btn" data-go>Lancer les 5 minutes</button><button type="button" class="btn" data-ret>Revoir la news</button><button type="button" class="btn" data-x>Fermer (Échap)</button></div>';
+    ecran.appendChild(q);
+    CC.anim(q, [{ opacity: 0, transform: "scale(1.03)" }, { opacity: 1, transform: "none" }], { duration: 500 });
+    var fin = null, reste = 300, it = null, bip2 = false;
+    var m = q.querySelector(".q-min");
+    q.querySelector("[data-go]").addEventListener("click", function (e) {
+      if (fin) { reste = (fin - Date.now()) / 1000; fin = null; e.target.textContent = "Reprendre"; return; }
+      fin = Date.now() + reste * 1000; e.target.textContent = "Pause";
+      clearInterval(it);
+      it = setInterval(function () {
+        if (!fin) return;
+        var r = Math.max(0, (fin - Date.now()) / 1000);
+        m.textContent = CC.mmss(Math.ceil(r));
+        if (r <= 120 && !bip2) { bip2 = true; CC.bipDouble(); }
+        if (r <= 0) { clearInterval(it); fin = null; CC.bipFin(); m.textContent = "Temps écoulé"; }
+      }, 250);
+    });
+    q.querySelector("[data-ret]").addEventListener("click", function () { clearInterval(it); q.remove(); });
+    q.querySelector("[data-x]").addEventListener("click", function () { clearInterval(it); fermer(); });
+    q.querySelector("[data-go]").focus();
+  }
+})();
+</script>
+</body>
+</html>
