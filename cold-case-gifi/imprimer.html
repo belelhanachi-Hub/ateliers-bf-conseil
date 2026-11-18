@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Cold case GiFi · Tout imprimer</title>
-<link rel="stylesheet" href="css/cc.css?v=0d489fcd4b">
-<script src="js/config.js?v=0d489fcd4b"></script>
-<script src="js/donnees.js?v=0d489fcd4b"></script>
-<script src="js/commun.js?v=0d489fcd4b"></script>
+<link rel="stylesheet" href="css/cc.css?v=d5b68aeaf9">
+<script src="js/config.js?v=d5b68aeaf9"></script>
+<script src="js/donnees.js?v=d5b68aeaf9"></script>
+<script src="js/commun.js?v=d5b68aeaf9"></script>
 <style>
 .panneau{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--ink);padding:22px 24px;margin-bottom:24px}
 .panneau h1{font:400 clamp(32px,4vw,52px)/1 var(--fd);margin-bottom:6px}
@@ -99,9 +99,10 @@
   var D = CC.data;
   var PIED = D.meta.pied_cartes;
   var MARQ = D.logos.cartes || {};
+  var IDS = D.pieces.map(function (p) { return p.id; });
   var SECTIONS = [
     ["lettre", "Lettres de mission (1 par cabinet)"],
-    ["etiquettes", "Étiquettes des enveloppes (8 pièces + finale)"],
+    ["etiquettes", "Étiquettes des enveloppes (" + IDS.length + " pièces + " + (D.finale ? "finale" : "grand oral") + ")"],
     ["indices", "Les 15 cartes indices (pièce 8)"],
     ["p5", "Les 6 cartes information (pièce 5)"],
     ["p6", "Les 4 cartes à coter (pièce 6)"],
@@ -109,8 +110,11 @@
     ["questionnaire", "Le questionnaire (pièce 2)"],
     ["grille", "La grille pondérée et la grille vierge (pièce 7)"],
     ["fiche", "La fiche « Et chez moi ? »"],
-    ["badges", "Les 6 badges"]
-  ];
+    ["badges", "Les " + D.badges.length + " badges"]
+  ].filter(function (s) {
+    var piece = { indices: 8, p5: 5, p6: 6, parcours: 4, questionnaire: 2, grille: 7 }[s[0]];
+    return !piece || IDS.indexOf(piece) >= 0;
+  });
   var choix = CC.get("imprimer", null) || SECTIONS.reduce(function (o, s) { o[s[0]] = true; return o; }, {});
   var box = CC.$("#choix");
   SECTIONS.forEach(function (s) {
@@ -134,7 +138,7 @@
 
     if (choix.lettre) JEUX.forEach(function (j) {
       var paras = D.lettre.split(/(?<=[.?]) (?=[A-ZÀ-Ý])/).reduce(function (acc, phr, i) {
-        if (i === 0 || /^(Huit|Votre|Après)/.test(phr)) acc.push([phr]); else acc[acc.length - 1].push(phr); return acc;
+        if (i === 0 || /^(Huit|Quatre|Votre|Après|À la fin)/.test(phr)) acc.push([phr]); else acc[acc.length - 1].push(phr); return acc;
       }, []);
       ap.appendChild(page("lettre-a4", entete("Lettre de mission", "Jeu " + j) +
         '<p style="text-align:right">À remettre sous enveloppe scellée</p>' +
@@ -146,14 +150,14 @@
 
     if (choix.etiquettes) JEUX.forEach(function (j) {
       var h = "";
-      D.pieces.forEach(function (p) {
-        var s = D.deroule.filter(function (x) { return x.seance === p.seance; })[0];
+      D.pieces.forEach(function (p, k) {
+        var s = D.meta.debut_reglable ? null : D.deroule.filter(function (x) { return x.seance === p.seance; })[0];
         h += '<div class="etiq"><span class="s">Cold case GiFi · Jeu ' + j + " · Cabinet ……………</span><b>Pièce " + p.id + "<br>" + esc(p.titre) + "</b>" +
           '<span class="s">Séance ' + p.seance.slice(1) + (s ? " · prévue à " + s.debut.replace(":", "h") : "") + " · " +
-          (p.id === 1 ? "s\u0027ouvre au signal du formateur" : "s\u0027ouvre avec le code de la pièce " + (p.id - 1)) + "</span></div>";
+          (k === 0 ? "s\u0027ouvre au signal du formateur" : "s\u0027ouvre avec le code de la pièce " + D.pieces[k - 1].id) + "</span></div>";
       });
-      h += '<div class="etiq"><span class="s">Cold case GiFi · Jeu ' + j + " · Cabinet ……………</span><b>Finale<br>" + esc(D.finale.titre) + '</b><span class="s">16h05 · s\u0027ouvre avec le code de la pièce 8</span></div>';
-      h += '<div class="etiq"><span class="s">Cold case GiFi · Jeu ' + j + '</span><b>Lettre<br>de mission</b><span class="s">Dossier scellé · à ouvrir à 8h30</span></div>';
+      h += '<div class="etiq"><span class="s">Cold case GiFi · Jeu ' + j + " · Cabinet ……………</span><b>" + (D.finale ? "Finale<br>" + esc(D.finale.titre) : "Le grand<br>oral") + '</b><span class="s">' + (D.finale ? "16h05" : "En fin de séance") + " · s\u0027ouvre avec le code de la pièce " + IDS[IDS.length - 1] + "</span></div>";
+      h += '<div class="etiq"><span class="s">Cold case GiFi · Jeu ' + j + '</span><b>Lettre<br>de mission</b><span class="s">Dossier scellé · ' + (D.meta.debut_reglable ? "à ouvrir au début de la séance" : "à ouvrir à 8h30") + '</span></div>';
       ap.appendChild(page("", entete("Étiquettes des enveloppes", "Jeu " + j) + '<div class="g25">' + h + "</div>"));
     });
 

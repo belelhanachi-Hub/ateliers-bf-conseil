@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Cold case GiFi · Espace du cabinet</title>
-<link rel="stylesheet" href="css/cc.css?v=0d489fcd4b">
-<script src="js/config.js?v=0d489fcd4b"></script>
-<script src="js/donnees.js?v=0d489fcd4b"></script>
-<script src="js/commun.js?v=0d489fcd4b"></script>
-<script src="js/une.js?v=0d489fcd4b"></script>
+<link rel="stylesheet" href="css/cc.css?v=d5b68aeaf9">
+<script src="js/config.js?v=d5b68aeaf9"></script>
+<script src="js/donnees.js?v=d5b68aeaf9"></script>
+<script src="js/commun.js?v=d5b68aeaf9"></script>
+<script src="js/une.js?v=d5b68aeaf9"></script>
 <style>
 .tete{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;padding-bottom:20px;border-bottom:2px solid var(--ink);margin-bottom:24px}
 .tete h1{font:400 clamp(34px,4.4vw,48px)/1.05 var(--fd);letter-spacing:-.01em;margin:6px 0 10px}
@@ -20,7 +20,7 @@
 .renommer input:focus{outline:none;border-color:var(--ink)}
 
 /* Frise des pièces */
-.frise{list-style:none;margin:0 0 26px;padding:0;display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:8px}
+.frise{list-style:none;margin:0 0 26px;padding:0;display:grid;grid-template-columns:repeat(var(--nb,9),minmax(0,1fr));gap:8px}
 .fr-btn{width:100%;min-height:92px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px 6px;
   border:1px solid var(--line);border-radius:var(--r);background:var(--soft);color:var(--ink3);font-size:13px;line-height:1.25;text-align:center}
 .fr-btn .n{font:400 28px/1 var(--fd);color:inherit}
@@ -103,10 +103,10 @@
       <h1 id="nom-equipe">Cabinet</h1>
       <p class="renommer"><label>Nom du cabinet : <input id="renommer" maxlength="40" autocomplete="off"></label></p>
     </div>
-    <p class="avance" aria-live="polite"><b id="nb">0</b> / 8 pièces versées au dossier</p>
+    <p class="avance" aria-live="polite"><b id="nb">0</b> / <span id="nb-tot">8</span> pièces versées au dossier</p>
   </div>
 
-  <ol class="frise" id="frise" aria-label="Les 8 pièces et la finale"></ol>
+  <ol class="frise" id="frise" aria-label="Les pièces et la finale"></ol>
 
   <div class="plan">
     <section aria-live="off">
@@ -116,16 +116,16 @@
       <div class="aside-bloc bloc">
         <p class="lib-sec">La une du dossier</p>
         <div class="puzzle" id="puzzle"></div>
-        <p class="note">Chaque code trouvé révèle un morceau de la une. Complète à la fin de la pièce 8.</p>
+        <p class="note" id="note-une">Chaque code trouvé révèle un morceau de la une. Complète à la fin de la dernière pièce.</p>
         <button class="btn petit" id="voir-une" hidden type="button">Voir la une en grand</button>
       </div>
       <div class="aside-bloc bloc">
-        <p class="lib-sec">Le grand oral · 15h45</p>
+        <p class="lib-sec" id="go-titre">Le grand oral · 15h45</p>
         <p style="font-size:14.5px;color:var(--ink2);margin:0 0 12px" id="go-consigne"></p>
         <a class="btn pri" href="masque-grand-oral.pptx" download="Cold-case-GiFi-masque-grand-oral.pptx">Télécharger le masque PowerPoint</a>
-        <a class="btn" href="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fbelelhanachi-hub.github.io%2Fateliers-bf-conseil%2Fcold-case-gifi%2Fmasque-grand-oral.pptx" target="_blank" rel="noopener" style="margin-top:8px">Ouvrir dans PowerPoint pour le web</a>
+        <a class="btn" id="go-web" href="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fbelelhanachi-hub.github.io%2Fateliers-bf-conseil%2Fcold-case-gifi%2Fmasque-grand-oral.pptx" target="_blank" rel="noopener" style="margin-top:8px">Ouvrir dans PowerPoint pour le web</a>
         <p class="note">Si le téléchargement ne démarre pas, ouvrez cette page dans Chrome, Edge ou Safari (pas dans Teams ou une autre application), ou ouvrez-le dans PowerPoint pour le web puis cliquez sur « Télécharger » en haut de l'écran.</p>
-        <p class="note">Après chaque pièce, complétez sa diapositive. À 15h45, votre diaporama est prêt.</p>
+        <p class="note" id="go-note">Après chaque pièce, complétez sa diapositive. À 15h45, votre diaporama est prêt.</p>
       </div>
       <div class="aside-bloc bloc beige">
         <p class="lib-sec">L'organisation du cabinet</p>
@@ -149,6 +149,14 @@
   ["codes", "essais", "resolues", "ouvertes"].forEach(function (k) { etat[k] = etat[k] || {}; });
   function sauver() { CC.set(CLE, etat); }
   var PIECES = D.pieces;
+  var N = PIECES.length, FIN = N + 1;          // positions 1..N, puis la finale
+  var GO = D.grand_oral || {};
+  function idDe(k) { return PIECES[k - 1].id; } // numéro de la pièce dans le cours (1 à 8)
+  CC.$("#nb-tot").textContent = N;
+  CC.$("#frise").style.setProperty("--nb", N + 1);
+  if (GO.titre_aside) CC.$("#go-titre").textContent = GO.titre_aside;
+  if (GO.note) CC.$("#go-note").textContent = GO.note;
+  try { CC.$("#go-web").href = "https://view.officeapps.live.com/op/view.aspx?src=" + encodeURIComponent(new URL("masque-grand-oral.pptx", location.href).href); } catch (e) {}
   var cadenasHTML = CC.$("#tpl-cadenas").innerHTML;
 
   /* ---------- Nom ---------- */
@@ -169,27 +177,28 @@
   CC.$("#roles").innerHTML = (D.organisation || []).map(function (r) { return "<li>" + CC.esc(r) + "</li>"; }).join("");
 
   /* ---------- États ---------- */
-  function resolue(n) { return !!etat.codes[n]; }
-  function ouverte(n) { return n === 1 || resolue(n - 1); }   // la pièce n s'ouvre avec le code de la pièce n-1
-  function nbResolues() { var k = 0; for (var i = 1; i <= 8; i++) if (resolue(i)) k++; return k; }
+  function resolue(k) { return !!etat.codes[k]; }
+  function ouverte(k) { return k === 1 || resolue(k - 1); }   // la pièce en position k s'ouvre avec le code de la précédente
+  function nbResolues() { var c = 0; for (var i = 1; i <= N; i++) if (resolue(i)) c++; return c; }
+  var FINALE = D.finale ? { court: "Finale", titre: D.finale.titre, icone: "⚖" } : { court: "Grand oral", titre: GO.titre || "Le grand oral", icone: "★" };
 
   /* ---------- Frise ---------- */
   function frise() {
     var ol = CC.$("#frise");
     ol.innerHTML = "";
-    PIECES.concat([{ id: 9, titre: "Le procès", seance: "Finale" }]).forEach(function (p) {
-      var n = p.id;
-      var ok = n === 9 ? resolue(8) : ouverte(n);
-      var st = n <= 8 && resolue(n) ? "resolue" : ok ? "ouverte" : "verrou";
+    PIECES.concat([{ id: 0, titre: FINALE.titre }]).forEach(function (p, i) {
+      var n = i + 1;
+      var ok = n === FIN ? resolue(N) : ouverte(n);
+      var st = n <= N && resolue(n) ? "resolue" : ok ? "ouverte" : "verrou";
       var li = CC.el("li");
       var b = CC.el("button", { type: "button", class: "fr-btn", "data-etat": st, "data-n": n });
       if (!ok) b.disabled = true;
       if (etat.vue === n) b.setAttribute("aria-current", "true");
       var libEtat = st === "resolue" ? "versée ✓" : st === "ouverte" ? "ouverte" : "verrouillée";
-      b.innerHTML = '<span class="n">' + (n === 9 ? "⚖" : n) + "</span>" +
-        "<span>" + CC.esc(n === 9 ? "Finale" : p.titre) + "</span>" +
+      b.innerHTML = '<span class="n">' + (n === FIN ? FINALE.icone : p.id) + "</span>" +
+        "<span>" + CC.esc(n === FIN ? FINALE.court : p.titre) + "</span>" +
         '<span class="etat">' + (st === "verrou" ? cadenasHTML.replace('class="cadenas"', 'class="cadenas" style="width:12px;height:15px;color:currentColor"') : "") + libEtat + "</span>";
-      b.setAttribute("aria-label", (n === 9 ? "Finale, le procès" : "Pièce " + n + ", " + p.titre) + ", " + libEtat);
+      b.setAttribute("aria-label", (n === FIN ? FINALE.court + ", " + FINALE.titre : "Pièce " + p.id + ", " + p.titre) + ", " + libEtat);
       b.addEventListener("click", function () { afficher(n); });
       li.appendChild(b);
       ol.appendChild(li);
@@ -199,29 +208,32 @@
 
   /* ---------- Une en puzzle ---------- */
   var une = CC.monterUne(CC.$("#puzzle"));
+  var COLS = N <= 4 ? 2 : 4, LIGS = Math.ceil(N / COLS);
   var caches = CC.el("div", { class: "caches", "aria-hidden": "true" });
-  for (var i = 1; i <= 8; i++) {
-    var c = CC.el("div", { class: "cache" + (resolue(i) ? " vu" : ""), "data-i": i, text: i });
+  caches.style.gridTemplateColumns = "repeat(" + COLS + ",1fr)";
+  caches.style.gridTemplateRows = "repeat(" + LIGS + ",1fr)";
+  for (var i = 1; i <= N; i++) {
+    var c = CC.el("div", { class: "cache" + (resolue(i) ? " vu" : ""), "data-i": i, text: idDe(i) });
     caches.appendChild(c);
   }
   une.cadre.appendChild(caches);
-  function majUneBouton() { CC.$("#voir-une").hidden = nbResolues() < 8; }
+  function majUneBouton() { CC.$("#voir-une").hidden = nbResolues() < N; }
   majUneBouton();
   CC.$("#voir-une").addEventListener("click", function () { unePleine(false); });
 
   function voler(i, depuis) {
-    // le morceau i (1 à 8) vole depuis la zone du code vers sa place dans la une
+    // le morceau i (1 à N) vole depuis la zone du code vers sa place dans la une
     var cache = caches.children[i - 1];
     var r = cache.getBoundingClientRect();
-    var col = (i - 1) % 4, lig = Math.floor((i - 1) / 4);
+    var col = (i - 1) % COLS, lig = Math.floor((i - 1) / COLS);
     var f = une.facteur;
     var vol = CC.el("div", { class: "vol" });
     vol.style.cssText += "left:" + r.left + "px;top:" + r.top + "px;width:" + r.width + "px;height:" + r.height + "px";
     var ech = CC.el("div", { class: "une-echelle" });
     ech.appendChild(CC.creerUne());
     ech.style.transform = "scale(" + f + ")";
-    ech.style.left = -(col * CC.UNE_L / 4) * f + "px";
-    ech.style.top = -(lig * CC.UNE_H / 2) * f + "px";
+    ech.style.left = -(col * CC.UNE_L / COLS) * f + "px";
+    ech.style.top = -(lig * CC.UNE_H / LIGS) * f + "px";
     vol.appendChild(ech);
     document.body.appendChild(vol);
     var s = depuis.getBoundingClientRect();
@@ -299,7 +311,7 @@
     etat.vue = n; sauver(); frise();
     var mon = ++jeton;
     var dos = CC.$("#dossier");
-    if (n === 9) return finale(dos);
+    if (n === FIN) return finale(dos);
     var p = PIECES[n - 1];
     var contenuP = p.contenu ? Promise.resolve(p.contenu)
       : CC.dechiffrer(p.contenu_chiffre, etat.codes[n - 1]).then(function (t) { return t ? JSON.parse(t) : null; });
@@ -314,7 +326,7 @@
       ch.appendChild(f);
       dos.appendChild(ch);
       if (!c) { f.innerHTML = "<p>Cette pièce est encore scellée.</p>"; return; }
-      f.innerHTML = '<p class="kick">Pièce ' + n + " · séance " + CC.esc(p.seance.replace("S", "")) + " · lien dossier : " + CC.esc(p.lien_dossier) + "</p>" +
+      f.innerHTML = '<p class="kick">Pièce ' + p.id + " · séance " + CC.esc(p.seance.replace("S", "")) + " · lien dossier : " + CC.esc(p.lien_dossier) + "</p>" +
         '<h2 class="pt">' + CC.esc(p.titre) + "</h2>" + '<div class="entete">' + c.entete + "</div>";
       chronoPiece(p, f);
       c.sections.forEach(function (s) {
@@ -328,7 +340,7 @@
       if (!etat.ouvertes[n] || animer) {
         etat.ouvertes[n] = true; sauver();
         var couv = CC.el("div", { class: "couv", "aria-hidden": "true" });
-        couv.innerHTML = '<span class="tampon vert">Pièce déverrouillée</span><b>Pièce ' + n + "</b><span>" + CC.esc(p.titre) + "</span>";
+        couv.innerHTML = '<span class="tampon vert">Pièce déverrouillée</span><b>Pièce ' + p.id + "</b><span>" + CC.esc(p.titre) + "</span>";
         ch.appendChild(couv);
         CC.cliquetis();
         var a = CC.reduit()
@@ -348,12 +360,13 @@
   }
 
   function boiteCode(p, deb) {
-    var n = p.id;
+    var n = PIECES.indexOf(p) + 1;
+    var suiv = n < N ? "la pièce " + idDe(n + 1) : (D.finale ? "la finale" : "le grand oral");
     var box = CC.el("div", { class: "codebox", id: "codebox" });
     var fait = resolue(n);
-    box.innerHTML = "<h3>" + cadenasHTML + (n < 8 ? "Le code de sortie" : "Le dernier code") + "</h3>" +
-      '<p class="fmt">' + CC.esc(p.code_format) + (n < 8 ? ". Il ouvre la pièce " + (n + 1) + "." : ". Il ouvre la finale.") + "</p>" +
-      '<form class="code-ligne" autocomplete="off"><label class="sr" for="code-in">Code de la pièce ' + n + '</label>' +
+    box.innerHTML = "<h3>" + cadenasHTML + (n < N ? "Le code de sortie" : "Le dernier code") + "</h3>" +
+      '<p class="fmt">' + CC.esc(p.code_format) + ". Il ouvre " + suiv + ".</p>" +
+      '<form class="code-ligne" autocomplete="off"><label class="sr" for="code-in">Code de la pièce ' + p.id + '</label>' +
       '<input id="code-in" inputmode="' + (/^\d/.test(p.code_format) ? "numeric" : "text") + '" maxlength="12" spellcheck="false" autocapitalize="characters">' +
       '<button class="btn pri" type="submit">Valider le code</button></form>' +
       '<p class="msg" role="status" aria-live="assertive"></p><p class="essais"></p><div class="suite"></div><div class="tampon-zone"></div>';
@@ -366,7 +379,7 @@
     essais();
     function boutonsSuite() {
       suite.innerHTML = "";
-      var b = CC.el("button", { type: "button", class: "btn vert grand", text: n < 8 ? "Ouvrir la pièce " + (n + 1) + " →" : "Ouvrir la finale →" });
+      var b = CC.el("button", { type: "button", class: "btn vert grand", text: "Ouvrir " + suiv + " →" });
       b.addEventListener("click", function () { afficher(n + 1, true); window.scrollTo({ top: CC.$("#frise").offsetTop - 70, behavior: CC.reduit() ? "auto" : "smooth" }); });
       suite.appendChild(b);
     }
@@ -382,7 +395,7 @@
       e.preventDefault();
       var v = input.value;
       if (!CC.normaliser(v)) { input.focus(); return; }
-      CC.verifierCode(n, v).then(function (ok) {
+      CC.verifierCode(p.id, v).then(function (ok) {
         if (!ok) {
           etat.essais[n] = (etat.essais[n] || 0) + 1; sauver(); essais();
           msg.className = "msg non"; msg.textContent = "Code refusé";
@@ -396,14 +409,13 @@
         sauver();
         input.disabled = true; form.querySelector("button").disabled = true;
         msg.className = "msg oui"; msg.textContent = "Code accepté à " + etat.resolues[n] + ". Pièce versée au dossier.";
-        deverrouiller(p, box, cad);
+        deverrouiller(p, box, cad, n, suiv);
       });
     });
     return box;
   }
 
-  function deverrouiller(p, box, cad) {
-    var n = p.id;
+  function deverrouiller(p, box, cad, n, suiv) {
     // 1. le cadenas s'ouvre
     CC.cliquetis();
     var anse = cad.querySelector(".anse");
@@ -433,26 +445,26 @@
           CC.anim(d, [{ opacity: 0, transform: "translateY(10px)" }, { opacity: 1, transform: "none" }], { duration: 500 });
         }
         var suite = box.querySelector(".suite"); suite.innerHTML = "";
-        var b = CC.el("button", { type: "button", class: "btn vert grand", text: n < 8 ? "Ouvrir la pièce " + (n + 1) + " →" : "Ouvrir la finale →" });
+        var b = CC.el("button", { type: "button", class: "btn vert grand", text: "Ouvrir " + suiv + " →" });
         b.addEventListener("click", function () { afficher(n + 1, true); window.scrollTo({ top: CC.$("#frise").offsetTop - 70, behavior: CC.reduit() ? "auto" : "smooth" }); });
         suite.appendChild(b);
-        if (nbResolues() === 8) return CC.attendre(500).then(function () { unePleine(true); });
+        if (nbResolues() === N) return CC.attendre(500).then(function () { unePleine(true); });
       });
     });
   }
 
   function finale(dos) {
-    var F = D.finale;
+    var F = D.finale || { titre: GO.titre || "Le grand oral", kick: GO.kick || "Le grand oral", entete: "", sections: [{ titre: "La consigne", html: "<p>" + CC.esc(GO.consigne || "") + "</p><p><a class=\"btn pri\" href=\"masque-grand-oral.pptx\" download>Télécharger le masque PowerPoint</a></p>" }] };
     dos.innerHTML = "";
     var ch = CC.el("div", { class: "chemise" });
 
     var f = CC.el("div", { class: "feuille doc piece-feuille" });
-    f.innerHTML = '<p class="kick">Finale · 16h05</p><h2 class="pt">' + CC.esc(F.titre) + "</h2>" + '<div class="entete">' + F.entete + "</div>" +
+    f.innerHTML = '<p class="kick">' + CC.esc(F.kick || "Finale · 16h05") + '</p><h2 class="pt">' + CC.esc(F.titre) + "</h2>" + '<div class="entete">' + F.entete + "</div>" +
       F.sections.map(function (s) { return "<section><h2>" + CC.esc(s.titre) + "</h2>" + s.html + "</section>"; }).join("");
     ch.appendChild(f);
     dos.appendChild(ch);
-    if (!etat.ouvertes[9]) {
-      etat.ouvertes[9] = true; sauver();
+    if (!etat.ouvertes[FIN]) {
+      etat.ouvertes[FIN] = true; sauver();
       CC.anim(ch, [{ opacity: 0, transform: "scale(.96)" }, { opacity: 1, transform: "none" }], { duration: 600 });
     }
   }
@@ -465,7 +477,7 @@
 
   frise();
   var v = etat.vue || 1;
-  if (v === 9 ? !resolue(8) : !ouverte(v)) v = 1;
+  if (v > FIN || (v === FIN ? !resolue(N) : !ouverte(v))) v = 1;
   afficher(v);
 })();
 </script>

@@ -8,7 +8,7 @@
   var CC = (window.CC = { data: D });
 
   /* ---------------- Stockage ---------------- */
-  var PFX = "ccg:";
+  var PFX = D.prefixe || "ccg:"; // la version 3 h a son propre préfixe : ses progressions ne se mélangent pas avec la journée
   var memoire = {};
   CC.get = function (k, def) {
     var v;
@@ -184,7 +184,7 @@
   };
 
   /* ---------------- Barre haute et pied de page ---------------- */
-  var NAV = [
+  var NAV = D.nav || [
     ["index.html", "Accueil"], ["equipe.html?e=1", "Cabinet 1"], ["equipe.html?e=2", "Cabinet 2"],
     ["tresorerie.html", "Trésorerie"], ["chrono.html", "Chrono"], ["breaking.html", "Breaking news"],
     ["quiz.html", "Quiz"], ["proces.html", "Procès"], ["badges.html", "Badges"], ["imprimer.html", "Imprimer"]
@@ -195,8 +195,8 @@
     var ici = location.pathname.split("/").pop() || "index.html";
     var q = location.search;
     h.className = "topbar no-print";
-    h.innerHTML = '<a class="tb-logo" href="../"><img src="img/bf-conseil.png" alt="BF Conseil" width="57" height="42"></a>' +
-      '<div class="tb-t"><b>Cold case GiFi</b>' + CC.esc(sousTitre || "L'enquête · Mastère MA28 · Bloc 1") + "</div>" +
+    h.innerHTML = '<a class="tb-logo" href="../"><img src="' + (D.racine || "") + 'img/bf-conseil.png" alt="BF Conseil" width="57" height="42"></a>' +
+      '<div class="tb-t"><b>' + CC.esc((D.meta && D.meta.titre_court) || "Cold case GiFi") + '</b>' + CC.esc(sousTitre || "L'enquête · Mastère MA28 · Bloc 1") + "</div>" +
       '<nav class="tb-nav" aria-label="Pages de l\'atelier">' + NAV.map(function (n) {
         var cible = n[0].split("?");
         var cur = cible[0] === ici && (!cible[1] || ("?" + cible[1]) === q);

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Cold case GiFi · Quiz flash</title>
+<link rel="stylesheet" href="../cold-case-gifi/css/cc.css?v=d5b87049da">
+<script src="../cold-case-gifi/js/config.js?v=d5b87049da"></script>
+<script src="js/donnees.js?v=d5b87049da"></script>
+<script src="../cold-case-gifi/js/commun.js?v=d5b87049da"></script>
+<style>
+.onglets{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+.onglets button{border:1.5px solid var(--line2);background:#fff;padding:7px 12px;font-size:14px;font-weight:700;border-radius:var(--r)}
+.onglets button:hover{border-color:var(--ink)}
+.onglets button[aria-selected="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.carte-q{min-height:52vh;display:flex;flex-direction:column;justify-content:space-between;gap:22px;padding:30px 36px;border-top:3px solid var(--ink)}
+.carte-q .num{font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);font-weight:700;margin:0}
+.carte-q .theme{font-size:17px;font-weight:700;color:var(--ink2);margin:4px 0 0}
+.carte-q .question{font:400 clamp(30px,4vw,60px)/1.12 var(--fd);letter-spacing:-.01em;margin:0}
+.reponse{border-top:1px solid var(--line);padding-top:16px;font-size:clamp(20px,2.3vw,32px);line-height:1.35}
+.reponse .vf{display:inline-block;font:400 clamp(30px,3.6vw,52px)/1 var(--fd);padding:4px 14px;margin-right:12px;color:#fff;border-radius:var(--r)}
+.reponse .vf.v{background:var(--ok)}.reponse .vf.f{background:var(--err)}
+.reponse strong{font-weight:700}
+.nav-q{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.raccourcis{color:var(--ink3);font-size:12.5px;margin-top:12px}
+</style>
+</head>
+<body data-sous-titre="Les quiz flash · à projeter">
+<header id="cc-top"></header>
+<main class="wrap">
+  <div class="p-tete"><div><p class="kick">Entre les pièces · à projeter</p><h1 class="p-titre">Quiz flash</h1><p class="p-sous">Une question à la fois, vote à main levée. +500 € par bonne réponse au premier cabinet qui répond juste. Aucune réponse n'est collectée.</p></div></div>
+  <div class="onglets" role="tablist" id="onglets"></div>
+  <section class="bloc carte-q" id="carte" aria-live="polite"></section>
+  <p class="raccourcis">Flèches : question précédente / suivante · Entrée ou R : révéler la réponse</p>
+</main>
+<footer id="cc-pied"></footer>
+<script>
+(function () {
+  "use strict";
+  var D = CC.data;
+  var SERIES = [{ id: "vf", lib: "Vrai ou faux ? (ouverture)", titre: "Le « Vrai ou faux ? » d\u0027ouverture",
+    questions: D.vrai_faux.map(function (v) {
+      return { q: CC.esc(v.affirmation), r: '<span class="vf ' + (v.reponse ? "v" : "f") + '">' + (v.reponse ? "Vrai" : "Faux") + "</span>" + CC.esc(v.explication) };
+    }) }].concat(D.quiz.map(function (s) {
+      return { id: s.seance, lib: "Séance " + s.seance.slice(1), titre: s.titre, questions: s.questions };
+    }));
+  var st = CC.get("quiz", { s: 0, q: 0 });
+  if (!SERIES[st.s]) st = { s: 0, q: 0 };
+  var revele = false;
+
+  var ong = CC.$("#onglets");
+  SERIES.forEach(function (s, i) {
+    var b = CC.el("button", { type: "button", role: "tab", text: s.lib });
+    b.addEventListener("click", function () { st = { s: i, q: 0 }; rendu(); });
+    ong.appendChild(b);
+  });
+
+  function rendu(anim) {
+    CC.set("quiz", st);
+    revele = false;
+    CC.$$("#onglets button").forEach(function (b, i) { b.setAttribute("aria-selected", i === st.s ? "true" : "false"); });
+    var S = SERIES[st.s], Q = S.questions[st.q];
+    var c = CC.$("#carte");
+    c.innerHTML = '<div><p class="num">' + CC.esc(S.lib) + " · question " + (st.q + 1) + " / " + S.questions.length + '</p><p class="theme">' + CC.esc(S.titre) + "</p></div>" +
+      '<p class="question">' + Q.q + "</p>" +
+      '<div class="reponse" hidden id="rep">' + Q.r + "</div>" +
+      '<div class="nav-q"><button type="button" class="btn" id="prec"' + (st.q === 0 ? " disabled" : "") + '>← Précédente</button>' +
+      '<button type="button" class="btn pri grand" id="rev">Révéler la réponse</button>' +
+      '<button type="button" class="btn" id="suiv"' + (st.q === S.questions.length - 1 ? " disabled" : "") + ">Suivante →</button></div>";
+    CC.$("#prec").addEventListener("click", function () { aller(-1); });
+    CC.$("#suiv").addEventListener("click", function () { aller(1); });
+    CC.$("#rev").addEventListener("click", reveler);
+    if (anim) CC.anim(c.querySelector(".question"), [{ opacity: 0, transform: "translateX(" + (anim * 30) + "px)" }, { opacity: 1, transform: "none" }], { duration: 350 });
+  }
+  function aller(d) {
+    var S = SERIES[st.s];
+    var q = st.q + d;
+    if (q < 0 || q >= S.questions.length) return;
+    st.q = q; rendu(d);
+  }
+  function reveler() {
+    if (revele) return;
+    revele = true;
+    var r = CC.$("#rep"); r.hidden = false;
+    CC.$("#rev").disabled = true;
+    CC.bip(660, .2);
+    CC.anim(r, [{ opacity: 0, transform: "translateY(12px)" }, { opacity: 1, transform: "none" }], { duration: 400 });
+  }
+  document.addEventListener("keydown", function (e) {
+    if (e.ctrlKey || e.metaKey || e.altKey || /INPUT|SELECT|TEXTAREA/.test(e.target.tagName)) return;
+    if (e.key === "ArrowRight") aller(1);
+    else if (e.key === "ArrowLeft") aller(-1);
+    else if ((e.key === "Enter" && e.target.tagName !== "BUTTON") || e.key === "r" || e.key === "R") reveler();
+  });
+  rendu();
+})();
+</script>
+</body>
+</html>

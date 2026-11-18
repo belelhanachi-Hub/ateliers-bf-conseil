@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Cold case GiFi · L'enquête</title>
-<link rel="stylesheet" href="css/cc.css?v=0d489fcd4b">
-<script src="js/config.js?v=0d489fcd4b"></script>
-<script src="js/donnees.js?v=0d489fcd4b"></script>
-<script src="js/commun.js?v=0d489fcd4b"></script>
-<script src="js/une.js?v=0d489fcd4b"></script>
+<link rel="stylesheet" href="css/cc.css?v=d5b68aeaf9">
+<script src="js/config.js?v=d5b68aeaf9"></script>
+<script src="js/donnees.js?v=d5b68aeaf9"></script>
+<script src="js/commun.js?v=d5b68aeaf9"></script>
+<script src="js/une.js?v=d5b68aeaf9"></script>
 <style>
 .d-chiffres{display:flex;gap:30px;margin-top:16px;flex-wrap:wrap}
 .d-chiffres div{font-size:13.5px;color:var(--ink2);line-height:1.25}
@@ -125,7 +125,7 @@
     CC.$("#lettre").innerHTML = "<p><strong>" + CC.esc(n1) + " et " + CC.esc(n2) + ",</strong></p>" +
       D.lettre.split(/(?<=[.?]) (?=[A-ZÀ-Ý])/).reduce(function (acc, phr, i) {
         // regroupe en paragraphes comme dans la lettre d'origine
-        var coupe = /^(Huit|Votre|Après)/.test(phr);
+        var coupe = /^(Huit|Quatre|Votre|Après|À la fin)/.test(phr);
         if (coupe || i === 0) acc.push([phr]); else acc[acc.length - 1].push(phr);
         return acc;
       }, []).map(function (para) { return "<p>" + CC.esc(para.join(" ")) + "</p>"; }).join("") +

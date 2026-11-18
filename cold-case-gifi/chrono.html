@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Cold case GiFi · Chrono</title>
-<link rel="stylesheet" href="css/cc.css?v=0d489fcd4b">
-<script src="js/config.js?v=0d489fcd4b"></script>
-<script src="js/donnees.js?v=0d489fcd4b"></script>
-<script src="js/commun.js?v=0d489fcd4b"></script>
+<link rel="stylesheet" href="css/cc.css?v=d5b68aeaf9">
+<script src="js/config.js?v=d5b68aeaf9"></script>
+<script src="js/donnees.js?v=d5b68aeaf9"></script>
+<script src="js/commun.js?v=d5b68aeaf9"></script>
 <style>
 .ecran{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(300px,1fr);gap:24px;padding:24px 20px 34px;max-width:1600px;margin:0 auto}
 .ecran > *{min-width:0}
@@ -95,7 +95,22 @@
 (function () {
   "use strict";
   var D = CC.data;
-  var F = D.finale.minuteurs_min;
+  var F = (D.finale || {}).minuteurs_min || {};
+  /* Version 3 h : l'horaire part de l'heure de début choisie par le formateur */
+  if (D.meta.debut_reglable) {
+    var hmin = function (t) { var p = t.split(":"); return +p[0] * 60 + +p[1]; };
+    var fmt = function (m) { m = ((m % 1440) + 1440) % 1440; return (m < 600 ? "0" : "") + Math.floor(m / 60) + ":" + (m % 60 < 10 ? "0" : "") + (m % 60); };
+    var debut = CC.get("debut-seance", D.meta.horaires.debut);
+    var dec = hmin(debut) - hmin(D.meta.horaires.debut);
+    if (dec) {
+      D.deroule.forEach(function (s) { s.debut = fmt(hmin(s.debut) + dec); s.fin = fmt(hmin(s.fin) + dec); });
+      D.meta.horaires.debut = fmt(hmin(D.meta.horaires.debut) + dec); D.meta.horaires.fin = fmt(hmin(D.meta.horaires.fin) + dec);
+    }
+    var lab = CC.el("label", { style: "display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700" });
+    lab.innerHTML = 'Début de la séance <input type="time" id="debut-seance" value="' + D.meta.horaires.debut + '" style="font:inherit;padding:7px 8px;border:1.5px solid var(--ink);border-radius:3px">';
+    CC.$(".choix").appendChild(lab);
+    CC.$("#debut-seance").addEventListener("change", function (e) { if (e.target.value) { CC.set("debut-seance", e.target.value); CC.suppr("chrono"); location.reload(); } });
+  }
   var ETAPES = D.deroule.map(function (s, i) { s.i = i; return s; }).filter(function (s) { return !s.pause; });
 
   function hm(s) { var p = s.split(":"); var d = new Date(); d.setHours(+p[0], +p[1], 0, 0); return d; }

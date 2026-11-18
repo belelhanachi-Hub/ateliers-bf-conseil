@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Cold case GiFi · Trésorerie</title>
+<link rel="stylesheet" href="../cold-case-gifi/css/cc.css?v=d5b87049da">
+<script src="../cold-case-gifi/js/config.js?v=d5b87049da"></script>
+<script src="js/donnees.js?v=d5b87049da"></script>
+<script src="../cold-case-gifi/js/commun.js?v=d5b87049da"></script>
+<style>
+.tete{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:10px;padding-bottom:20px;border-bottom:2px solid var(--ink);margin-bottom:24px}
+.tete h1{font:400 clamp(34px,4.4vw,52px)/1.05 var(--fd);letter-spacing:-.01em;margin-top:8px}
+.horloge{font:400 clamp(30px,3.6vw,46px)/1 var(--fd);font-variant-numeric:tabular-nums}
+.compte{position:relative;overflow:hidden}
+.compte .nom{font:400 clamp(28px,3.2vw,42px)/1.05 var(--fd);margin-bottom:12px}
+.solde{display:flex;align-items:center;justify-content:flex-end;font:400 clamp(56px,7.6vw,112px)/1 var(--fd);
+  background:var(--ink);color:#fff;padding:16px 20px;border-radius:var(--r);position:relative;font-variant-numeric:tabular-nums;overflow:hidden}
+.solde .sg{display:inline-block;width:.55em;text-align:center}
+.reel{display:inline-block;height:1em;overflow:hidden;width:.6em;text-align:center;vertical-align:top}
+.reel .col{display:block;transition:transform .9s cubic-bezier(.25,.8,.3,1)}
+.reel .col span{display:block;height:1em;line-height:1}
+.reel.zero{display:none}
+.sp{display:inline-block;width:.25em}
+.eur{margin-left:.15em}
+.solde.neg{color:#ff9b93}
+@media (prefers-reduced-motion:reduce){.reel .col{transition:none}}
+.flash{position:absolute;inset:0;pointer-events:none;opacity:0}
+.flash.v{background:var(--ok)}.flash.r{background:var(--err)}
+.flotte{position:absolute;right:24px;top:70px;font:700 clamp(26px,3.4vw,44px)/1 var(--f);pointer-events:none;padding:4px 12px;border-radius:var(--r);color:#fff}
+.flotte.v{background:var(--ok)}.flotte.r{background:var(--err)}
+.statut{margin:10px 0 4px;font-size:14px;color:var(--ink2);min-height:1.4em}
+.cessation{background:var(--err);color:#fff;font:400 clamp(24px,2.8vw,36px)/1.1 var(--fd);text-align:center;padding:12px;border-radius:var(--r);
+  animation:cc-pulse 1s ease-in-out infinite;margin:12px 0}
+.cessation small{display:block;font:14px/1.35 var(--f);margin-top:4px}
+.groupes h3{font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);margin:16px 0 8px}
+.ops{display:flex;flex-wrap:wrap;gap:6px}
+.op{border:1.5px solid var(--line2);background:var(--paper);padding:6px 10px;font-size:13.5px;line-height:1.25;text-align:left;border-radius:var(--r);max-width:100%}
+.op b{white-space:nowrap;font-variant-numeric:tabular-nums}
+.op:hover{border-color:var(--ink)}
+.op.g b{color:var(--ok)}
+.op.p b{color:var(--err)}
+.op.a{background:var(--beige3);border-color:var(--beige2)}
+.op:disabled{opacity:.35;cursor:not-allowed}
+.libre{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;align-items:center}
+.libre input{padding:8px 10px;border:1.5px solid var(--line2);border-radius:var(--r);background:#fff;font-size:15px}
+.libre input:focus{outline:none;border-color:var(--ink)}
+.libre input[type=number]{width:130px}
+.libre input[type=text]{flex:1;min-width:160px}
+.histo{margin-top:26px}
+.histo-tete{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:10px}
+.histo h2{font-size:19px}
+.histo table td.m{font-weight:700;white-space:nowrap;text-align:right;font-variant-numeric:tabular-nums}
+.histo .vide{color:var(--ink3)}
+.details-ops > summary{cursor:pointer;font-size:14px;font-weight:700;margin-top:12px}
+</style>
+</head>
+<body data-sous-titre="Le tableau des trésoreries · à projeter">
+<header id="cc-top"></header>
+<main class="wrap large">
+  <div class="tete">
+    <div><p class="kick">Départ : <span id="depart"></span> par cabinet · cessation de paiements sous 0 €</p>
+      <h1>Trésorerie des cabinets</h1></div>
+    <div class="horloge" id="horloge" aria-hidden="true"></div>
+  </div>
+  <div class="grille2" id="comptes"></div>
+
+  <section class="histo feuille">
+    <div class="histo-tete">
+      <h2>Historique</h2>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn rouge" type="button" id="annuler">Annuler la dernière opération</button>
+        <button class="btn petit" type="button" id="raz">Tout remettre à 30 000 €</button>
+      </div>
+    </div>
+    <div class="tbl"><table class="cc"><thead><tr><th>Heure</th><th>Cabinet</th><th>Motif</th><th>Montant</th><th>Solde après</th></tr></thead><tbody id="histo"></tbody></table></div>
+    <p style="font-size:14px;margin-top:8px">Les opérations restent sur cet appareil (celui du formateur). Rien n'est envoyé.</p>
+  </section>
+</main>
+<footer id="cc-pied"></footer>
+<script>
+(function () {
+  "use strict";
+  var D = CC.data, T = D.tresorerie;
+  var INIT = T.solde_initial, SEUIL = T.seuil_cessation;
+  CC.$("#depart").textContent = CC.euros(INIT);
+  var etat = CC.get("tresor", null) || { ops: [] };
+  var comptes = {};
+
+  function solde(e, jusqua) {
+    var s = INIT;
+    etat.ops.forEach(function (o, i) { if (o.e === e && (jusqua == null || i <= jusqua)) s += o.montant; });
+    return s;
+  }
+
+  /* ---------- Compteur mécanique ---------- */
+  var NB = 6;
+  function construireCompteur(el) {
+    var h = '<span class="sg"></span>';
+    for (var i = 0; i < NB; i++) {
+      if (i === NB - 3) h += '<span class="sp"></span>';
+      h += '<span class="reel"><span class="col">' + "0123456789".split("").map(function (d) { return "<span>" + d + "</span>"; }).join("") + "</span></span>";
+    }
+    el.innerHTML = h + '<span class="eur">€</span><span class="sr" aria-live="polite"></span>';
+  }
+  function afficherCompteur(el, v) {
+    var abs = Math.min(Math.abs(v), Math.pow(10, NB) - 1);
+    var s = String(abs);
+    while (s.length < NB) s = "0" + s;
+    var reels = el.querySelectorAll(".reel");
+    var debut = true;
+    for (var i = 0; i < NB; i++) {
+      var d = +s[i];
+      if (d !== 0 || i === NB - 1) debut = false;
+      reels[i].classList.toggle("zero", debut);
+      reels[i].firstChild.style.transform = "translateY(" + (-d * 10) + "%)";
+    }
+    el.querySelector(".sg").textContent = v < 0 ? "−" : "";
+    el.querySelector(".sp").style.display = abs < 1000 ? "none" : "";
+    el.classList.toggle("neg", v < 0);
+    el.querySelector(".sr").textContent = "Solde : " + CC.euros(v);
+  }
+
+  /* ---------- Comptes ---------- */
+  function boutons(liste, cls, e) {
+    return liste.map(function (o, i) {
+      return '<button type="button" class="op ' + cls + '" data-e="' + e + '" data-k="' + cls + i + '">' + CC.esc(o.motif) + " <b>" + CC.signe(o.montant) + "</b></button>";
+    }).join("");
+  }
+  [1, 2].forEach(function (e) {
+    var c = CC.el("section", { class: "chemise compte", "aria-label": "Trésorerie de " + CC.nomEquipe(e) });
+    c.innerHTML = '<span class="etiq">Cabinet ' + e + "</span>" +
+      '<h2 class="nom">' + CC.esc(CC.nomEquipe(e)) + "</h2>" +
+      '<div class="solde" data-solde></div><div class="flash" data-flash></div>' +
+      '<div data-cess></div><p class="statut" data-statut></p>' +
+      '<div class="groupes">' +
+      "<h3>Gains</h3><div class=\"ops\">" + boutons(T.gains, "g", e) + "</div>" +
+      "<h3>Pertes</h3><div class=\"ops\">" + boutons(T.pertes, "p", e) + "</div>" +
+      "<h3>Achats</h3><div class=\"ops\">" + boutons(T.achats, "a", e) + "</div>" +
+      '<details class="details-ops"><summary>Autre opération</summary><form class="libre" data-e="' + e + '">' +
+      '<label class="sr" for="m' + e + '">Montant</label><input id="m' + e + '" type="number" step="500" placeholder="± montant" required>' +
+      '<label class="sr" for="l' + e + '">Motif</label><input id="l' + e + '" type="text" maxlength="80" placeholder="Motif" required>' +
+      '<button class="btn petit" type="submit">Ajouter</button></form></details></div>';
+    CC.$("#comptes").appendChild(c);
+    var s = c.querySelector("[data-solde]");
+    construireCompteur(s);
+    comptes[e] = { el: c, solde: s, cess: c.querySelector("[data-cess]"), statut: c.querySelector("[data-statut]"), flash: c.querySelector("[data-flash]"), dernier: null };
+  });
+
+  var OPS = {};
+  T.gains.forEach(function (o, i) { OPS["g" + i] = o; });
+  T.pertes.forEach(function (o, i) { OPS["p" + i] = o; });
+  T.achats.forEach(function (o, i) { OPS["a" + i] = o; });
+
+  document.addEventListener("click", function (ev) {
+    var b = ev.target.closest(".op");
+    if (!b) return;
+    var o = OPS[b.getAttribute("data-k")];
+    ajouter(+b.getAttribute("data-e"), o.motif, o.montant);
+  });
+  CC.$$(".libre").forEach(function (f) {
+    f.addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      var m = Math.round(+f.querySelector("[type=number]").value), l = f.querySelector("[type=text]").value.trim();
+      if (!m || !l) return;
+      ajouter(+f.getAttribute("data-e"), l, m);
+      f.reset();
+    });
+  });
+
+  function ajouter(e, motif, montant) {
+    var avant = solde(e);
+    if (/^a/.test(achatCle(motif)) && avant < SEUIL) return;
+    var d = new Date();
+    etat.ops.push({ e: e, motif: motif, montant: montant, t: CC.heure(d), ts: d.getTime() });
+    CC.set("tresor", etat);
+    rendu(e, montant, avant);
+  }
+  function achatCle(motif) { return T.achats.some(function (a) { return a.motif === motif; }) ? "a" : "x"; }
+
+  function animer(e, montant, avant) {
+    var c = comptes[e];
+    if (!montant) return;
+    var gain = montant > 0;
+    c.flash.className = "flash " + (gain ? "v" : "r");
+    CC.anim(c.flash, [{ opacity: 0 }, { opacity: .45 }, { opacity: 0 }], { duration: 700 });
+    var f = CC.el("span", { class: "flotte " + (gain ? "v" : "r"), text: CC.signe(montant), "aria-hidden": "true" });
+    c.el.appendChild(f);
+    CC.anim(f, [{ transform: "translateY(20px)", opacity: 0 }, { transform: "translateY(0)", opacity: 1, offset: .2 }, { transform: "translateY(-70px)", opacity: 0 }],
+      { duration: 1400, easing: "ease-out", fill: "forwards" }).finished.then(function () { f.remove(); });
+    if (gain) CC.gain();
+    else {
+      CC.perte();
+      CC.anim(c.solde, [{ transform: "none" }, { transform: "translateX(-10px)" }, { transform: "translateX(8px)" }, { transform: "translateX(-5px)" }, { transform: "none" }], { duration: 400 });
+    }
+    var apres = solde(e);
+    if (avant >= SEUIL && apres < SEUIL) setTimeout(CC.sirene, 300);
+  }
+
+  function rendu(eAnim, montant, avant) {
+    [1, 2].forEach(function (e) {
+      var c = comptes[e], s = solde(e);
+      afficherCompteur(c.solde, s);
+      var enCess = s < SEUIL;
+      c.cess.innerHTML = enCess ? '<div class="cessation" role="alert">Cessation de paiements<small>Le cabinet continue à jouer, mais ne peut plus rien acheter' + (D.finale ? ' et perdra 2 000 € de plus au procès' : '') + '.</small></div>' : "";
+      c.statut.textContent = (enCess ? "En cessation de paiements" : "Trésorerie positive") + " · " + etat.ops.filter(function (o) { return o.e === e; }).length + " opération(s)";
+      c.el.querySelectorAll(".op.a").forEach(function (b) { b.disabled = enCess; b.title = enCess ? "Impossible en cessation de paiements" : ""; });
+    });
+    if (eAnim) animer(eAnim, montant, avant);
+    var tb = CC.$("#histo");
+    if (!etat.ops.length) { tb.innerHTML = '<tr><td colspan="5" class="vide">Aucune opération pour l\u0027instant.</td></tr>'; }
+    else tb.innerHTML = etat.ops.map(function (o, i) {
+      return "<tr><td>" + o.t + "</td><td>" + CC.esc(CC.nomEquipe(o.e)) + "</td><td>" + CC.esc(o.motif) + '</td><td class="m">' + (o.montant > 0 ? "Gain " : "Perte ") + CC.signe(o.montant) +
+        '</td><td class="m">' + CC.euros(solde(o.e, i)) + "</td></tr>";
+    }).reverse().join("");
+    CC.$("#annuler").disabled = !etat.ops.length;
+  }
+
+  CC.$("#annuler").addEventListener("click", function () {
+    var o = etat.ops[etat.ops.length - 1];
+    if (!o) return;
+    if (!confirm("Annuler : « " + o.motif + " » (" + CC.signe(o.montant) + ") pour " + CC.nomEquipe(o.e) + " ?")) return;
+    var avant = solde(o.e);
+    etat.ops.pop();
+    CC.set("tresor", etat);
+    rendu(o.e, -o.montant, avant);
+  });
+  CC.$("#raz").addEventListener("click", function () {
+    if (!confirm("Effacer tout l\u0027historique et remettre les deux cabinets à " + CC.euros(INIT) + " ?")) return;
+    etat = { ops: [] }; CC.set("tresor", etat); rendu();
+  });
+  CC.ecouter("tresor", function (v) { etat = v || { ops: [] }; rendu(); });
+
+  function horloge() { CC.$("#horloge").textContent = CC.heure(); }
+  horloge(); setInterval(horloge, 5000);
+  rendu();
+})();
+</script>
+</body>
+</html>

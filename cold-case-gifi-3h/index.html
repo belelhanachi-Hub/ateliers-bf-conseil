@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Cold case GiFi · version 3 h</title>
+<link rel="stylesheet" href="../cold-case-gifi/css/cc.css?v=d5b87049da">
+<script src="../cold-case-gifi/js/config.js?v=d5b87049da"></script>
+<script src="js/donnees.js?v=d5b87049da"></script>
+<script src="../cold-case-gifi/js/commun.js?v=d5b87049da"></script>
+<script src="../cold-case-gifi/js/une.js?v=d5b87049da"></script>
+<style>
+.d-chiffres{display:flex;gap:30px;margin-top:16px;flex-wrap:wrap}
+.d-chiffres div{font-size:13.5px;color:var(--ink2);line-height:1.25}
+.d-chiffres b{display:block;font-size:24px;color:var(--ink);font-weight:700}
+.d-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:28px;align-items:start}
+@media (max-width:900px){.d-grid{grid-template-columns:1fr}}
+.section{margin:30px 0}
+.protag{display:flex;flex-wrap:wrap;gap:22px;align-items:flex-start;justify-content:space-around}
+.protag figure{margin:0;text-align:center;max-width:220px}
+.protag figcaption{font-size:13.5px;color:var(--ink2);margin-top:8px}
+.lettre{font-size:16.5px;line-height:1.65}
+.lettre .sign{text-align:right;margin-top:12px;color:var(--ink2)}
+.noms{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:6px}
+.champ span{display:block;font-size:13.5px;font-weight:700;margin-bottom:5px}
+.champ input{width:100%;padding:11px 12px;border:1.5px solid var(--line2);border-radius:var(--r);background:#fff;font-size:16px}
+.champ input:focus{outline:none;border-color:var(--ink)}
+.ouvrir{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px}
+.consignes{margin:0;padding:0;list-style:none;counter-reset:c}
+.consignes li{position:relative;padding:0 0 12px 38px;font-size:15px;color:var(--ink2)}
+.consignes li b{color:var(--ink)}
+.consignes li::before{counter-increment:c;content:counter(c);position:absolute;left:0;top:0;width:25px;height:25px;border:1.5px solid var(--ink);border-radius:50%;display:grid;place-items:center;font-size:12.5px;font-weight:700;color:var(--ink)}
+.rules details{border-bottom:1px solid var(--line);padding:10px 0}
+.rules details:last-child{border-bottom:0}
+.rules summary{font-weight:700;font-size:16px;cursor:pointer}
+.form-liens{display:flex;flex-wrap:wrap;gap:10px}
+@media (max-width:640px){.noms{grid-template-columns:1fr}}
+</style>
+</head>
+<body data-avec-logos data-sous-titre="L'enquête · Mastère MA28 · Bloc 1, C1.1">
+<header id="cc-top"></header>
+<main class="wrap">
+  <div class="p-tete">
+    <img src="../cold-case-gifi/img/bf-conseil.png" alt="BF Conseil" width="140" height="103">
+    <div>
+      <p class="kick" id="meta-sous"></p>
+      <h1 class="p-titre">Cold case GiFi : l'enquête en 3 h</h1>
+      <p class="p-sous">Le 3 novembre 2026, GiFi a été placé en redressement judiciaire. Vous avez 3 heures pour comprendre ce que l'étude de marché et la veille n'ont pas vu.</p>
+      <div class="d-chiffres"><div><b>4</b>pièces à conviction</div><div><b>2</b>cabinets d'enquête</div><div><b>30 000 €</b>de trésorerie au départ</div><div><b>10 min</b>de grand oral par cabinet</div></div>
+    </div>
+  </div>
+
+  <div class="d-grid">
+    <section class="bloc"><p class="lib-sec">La une du dossier</p><div id="une"></div></section>
+    <section class="bloc"><p class="lib-sec">La lettre de mission</p><div class="lettre" id="lettre"></div></section>
+  </div>
+
+  <section class="section bloc">
+    <p class="lib-sec">Les protagonistes</p>
+    <div class="protag" id="protag"></div>
+  </section>
+
+  <section class="section chemise">
+    <span class="etiq">Les deux cabinets</span>
+    <p id="compo" style="color:var(--ink2)"></p>
+    <div class="noms">
+      <label class="champ"><span>Nom du cabinet 1</span><input id="nom1" maxlength="40" autocomplete="off" placeholder="Cabinet 1"></label>
+      <label class="champ"><span>Nom du cabinet 2</span><input id="nom2" maxlength="40" autocomplete="off" placeholder="Cabinet 2"></label>
+    </div>
+    <p style="font-size:13.5px;color:var(--ink3);margin-top:8px">Les noms restent sur cet appareil. Rien n'est envoyé.</p>
+    <div class="ouvrir">
+      <a class="btn pri grand" id="go1" href="equipe.html?e=1">Ouvrir le dossier · Cabinet 1</a>
+      <a class="btn pri grand" id="go2" href="equipe.html?e=2">Ouvrir le dossier · Cabinet 2</a>
+    </div>
+  </section>
+
+  <div class="d-grid">
+    <section class="bloc rules"><p class="lib-sec">Les règles du jeu</p><div class="doc" id="regles"></div></section>
+    <section class="bloc beige">
+      <p class="lib-sec">Pour le formateur</p>
+      <ol class="consignes">
+        <li><b>Au début : le générique</b>, projeté, puis les cabinets ouvrent leur dossier.</li>
+        <li><b>Toute la séance :</b> le chrono et la trésorerie au tableau. Réglez l'heure de début dans le chrono.</li>
+        <li><b>Entre les pièces :</b> le quiz flash et la Minute jury.</li>
+        <li><b>À la fin : le grand oral</b>, 10 min par cabinet, avec le masque PowerPoint.</li>
+        <li><b>Pour finir :</b> badges et palmarès.</li>
+      </ol>
+      <div class="form-liens">
+        <a class="btn petit" href="generique.html">Générique</a>
+        <a class="btn petit" href="chrono.html">Chrono</a>
+        <a class="btn petit" href="tresorerie.html">Trésorerie</a>
+        
+        <a class="btn petit" href="quiz.html">Quiz flash</a>
+        
+        <a class="btn petit" href="badges.html">Badges et palmarès</a>
+        <a class="btn petit" href="imprimer.html">Tout imprimer</a>
+        <a class="btn petit" href="masque-grand-oral.pptx" download="Cold-case-GiFi-masque-grand-oral.pptx">Masque PowerPoint du grand oral</a>
+        <a class="btn petit" href="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fbelelhanachi-hub.github.io%2Fateliers-bf-conseil%2Fcold-case-gifi-3h%2Fmasque-grand-oral.pptx" target="_blank" rel="noopener">Masque dans PowerPoint pour le web</a>
+      </div>
+    </section>
+  </div>
+</main>
+<footer id="cc-pied"></footer>
+<script>
+(function () {
+  var D = CC.data;
+  CC.$("#meta-sous").textContent = D.meta.sous_titre;
+  CC.monterUne(CC.$("#une"));
+
+  var p = CC.$("#protag");
+  [["gifi", "L\u0027enseigne placée en redressement judiciaire le 3 novembre 2026"],
+   ["action", "Le discounter concurrent"],
+   ["temu", "La plateforme lancée en France en avril 2023"]].forEach(function (m, i) {
+    var f = CC.el("figure");
+    var l = CC.logo(m[0], "grand");
+    f.appendChild(l);
+    f.appendChild(CC.el("figcaption", { text: m[1] }));
+    p.appendChild(f);
+    CC.anim(f, [{ opacity: 0, transform: "translateY(14px)" }, { opacity: 1, transform: "none" }], { duration: 600, delay: 150 * i, fill: "backwards", easing: "ease-out" });
+  });
+
+  function lettre() {
+    var n1 = CC.nomEquipe(1), n2 = CC.nomEquipe(2);
+    CC.$("#lettre").innerHTML = "<p><strong>" + CC.esc(n1) + " et " + CC.esc(n2) + ",</strong></p>" +
+      D.lettre.split(/(?<=[.?]) (?=[A-ZÀ-Ý])/).reduce(function (acc, phr, i) {
+        // regroupe en paragraphes comme dans la lettre d'origine
+        var coupe = /^(Huit|Quatre|Votre|Après|À la fin)/.test(phr);
+        if (coupe || i === 0) acc.push([phr]); else acc[acc.length - 1].push(phr);
+        return acc;
+      }, []).map(function (para) { return "<p>" + CC.esc(para.join(" ")) + "</p>"; }).join("") +
+      '<p class="sign">L\u0027administrateur judiciaire<br><em>(lettre d\u0027exercice)</em></p>';
+  }
+  lettre();
+  CC.$("#compo").textContent = D.equipes.composition + ". " + (D.organisation || []).slice(0, 2).join(" ");
+
+  var noms = CC.get("noms", ["", ""]);
+  ["nom1", "nom2"].forEach(function (id, i) {
+    var inp = CC.$("#" + id);
+    inp.value = noms[i] || "";
+    inp.addEventListener("input", function () {
+      noms[i] = inp.value; CC.set("noms", noms); lettre(); CC.entete(document.body.getAttribute("data-sous-titre"));
+      CC.$("#go" + (i + 1)).textContent = "Ouvrir le dossier · " + CC.nomEquipe(i + 1);
+      CC.activerSon(CC.son.actif);
+    });
+    CC.$("#go" + (i + 1)).textContent = "Ouvrir le dossier · " + CC.nomEquipe(i + 1);
+  });
+
+  CC.$("#regles").innerHTML = D.regles.map(function (r, i) {
+    return "<details open><summary>" + CC.esc(r.titre) + "</summary>" + r.html + "</details>";
+  }).join("");
+})();
+</script>
+</body>
+</html>

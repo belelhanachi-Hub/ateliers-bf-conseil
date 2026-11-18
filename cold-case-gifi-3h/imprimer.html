@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Cold case GiFi · Tout imprimer</title>
+<link rel="stylesheet" href="../cold-case-gifi/css/cc.css?v=d5b87049da">
+<script src="../cold-case-gifi/js/config.js?v=d5b87049da"></script>
+<script src="js/donnees.js?v=d5b87049da"></script>
+<script src="../cold-case-gifi/js/commun.js?v=d5b87049da"></script>
+<style>
+.panneau{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--ink);padding:22px 24px;margin-bottom:24px}
+.panneau h1{font:400 clamp(32px,4vw,52px)/1 var(--fd);margin-bottom:6px}
+.choix{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:6px 18px;margin:14px 0}
+.choix label{display:flex;gap:8px;align-items:flex-start;font-size:15px}
+.reglages{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin:10px 0}
+.reglages input[type=number]{width:70px;padding:6px;border:2px solid var(--encre);font:700 15px var(--f)}
+.conseil{font-size:14px;color:var(--encre2)}
+#apercu{display:flex;flex-direction:column;align-items:center;gap:22px}
+
+/* ---------- Feuilles A4 ---------- */
+.a4{width:210mm;height:297mm;background:#fff;color:#111;padding:8mm;position:relative;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.4);
+  font-family:var(--f);font-size:11pt;line-height:1.4}
+.a4 .entete-f{display:flex;justify-content:space-between;font:700 8.5pt var(--f);text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid #111;padding-bottom:2mm;margin-bottom:4mm}
+.g22{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:4mm;height:calc(281mm - 10mm)}
+.g23{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,1fr);gap:4mm;height:calc(281mm - 10mm)}
+.g25{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(5,1fr);gap:3mm;height:calc(281mm - 10mm)}
+.carte{border:1.6pt solid #111;padding:5mm;display:flex;flex-direction:column;position:relative;min-height:0;overflow:hidden;border-radius:2mm}
+.carte .ct{font:700 8pt var(--f);letter-spacing:.14em;text-transform:uppercase;display:flex;justify-content:space-between;gap:4mm}
+.carte .titre{font:400 22pt/1.02 var(--fd);margin:3mm 0 4mm}
+.carte .fait{font-size:13pt;line-height:1.45;flex:1}
+.carte .src{font-size:9.5pt;border-top:1px dashed #111;padding-top:2mm;margin-top:3mm;display:flex;align-items:center;justify-content:space-between;gap:3mm}
+.carte .pied-c{font:700 7.5pt var(--f);text-align:center;letter-spacing:.06em;margin-top:2mm;color:#333}
+.carte .num{font:400 34pt/1 var(--fd);position:absolute;right:5mm;bottom:12mm;color:#ddd;z-index:0}
+.carte > *{position:relative;z-index:1}
+.carte.indice{border-top:3mm solid #151515}
+.carte.p5 .fait,.carte.p6 .fait{font-size:14pt}
+.carte.p6 .src{display:block}
+.carte.parcours .fait{font-size:15pt;display:flex;align-items:center}
+.carte.verso{align-items:center;justify-content:center;background:#fff}
+.carte.verso .lettre{font:400 110pt/1 var(--fd)}
+.etiq{border:1.6pt dashed #111;border-radius:2mm;padding:4mm 5mm;display:flex;flex-direction:column;justify-content:space-between}
+.etiq b{font:400 24pt/1 var(--fd)}
+.etiq .s{font-size:10pt}
+.logo-marque{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.a4 .logo-marque.petit{--h:16px}
+.a4 .logo-marque.icone img{height:24px}
+.doc-a4 h2{font:400 26pt/1.05 var(--fd);margin:2mm 0 4mm}
+.doc-a4 h3{font:400 15pt var(--fd);margin:5mm 0 2mm}
+.doc-a4 table{border-collapse:collapse;width:100%;font-size:10.5pt}
+.doc-a4 th,.doc-a4 td{border:1pt solid #111;padding:2mm;vertical-align:top;text-align:left}
+.doc-a4 th{background:#eee;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.doc-a4 .lignes{border-bottom:1px dotted #111;height:8mm}
+.doc-a4 ol li{margin-bottom:2mm}
+.doc-a4 .rep{display:block;border-bottom:1px dotted #555;height:7mm}
+.vierge td{height:15mm}
+.lettre-a4{font-size:12.5pt;line-height:1.75}
+.lettre-a4 p{margin:0 0 4mm}
+.badge-p{border:2pt solid #111;border-radius:3mm;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:5mm;gap:2mm}
+.badge-p .rond{width:30mm;height:30mm;border-radius:50%;border:1.5pt solid #151515;display:flex;align-items:center;justify-content:center;font:400 13pt/1 var(--fd);color:#151515;padding:3mm}
+.badge-p b{font:400 20pt/1 var(--fd)}
+.badge-p .pour{font-size:10pt}
+.badge-p .nom{width:80%;border-bottom:1px dotted #111;height:9mm;font:700 13pt var(--f)}
+.consigne-imp{font:700 9pt var(--f);text-align:center;margin-top:2mm}
+
+@page{size:A4;margin:0}
+@media print{
+  body{background:#fff}
+  .wrap{padding:0;max-width:none}
+  .panneau{display:none}
+  #apercu{gap:0;display:block}
+  .a4{box-shadow:none;break-after:page;page-break-after:always;margin:0}
+  .a4:last-child{break-after:auto;page-break-after:auto}
+}
+@media screen and (max-width:860px){ #apercu{zoom:.45} }
+</style>
+</head>
+<body data-avec-logos data-sous-titre="Tout ce qui s'imprime · A4">
+<header id="cc-top"></header>
+<main class="wrap">
+  <section class="panneau no-print">
+    <h1>Tout imprimer</h1>
+    <p>Choisissez ce qu'il faut imprimer. Chaque élément est prévu en 2 jeux, un par cabinet (« Jeu 1 », « Jeu 2 »).</p>
+    <div class="choix" id="choix"></div>
+    <div class="reglages">
+      <label>Fiches « Et chez moi ? » : <input type="number" id="nb-fiches" min="1" max="20" value="8"></label>
+      <button class="btn pri grand" type="button" id="imprimer">Imprimer</button>
+      <span id="nb-pages" class="conseil"></span>
+    </div>
+    <p class="conseil">Réglages de l'impression : format A4, marges « Aucune », échelle 100 %, cocher « Graphiques d'arrière-plan ». Les cartes parcours se font en recto verso (retournement sur le bord long) : la page des lettres suit celle des situations. Toutes les autres cartes sont en recto seul.</p>
+  </section>
+  <div id="apercu"></div>
+</main>
+<footer id="cc-pied"></footer>
+<script>
+(function () {
+  "use strict";
+  var D = CC.data;
+  var PIED = D.meta.pied_cartes;
+  var MARQ = D.logos.cartes || {};
+  var IDS = D.pieces.map(function (p) { return p.id; });
+  var SECTIONS = [
+    ["lettre", "Lettres de mission (1 par cabinet)"],
+    ["etiquettes", "Étiquettes des enveloppes (" + IDS.length + " pièces + " + (D.finale ? "finale" : "grand oral") + ")"],
+    ["indices", "Les 15 cartes indices (pièce 8)"],
+    ["p5", "Les 6 cartes information (pièce 5)"],
+    ["p6", "Les 4 cartes à coter (pièce 6)"],
+    ["parcours", "Les 6 cartes parcours, recto verso (pièce 4)"],
+    ["questionnaire", "Le questionnaire (pièce 2)"],
+    ["grille", "La grille pondérée et la grille vierge (pièce 7)"],
+    ["fiche", "La fiche « Et chez moi ? »"],
+    ["badges", "Les " + D.badges.length + " badges"]
+  ].filter(function (s) {
+    var piece = { indices: 8, p5: 5, p6: 6, parcours: 4, questionnaire: 2, grille: 7 }[s[0]];
+    return !piece || IDS.indexOf(piece) >= 0;
+  });
+  var choix = CC.get("imprimer", null) || SECTIONS.reduce(function (o, s) { o[s[0]] = true; return o; }, {});
+  var box = CC.$("#choix");
+  SECTIONS.forEach(function (s) {
+    var l = CC.el("label");
+    l.innerHTML = '<input type="checkbox" data-s="' + s[0] + '"' + (choix[s[0]] ? " checked" : "") + "> <span>" + CC.esc(s[1]) + "</span>";
+    box.appendChild(l);
+  });
+  box.addEventListener("change", function (e) { choix[e.target.getAttribute("data-s")] = e.target.checked; CC.set("imprimer", choix); rendu(); });
+  CC.$("#nb-fiches").addEventListener("change", rendu);
+  CC.$("#imprimer").addEventListener("click", function () { window.print(); });
+
+  var esc = CC.esc;
+  function page(cls, html) { var p = CC.el("section", { class: "a4 " + (cls || "") }); p.innerHTML = html; return p; }
+  function entete(g, d) { return '<div class="entete-f"><span>Cold case GiFi · ' + esc(g) + "</span><span>" + esc(d) + "</span></div>"; }
+  function pied() { return '<div class="pied-c">' + esc(PIED) + "</div>"; }
+
+  function rendu() {
+    var ap = CC.$("#apercu");
+    ap.innerHTML = "";
+    var JEUX = [1, 2];
+
+    if (choix.lettre) JEUX.forEach(function (j) {
+      var paras = D.lettre.split(/(?<=[.?]) (?=[A-ZÀ-Ý])/).reduce(function (acc, phr, i) {
+        if (i === 0 || /^(Huit|Quatre|Votre|Après|À la fin)/.test(phr)) acc.push([phr]); else acc[acc.length - 1].push(phr); return acc;
+      }, []);
+      ap.appendChild(page("lettre-a4", entete("Lettre de mission", "Jeu " + j) +
+        '<p style="text-align:right">À remettre sous enveloppe scellée</p>' +
+        "<p><strong>Cabinet ………………………………………,</strong></p>" +
+        paras.map(function (p) { return "<p>" + esc(p.join(" ")) + "</p>"; }).join("") +
+        '<p style="text-align:right;margin-top:8mm">L\u0027administrateur judiciaire<br><em>(lettre d\u0027exercice)</em></p>' +
+        '<div style="position:absolute;bottom:8mm;left:8mm;right:8mm">' + pied() + "</div>"));
+    });
+
+    if (choix.etiquettes) JEUX.forEach(function (j) {
+      var h = "";
+      D.pieces.forEach(function (p, k) {
+        var s = D.meta.debut_reglable ? null : D.deroule.filter(function (x) { return x.seance === p.seance; })[0];
+        h += '<div class="etiq"><span class="s">Cold case GiFi · Jeu ' + j + " · Cabinet ……………</span><b>Pièce " + p.id + "<br>" + esc(p.titre) + "</b>" +
+          '<span class="s">Séance ' + p.seance.slice(1) + (s ? " · prévue à " + s.debut.replace(":", "h") : "") + " · " +
+          (k === 0 ? "s\u0027ouvre au signal du formateur" : "s\u0027ouvre avec le code de la pièce " + D.pieces[k - 1].id) + "</span></div>";
+      });
+      h += '<div class="etiq"><span class="s">Cold case GiFi · Jeu ' + j + " · Cabinet ……………</span><b>" + (D.finale ? "Finale<br>" + esc(D.finale.titre) : "Le grand<br>oral") + '</b><span class="s">' + (D.finale ? "16h05" : "En fin de séance") + " · s\u0027ouvre avec le code de la pièce " + IDS[IDS.length - 1] + "</span></div>";
+      h += '<div class="etiq"><span class="s">Cold case GiFi · Jeu ' + j + '</span><b>Lettre<br>de mission</b><span class="s">Dossier scellé · ' + (D.meta.debut_reglable ? "à ouvrir au début de la séance" : "à ouvrir à 8h30") + '</span></div>';
+      ap.appendChild(page("", entete("Étiquettes des enveloppes", "Jeu " + j) + '<div class="g25">' + h + "</div>"));
+    });
+
+    if (choix.indices) JEUX.forEach(function (j) {
+      for (var k = 0; k < D.cartes_indices.length; k += 4) {
+        var h = D.cartes_indices.slice(k, k + 4).map(function (c) {
+          return '<article class="carte indice"><div class="ct"><span>Carte indice n° ' + c.n + "</span><span>Jeu " + j + "</span></div>" +
+            '<h3 class="titre">' + esc(c.titre) + '</h3><p class="fait">' + esc(c.fait) + "</p>" +
+            '<div class="src"><span>Source : ' + esc(c.source) + '</span><span class="lg" data-m="' + (MARQ[String(c.n)] || "") + '"></span></div>' + pied() + "</article>";
+        }).join("");
+        ap.appendChild(page("", entete("Cartes indices · pièce 8", "Jeu " + j + " · recto seul") + '<div class="g22">' + h + "</div>"));
+      }
+    });
+
+    if (choix.p5) JEUX.forEach(function (j) {
+      var h = D.cartes_p5.map(function (c) {
+        return '<article class="carte p5"><div class="ct"><span>Carte information ' + esc(c.id) + "</span><span>Jeu " + j + '</span></div><p class="fait" style="margin-top:4mm">' + esc(c.texte) + "</p>" + pied() + "</article>";
+      }).join("");
+      ap.appendChild(page("", entete("Cartes information · pièce 5", "Jeu " + j + " · recto seul") + '<div class="g23">' + h + "</div>"));
+    });
+
+    if (choix.p6) JEUX.forEach(function (j) {
+      var h = D.cartes_p6.map(function (c) {
+        return '<article class="carte p6"><div class="ct"><span>Carte à coter ' + esc(c.id) + "</span><span>Jeu " + j + '</span></div><h3 class="titre">Carte ' + esc(c.id) + '</h3><p class="fait">' + esc(c.texte) + "</p>" +
+          '<div class="src"><strong>Source indiquée :</strong> ' + esc(c.source) + "</div>" + pied() + "</article>";
+      }).join("");
+      ap.appendChild(page("", entete("Cartes à coter · pièce 6", "Jeu " + j + " · recto seul") + '<div class="g22">' + h + "</div>"));
+    });
+
+    if (choix.parcours) JEUX.forEach(function (j) {
+      var C = D.cartes_parcours;
+      var recto = C.map(function (c) {
+        return '<article class="carte parcours"><div class="ct"><span>Carte parcours</span><span>Jeu ' + j + '</span></div><p class="fait">' + esc(c.texte) + "</p>" + pied() + "</article>";
+      }).join("");
+      // verso : colonnes inversées pour le retournement sur le bord long
+      var verso = "";
+      for (var r = 0; r < 3; r++) [1, 0].forEach(function (col) {
+        var c = C[r * 2 + col];
+        verso += '<article class="carte verso"><span class="lettre">' + esc(c.lettre) + "</span></article>";
+      });
+      ap.appendChild(page("", entete("Cartes parcours · pièce 4 · RECTO", "Jeu " + j) + '<div class="g23">' + recto + "</div>"));
+      ap.appendChild(page("", entete("Cartes parcours · pièce 4 · VERSO (lettres)", "Jeu " + j) + '<div class="g23">' + verso + "</div>"));
+    });
+
+    if (choix.questionnaire) JEUX.forEach(function (j) {
+      ap.appendChild(page("doc-a4", entete("Pièce 2 · Le sondage", "Jeu " + j) +
+        "<h2>Le questionnaire</h2><p>Repérez les questions biaisées et nommez le biais de chacune : question orientée, double question, terme vague, réponses incomplètes.</p><ol>" +
+        D.questionnaire_piege.map(function (q) { return "<li>" + esc(q) + '<span class="rep"></span></li>'; }).join("") + "</ol>" +
+        '<div style="position:absolute;bottom:8mm;left:8mm;right:8mm">' + pied() + "</div>"));
+    });
+
+    if (choix.grille) JEUX.forEach(function (j) {
+      var G = D.grille_ponderee;
+      var ex = "<table><thead><tr><th>FCS</th><th>Poids</th><th>Note de GiFi (exercice)</th><th>Pourquoi cette note</th></tr></thead><tbody>" +
+        G.map(function (r) { return "<tr><td>" + esc(r.fcs) + "</td><td>" + Math.round(r.poids * 100) + " %</td><td>" + r.note_gifi + "</td><td>" + esc(r.pourquoi) + "</td></tr>"; }).join("") +
+        "</tbody></table><p style=\"margin-top:2mm\">Score pondéré = somme de (poids × note).</p>";
+      var vierge = '<table class="vierge"><thead><tr><th style="width:24%">FCS</th><th style="width:16%">Origine</th><th style="width:9%">Poids</th><th style="width:8%">GiFi</th><th style="width:8%">Action</th><th style="width:8%">Temu</th><th>Justification des notes</th></tr></thead><tbody>' +
+        [1, 2, 3, 4, 5, 6].map(function () { return "<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>"; }).join("") +
+        "<tr><td><strong>Total / score pondéré</strong></td><td></td><td>100 %</td><td></td><td></td><td></td><td></td></tr></tbody></table>";
+      ap.appendChild(page("doc-a4", entete("Pièce 7 · Les facteurs clés de succès", "Jeu " + j) +
+        "<h2>La grille pondérée d\u0027exercice</h2>" + ex + "<h3>Votre grille</h3><p>Origine : clients, leaders, échecs, experts. Notes de 1 à 5.</p>" + vierge +
+        '<div style="position:absolute;bottom:8mm;left:8mm;right:8mm">' + pied() + "</div>"));
+    });
+
+    if (choix.fiche) {
+      var nb = Math.max(1, Math.min(20, +CC.$("#nb-fiches").value || 8));
+      for (var f = 0; f < nb; f++) {
+        ap.appendChild(page("doc-a4", entete("Et chez moi ?", "Fiche individuelle") +
+          "<h2>Et chez moi ?</h2><p>Nom : ……………………………………… · " + esc(D.transfert.quand.charAt(0).toUpperCase() + D.transfert.quand.slice(1)) + ".</p>" +
+          "<p>Ce que vous avez fait pour GiFi aujourd\u0027hui, faites-le pour votre entreprise, en une page.</p>" +
+          '<table><thead><tr><th style="width:26%">Ce que j\u0027ai appris sur GiFi</th><th>Ce que j\u0027applique à mon entreprise</th><th style="width:18%">Où ça va dans mon dossier</th></tr></thead><tbody>' +
+          D.transfert.lignes.map(function (l) {
+            return "<tr><td>" + esc(l[0]) + '</td><td><em style="font-size:9pt">' + esc(l[1]) + '</em><div class="lignes"></div><div class="lignes"></div></td><td>' + esc(l[2]) + "</td></tr>";
+          }).join("") + "</tbody></table>" +
+          '<p style="margin-top:6mm"><strong>Mon engagement :</strong> d\u0027ici la prochaine séance, j\u0027ajoute à mon dossier …………………………………………………………………………</p><div class="lignes"></div>' +
+          '<div style="position:absolute;bottom:8mm;left:8mm;right:8mm">' + pied() + "</div>"));
+      }
+    }
+
+    if (choix.badges) {
+      var h = D.badges.map(function (b) {
+        return '<div class="badge-p"><div class="rond">' + esc(b.badge) + "</div><b>" + esc(b.badge) + '</b><span class="pour">' + esc(b.pour) + '</span><span class="nom"></span><span class="pour">Cold case GiFi · ' + esc(D.meta.groupe) + "</span></div>";
+      }).join("");
+      ap.appendChild(page("", entete("Les badges", "À découper") + '<div class="g23">' + h + "</div>"));
+    }
+
+    // logos (petits) à côté de la source, selon cartes_indices_marque
+    CC.$$(".lg", ap).forEach(function (s) { var m = s.getAttribute("data-m"); if (m) s.appendChild(CC.logo(m, "petit")); });
+    var n = ap.children.length;
+    CC.$("#nb-pages").textContent = n + " page" + (n > 1 ? "s" : "") + " A4";
+  }
+  rendu();
+})();
+</script>
+</body>
+</html>

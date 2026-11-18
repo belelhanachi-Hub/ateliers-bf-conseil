@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Cold case GiFi · Générique</title>
+<link rel="stylesheet" href="../cold-case-gifi/css/cc.css?v=d5b87049da">
+<script src="../cold-case-gifi/js/config.js?v=d5b87049da"></script>
+<script src="js/donnees.js?v=d5b87049da"></script>
+<script src="../cold-case-gifi/js/commun.js?v=d5b87049da"></script>
+<style>
+body{background:var(--ink);overflow:hidden}
+.plateau{position:fixed;inset:0;z-index:100;background:var(--ink);color:#fff;overflow:hidden}
+.scene{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column}
+.date-tape{font:400 clamp(40px,6.4vw,104px)/1 var(--fd);letter-spacing:-.01em;color:#fff;white-space:pre}
+.curseur{display:inline-block;width:.08em;height:.95em;background:#fff;vertical-align:-.1em;margin-left:.06em;animation:cc-pulse 1s steps(2) infinite}
+.bureau-fond{position:absolute;inset:0;background:var(--bg)}
+.chem{position:relative;width:min(74vw,980px);aspect-ratio:1.45;background:var(--paper);border:1px solid var(--line);border-top:4px solid var(--ink);
+  box-shadow:0 30px 60px rgba(0,0,0,.18);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3vh;color:var(--ink)}
+.chem .logo-bf{position:absolute;top:6%;left:5%;width:clamp(60px,7vw,110px);mix-blend-mode:multiply}
+.chem .ref{position:absolute;top:7%;right:5%;font-size:clamp(11px,1.1vw,15px);font-weight:700;letter-spacing:.14em;color:var(--ink3);text-transform:uppercase}
+.chem .titre-g{font:400 clamp(60px,10vw,160px)/.95 var(--fd);text-align:center;letter-spacing:-.02em}
+.chem .titre-g span{display:block;font-size:.55em;color:var(--ink2);margin-top:.15em}
+.gros-tampon{display:inline-block;font:700 clamp(20px,2.8vw,40px)/1 var(--f);color:var(--err);border:3px solid var(--err);border-radius:var(--r);padding:.3em .6em;text-transform:uppercase;letter-spacing:.14em;transform:rotate(-6deg);background:#fff}
+/* Frise */
+.frise-g{position:absolute;left:4vw;right:4vw;top:52%;height:0}
+.frise-g .trait{position:absolute;left:0;right:0;top:-2px;height:4px;background:var(--ink);transform-origin:left;transform:scaleX(0)}
+.jalon{position:absolute;width:17%;transform:translateX(-50%)}
+.jalon .point{position:absolute;left:50%;width:16px;height:16px;border-radius:50%;background:#fff;border:3px solid var(--ink);transform:translate(-50%,-50%);top:0}
+.jalon .boite{position:absolute;left:0;right:0;background:var(--paper);color:var(--ink);padding:10px 12px;font-size:clamp(12px,1.05vw,16px);line-height:1.35;border:1px solid var(--line);border-top:3px solid var(--ink)}
+.jalon.haut .boite{bottom:26px}
+.jalon.bas .boite{top:26px}
+.jalon .boite::after{content:"";position:absolute;left:50%;width:1.5px;height:18px;background:var(--ink);transform:translateX(-50%)}
+.jalon.haut .boite::after{top:100%}.jalon.bas .boite::after{bottom:100%}
+.jalon .an{display:block;font:400 clamp(20px,2.1vw,32px)/1.05 var(--fd)}
+.jalon .fait{display:block;font-weight:700;margin:4px 0}
+.jalon .src{display:block;font-size:.8em;color:var(--ink3)}
+.jalon .lg{margin-top:6px;display:block}
+.jalon .lg .logo-marque{--h:26px;--hf:15px}
+.titre-frise{position:absolute;top:7vh;left:0;right:0;text-align:center;font:400 clamp(30px,3.6vw,54px) var(--fd);color:var(--ink);letter-spacing:-.01em}
+.mention-g{position:absolute;bottom:64px;left:0;right:0;text-align:center;font-size:12px;color:var(--ink3)}
+/* Compteurs */
+.compteurs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6vw;align-items:start;padding:0 6vw;width:100%}
+.cpt .lib{font-size:clamp(14px,1.5vw,20px);font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--beige2)}
+.cpt .val{font:400 clamp(64px,9vw,150px)/1 var(--fd);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.cpt .val.rouge{color:#ff8f86}
+.cpt .sub{font-size:clamp(15px,1.6vw,24px);color:#e9e9e6;margin-top:6px}
+.cpt .src{font-size:clamp(12px,1.1vw,15px);color:#9d9d98;margin-top:8px}
+/* Fin */
+.phrase{font:400 clamp(34px,4.8vw,76px)/1.12 var(--fd);text-align:center;max-width:1400px;padding:0 5vw;letter-spacing:-.01em}
+.phrase.mission{color:var(--beige);margin-top:4vh;font-size:clamp(26px,3.4vw,54px)}
+.scene .btn.pri{background:#fff;color:var(--ink);border-color:#fff}
+/* Commandes */
+.cmd{position:fixed;left:0;right:0;bottom:0;z-index:150;display:flex;align-items:center;gap:10px;padding:10px 16px;background:rgba(21,21,21,.92)}
+.cmd button{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.55);padding:6px 12px;font-size:13.5px;font-weight:700;border-radius:var(--r)}
+.cmd .barre{flex:1;height:3px;background:rgba(255,255,255,.2);position:relative;overflow:hidden}
+.cmd .barre i{position:absolute;inset:0;background:var(--beige);transform-origin:left;transform:scaleX(0)}
+.cmd .tps{color:#cfcfca;font-size:13.5px;min-width:48px;text-align:right;font-variant-numeric:tabular-nums}
+.cmd a{color:#fff;font-weight:700;margin-left:6px}
+.depart{position:fixed;inset:0;z-index:200;background:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;color:var(--ink);text-align:center;padding:20px}
+.depart img{width:150px}
+.depart h1{font:400 clamp(44px,6vw,84px)/1 var(--fd);letter-spacing:-.01em}
+.depart p{color:var(--ink2);max-width:640px}
+</style>
+</head>
+<body data-avec-logos data-sous-titre="Générique d'ouverture · 8h30">
+<header id="cc-top"></header>
+<div class="plateau" id="plateau" aria-live="off"></div>
+<div class="cmd" id="cmd">
+  <button type="button" id="b-prec" aria-label="Séquence précédente">⟨ Préc.</button>
+  <button type="button" id="b-pause" aria-label="Pause">Pause</button>
+  <button type="button" id="b-suiv" aria-label="Séquence suivante">Suiv. ⟩</button>
+  <div class="barre" aria-hidden="true"><i id="barre"></i></div>
+  <span class="tps" id="tps">0:00</span>
+  <button type="button" data-son aria-pressed="false">Activer le son</button>
+  <a href="index.html">Passer →</a>
+</div>
+<div class="depart" id="depart">
+  <img src="../cold-case-gifi/img/bf-conseil.png" alt="BF Conseil" width="150" height="111">
+  <h1>Cold case GiFi</h1>
+  <p>Générique d'ouverture · environ 60 secondes · flèches pour avancer ou reculer, Espace pour la pause, M pour le son</p>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+    <button class="btn pri grand" type="button" id="go-son">Lancer avec le son</button>
+    <button class="btn grand" type="button" id="go">Lancer sans le son</button>
+    <a class="btn grand" href="index.html">Passer</a>
+  </div>
+</div>
+<footer id="cc-pied"></footer>
+<script>
+(function () {
+  "use strict";
+  var D = CC.data;
+  var P = CC.$("#plateau");
+  var DUREE = 60;
+  var T = 0, joue = false, dernier = 0, evts = [], sc = -1, anims = [];
+
+  function A(el, kf, o) { var a = CC.anim(el, kf, o); anims.push(a); if (!joue && a.pause) a.pause(); return a; }
+  function quand(t, fn) { evts.push({ t: t, fn: fn, fait: false }); }
+  function vider() { anims.forEach(function (a) { try { a.cancel(); } catch (e) {} }); anims = []; evts = []; P.innerHTML = ""; }
+  function el(html, cls) { var e = CC.el("div", { class: cls || "scene" }, html); P.appendChild(e); return e; }
+
+  /* Tous les faits ci-dessous viennent de contenu/cartes_indices.md et contenu/00_scenario_et_regles.md */
+  var JALONS = [
+    { an: "2021", fait: "Action France : 2,92 Md€ de chiffre d\u0027affaires", src: "IntoTheMinds, d\u0027après les données d\u0027Action", m: "action", pos: "haut" },
+    { an: "Avril 2023", fait: "Lancement officiel de Temu en France", src: "LSA Data", m: "temu", pos: "bas" },
+    { an: "2023", fait: "GiFi change de logiciel de gestion (ERP) : achats, stocks et réassort perturbés", src: "Décision du tribunal, citée par l\u0027AFP (novembre 2026) ; Le Monde Informatique", m: "gifi", pos: "haut" },
+    { an: "2024", fait: "Action France : 5,27 Md€ de chiffre d\u0027affaires", src: "IntoTheMinds, d\u0027après les données d\u0027Action", m: "action", pos: "bas" },
+    { an: "1er juillet 2026", fait: "Taxe européenne de 3 € par catégorie d\u0027article sur les petits colis", src: "info.gouv.fr (juillet 2026)", m: null, pos: "haut" },
+    { an: "3 novembre 2026", fait: "GiFi placé en redressement judiciaire", src: "AFP, 3 novembre 2026", m: "gifi", pos: "bas" }
+  ];
+
+  var SCENES = [
+    { t: 0, f: function (t0) {
+      var s = el('<div class="date-tape"><span id="tape"></span><span class="curseur"></span></div>');
+      var txt = "3 novembre 2026";
+      txt.split("").forEach(function (c, i) {
+        quand(t0 + 0.8 + i * 0.22, function () { var z = CC.$("#tape"); if (z) { z.textContent = txt.slice(0, i + 1); if (c !== " ") CC.cliquetis(); } });
+      });
+    } },
+    { t: 6, f: function (t0) {
+      el('<div class="bureau-fond"></div>', "scene");
+      var s = el('<div class="chem" id="chem"><img class="logo-bf" src="../cold-case-gifi/img/bf-conseil.png" alt="BF Conseil"><span class="ref">Dossier d\u0027enquête · document d\u0027exercice</span><div id="tamp" style="opacity:0"><span class="gros-tampon">Affaire non élucidée</span></div><div class="titre-g" id="tg" style="opacity:0">Cold case GiFi<span>l\u0027enquête</span></div></div>');
+      A(CC.$("#chem"), [{ transform: "translateY(110vh) rotate(-6deg)" }, { transform: "translateY(0) rotate(-1deg)" }], { duration: 1300, easing: "cubic-bezier(.2,.8,.25,1)", fill: "both" });
+      quand(t0 + 1.8, function () {
+        var tp = CC.$("#tamp"); if (!tp) return;
+        tp.style.opacity = 1;
+        A(tp, [{ transform: "scale(3)", opacity: 0 }, { transform: "scale(.95)", opacity: 1, offset: .75 }, { transform: "scale(1)", opacity: 1 }], { duration: 380, easing: "cubic-bezier(.6,0,.9,.5)" });
+        CC.coupSourd();
+        A(P, [{ transform: "none" }, { transform: "translate(6px,4px)" }, { transform: "translate(-5px,-3px)" }, { transform: "translate(3px,1px)" }, { transform: "none" }], { duration: 300, delay: 260 });
+      });
+      quand(t0 + 3.4, function () {
+        var tg = CC.$("#tg"); if (!tg) return;
+        tg.style.opacity = 1;
+        A(tg, [{ opacity: 0, transform: "scale(.9)" }, { opacity: 1, transform: "none" }], { duration: 1000, easing: "ease-out" });
+      });
+    } },
+    { t: 14, f: function (t0) {
+      el('<div class="bureau-fond"></div>', "scene");
+      var s = el('<div class="titre-frise">2021 → 2026 : ce qui s\u0027est passé</div><div class="frise-g" id="frise"><div class="trait" id="trait"></div></div><div class="mention-g">' + CC.esc(D.logos.mention) + "</div>", "scene");
+      A(CC.$("#trait"), [{ transform: "scaleX(0)" }, { transform: "scaleX(1)" }], { duration: 2200, easing: "ease-in-out", fill: "forwards" });
+      JALONS.forEach(function (j, i) {
+        quand(t0 + 2 + i * 3.6, function () {
+          var fr = CC.$("#frise"); if (!fr) return;
+          var x = 8 + i * (84 / 5);
+          var d = CC.el("div", { class: "jalon " + j.pos });
+          d.style.left = x + "%";
+          d.innerHTML = '<span class="point"></span><div class="boite"><span class="an">' + CC.esc(j.an) + '</span><span class="fait">' + CC.esc(j.fait) + '</span><span class="src">Source : ' + CC.esc(j.src) + '</span><span class="lg"></span></div>';
+          fr.appendChild(d);
+          A(d.querySelector(".boite"), [{ opacity: 0, transform: "translateY(" + (j.pos === "haut" ? 20 : -20) + "px)" }, { opacity: 1, transform: "none" }], { duration: 700, easing: "ease-out" });
+          A(d.querySelector(".point"), [{ transform: "translate(-50%,-50%) scale(0)" }, { transform: "translate(-50%,-50%) scale(1)" }], { duration: 400 });
+          CC.cliquetis();
+          if (j.m) {
+            var lg = CC.logo(j.m);
+            lg.style.opacity = 0;
+            d.querySelector(".lg").appendChild(lg);
+            quand(t0 + 2 + i * 3.6 + 0.7, function () { lg.style.opacity = 1; A(lg, [{ opacity: 0 }, { opacity: 1 }], { duration: 900 }); });
+          }
+        });
+      });
+    } },
+    { t: 40, f: function (t0) {
+      var s = el('<div class="compteurs">' +
+        '<div class="cpt"><div class="lib">Ebitda de GiFi pour 2025</div><div class="val" id="v-eb">0 M€</div><div class="sub" id="s-eb">attendu</div>' +
+        '<div class="src">Source : décision du tribunal, citée par l\u0027AFP (novembre 2026)</div></div>' +
+        '<div class="cpt"><div class="lib">Salariés en France</div><div class="val" id="v-sal">0</div><div class="sub">environ 500 magasins</div>' +
+        '<div class="src">Source : AFP, 3 novembre 2026 ; Journal de l\u0027économie</div></div></div>');
+      A(s, [{ opacity: 0 }, { opacity: 1 }], { duration: 600 });
+      function compteur(id, de, a, debut, duree, fmt) {
+        quand(debut, function () { compteurs.push({ id: id, de: de, a: a, t0: debut, d: duree, fmt: fmt }); });
+      }
+      var mio = function (v) { return (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(Math.round(v)) + " M€"; };
+      compteur("v-eb", 0, 9, t0 + 0.6, 1.4, mio);
+      quand(t0 + 3, function () { var s2 = CC.$("#s-eb"); if (s2) { s2.textContent = "réalisé"; CC.$("#v-eb").classList.add("rouge"); CC.perte(); } });
+      compteur("v-eb", 9, -100, t0 + 3, 2.6, mio);
+      compteur("v-sal", 0, 6000, t0 + 6, 2, function (v) { return Math.round(v).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " "); });
+    } },
+    { t: 50, f: function (t0) {
+      el('<p class="phrase" id="ph1" style="opacity:0">Un redressement judiciaire n\u0027est pas une liquidation.</p><p class="phrase mission" id="ph2" style="opacity:0">Votre mission : comprendre ce que l\u0027étude de marché et la veille n\u0027ont pas vu.</p><p id="ph3" style="opacity:0;margin-top:5vh"><a class="btn pri grand" href="index.html">Ouvrir le dossier</a></p>');
+      [["#ph1", 0.5], ["#ph2", 3.8], ["#ph3", 7]].forEach(function (p) {
+        quand(t0 + p[1], function () { var e = CC.$(p[0]); if (!e) return; e.style.opacity = 1; A(e, [{ opacity: 0, transform: "translateY(16px)" }, { opacity: 1, transform: "none" }], { duration: 1200, easing: "ease-out" }); });
+      });
+    } }
+  ];
+
+  var compteurs = [];
+  function maj() {
+    compteurs = compteurs.filter(function (c) {
+      var e = CC.$("#" + c.id); if (!e) return false;
+      var k = Math.max(0, Math.min(1, (T - c.t0) / c.d));
+      var ease = 1 - Math.pow(1 - k, 3);
+      e.textContent = c.fmt(c.de + (c.a - c.de) * ease);
+      if (k < 1 && Math.random() < .25) CC.cliquetis();
+      return k < 1;
+    });
+  }
+
+  function aller(i) {
+    i = Math.max(0, Math.min(SCENES.length - 1, i));
+    vider(); compteurs = [];
+    sc = i; T = SCENES[i].t;
+    SCENES[i].f(T);
+    tick(true);
+  }
+  function sceneDe(t) { var k = 0; SCENES.forEach(function (s, i) { if (t >= s.t) k = i; }); return k; }
+  function tick(force) {
+    evts.forEach(function (e) { if (!e.fait && T >= e.t) { e.fait = true; e.fn(); } });
+    maj();
+    CC.$("#barre").style.transform = "scaleX(" + Math.min(1, T / DUREE) + ")";
+    CC.$("#tps").textContent = CC.mmss(Math.min(T, DUREE));
+  }
+  function boucle() {
+    var now = performance.now();
+    if (joue) {
+      var dt = Math.min(1, (now - dernier) / 1000);
+      T += dt;
+      var s = sceneDe(T);
+      if (s !== sc && T < DUREE) { vider(); sc = s; SCENES[s].f(SCENES[s].t); }
+      if (T >= DUREE) { T = DUREE; pause(true); }
+      tick();
+    }
+    dernier = now;
+  }
+  function pause(p) {
+    joue = !p;
+    anims.forEach(function (a) { try { p ? a.pause() : a.play(); } catch (e) {} });
+    CC.$("#b-pause").textContent = joue ? "Pause" : "Lecture";
+  }
+  function lancer(son) {
+    if (son) CC.activerSon(true);
+    CC.$("#depart").remove();
+    joue = true; dernier = performance.now();
+    aller(0);
+    setInterval(boucle, 40); // horloge du générique (minuterie plutôt que requestAnimationFrame : continue même si l'onglet ralentit)
+  }
+  CC.$("#go").addEventListener("click", function () { lancer(false); });
+  CC.$("#go-son").addEventListener("click", function () { lancer(true); });
+  CC.$("#go-son").focus();
+  CC.$("#b-pause").addEventListener("click", function () { if (T >= DUREE) { aller(0); pause(false); } else pause(joue); });
+  CC.$("#b-suiv").addEventListener("click", function () { if (sc < SCENES.length - 1) aller(sc + 1); });
+  CC.$("#b-prec").addEventListener("click", function () { aller(T - SCENES[sc].t > 1.5 ? sc : sc - 1); });
+  document.addEventListener("keydown", function (e) {
+    if (CC.$("#depart")) return;
+    if (e.key === " ") { if (e.target.tagName === "BUTTON") return; e.preventDefault(); CC.$("#b-pause").click(); }
+    else if (e.key === "ArrowRight") CC.$("#b-suiv").click();
+    else if (e.key === "ArrowLeft") CC.$("#b-prec").click();
+    else if (e.key === "Escape") location.href = "index.html";
+  });
+})();
+</script>
+</body>
+</html>
