@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Cold case GiFi · Breaking news</title>
+<link rel="stylesheet" href="../cold-case-gifi/css/cc.css?v=b6ec47bbfb">
+<script src="../cold-case-gifi/js/config.js?v=b6ec47bbfb"></script>
+<script src="js/donnees.js?v=b6ec47bbfb"></script>
+<script src="../cold-case-gifi/js/commun.js?v=b6ec47bbfb"></script>
+<style>
+.liste{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+@media (max-width:900px){.liste{grid-template-columns:1fr}}
+.liste .p-tete{grid-column:1/-1;margin-bottom:6px}
+.news-carte{display:flex;flex-direction:column;align-items:flex-start;gap:8px;text-align:left;cursor:pointer;border-top:3px solid var(--err)}
+.news-carte:hover{border-color:var(--ink);border-top-color:var(--err)}
+.news-carte .h{font:400 40px/1 var(--fd);font-variant-numeric:tabular-nums}
+.news-carte .t{font-size:19px;font-weight:700;line-height:1.25}
+.news-carte .s{font-size:13.5px;color:var(--ink2)}
+.aide{font-size:14.5px;color:var(--ink2);margin-top:18px}
+/* Écran plein : bandeau d'information */
+.bn{position:fixed;inset:0;z-index:100;background:var(--ink);color:#fff;overflow:hidden;display:flex;flex-direction:column}
+.bn-haut{display:flex;justify-content:space-between;align-items:center;padding:14px 26px;border-bottom:1px solid #333;font-size:clamp(14px,1.5vw,20px);font-weight:700;letter-spacing:.06em}
+.bn-haut .direct{background:var(--err);padding:4px 10px;border-radius:var(--r);letter-spacing:.14em;text-transform:uppercase;font-size:.85em}
+.bn-heure{font:400 clamp(24px,2.8vw,38px)/1 var(--fd);font-variant-numeric:tabular-nums}
+.bandeau{background:var(--err);color:#fff;font:400 clamp(48px,8.6vw,132px)/1 var(--fd);letter-spacing:-.01em;padding:16px 28px;white-space:nowrap}
+.bn-corps{flex:1;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:28px;padding:30px 36px;align-items:start;overflow:auto}
+.bn-titre{font:400 clamp(38px,5vw,78px)/1.04 var(--fd);letter-spacing:-.01em;margin-bottom:18px}
+.bn-texte{font-size:clamp(20px,2vw,30px);line-height:1.45;max-width:1200px;color:#e9e9e6}
+.bn-source{margin-top:18px;font-size:clamp(14px,1.4vw,20px);color:var(--beige2)}
+.bn-source a{color:#fff}
+.bn-logo .logo-marque{--h:80px}
+.bn-question{position:absolute;inset:0;background:var(--ink);display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:4vw 6vw;gap:24px}
+.bn-question .q-et{font-size:clamp(14px,1.5vw,20px);font-weight:700;color:var(--beige2);letter-spacing:.14em;text-transform:uppercase}
+.bn-question .q{font:400 clamp(38px,5.2vw,86px)/1.08 var(--fd);max-width:1500px;letter-spacing:-.01em}
+.bn-question .q-min{font:400 clamp(40px,5vw,78px)/1 var(--fd);color:var(--beige);font-variant-numeric:tabular-nums}
+.ticker{background:#fff;color:var(--ink);font-size:clamp(17px,1.8vw,26px);font-weight:700;white-space:nowrap;overflow:hidden;display:flex;align-items:stretch}
+.ticker .lbl{background:var(--err);color:#fff;padding:12px 16px;flex:none;position:relative;z-index:2;letter-spacing:.1em}
+.ticker .piste{flex:1;overflow:hidden;position:relative}
+.ticker .defile{display:inline-block;padding:12px 0;will-change:transform}
+.bn-ctrl{position:absolute;right:18px;bottom:72px;display:flex;gap:8px;z-index:5}
+.bn .btn{background:transparent;color:#fff;border-color:#fff}
+.bn .btn:hover{background:#fff;color:var(--ink)}
+@media (max-width:760px){.bn-corps{grid-template-columns:1fr}}
+</style>
+</head>
+<body data-avec-logos data-sous-titre="Les Breaking news · à projeter">
+<header id="cc-top"></header>
+<main class="wrap">
+  <div class="liste" id="liste"><div class="p-tete"><div><p class="kick">Rebondissements · à projeter</p><h1 class="p-titre">Breaking news</h1><p class="p-sous">Trois vraies infos, avec leur date et leur source, à lancer pendant la journée.</p></div></div></div>
+  <p class="aide">Les Breaking news s'affichent d'elles-mêmes sur l'écran des cabinets, à l'ouverture des pièces indiquées. Cette page sert à les projeter à la main si vous le souhaitez. Échap pour revenir.</p>
+</main>
+<footer id="cc-pied"></footer>
+<script>
+(function () {
+  "use strict";
+  var D = CC.data;
+  // l'entreprise concernée par chaque news (logo affiché à côté de la news)
+  var MARQUE = { 2: "action", 3: "gifi" };
+
+  var liste = CC.$("#liste");
+  D.breaking_news.forEach(function (n) {
+    var b = CC.el("button", { type: "button", class: "feuille news-carte" });
+    b.innerHTML = '<span class="kick">News n° ' + n.n + "</span><span class=\"h\">Pièce " + n.piece + '</span><span class="t">' + CC.esc(n.titre) + "</span>" +
+      "<span class=\"s\">Source : " + CC.esc(n.source) + "</span>";
+    b.addEventListener("click", function () { ouvrir(n); });
+    liste.appendChild(b);
+  });
+
+  var ecran = null, tick = null, ticker = null;
+  function fermer() {
+    if (!ecran) return;
+    clearInterval(tick); if (ticker) ticker.cancel();
+    ecran.remove(); ecran = null;
+    document.removeEventListener("keydown", touches);
+  }
+  function touches(e) {
+    if (e.key === "Escape") fermer();
+    else if ((e.key === "Enter" || e.key === "ArrowRight") && ecran && !ecran.querySelector(".bn-question")) { e.preventDefault(); question(); }
+  }
+  var courante = null;
+  function ouvrir(n) {
+    courante = n;
+    fermer();
+    CC.jingle();
+    ecran = CC.el("div", { class: "bn", role: "dialog", "aria-modal": "true", "aria-label": "Breaking news n° " + n.n });
+    var lien = n.url ? ' · <a href="' + CC.esc(n.url) + '" target="_blank" rel="noopener">lire la source</a>' : "";
+    ecran.innerHTML =
+      '<div class="bn-haut"><span><span class="direct">En direct</span> · Cold case GiFi · News n° ' + n.n + '</span><span class="bn-heure" aria-label="Heure"></span></div>' +
+      '<div class="bandeau">BREAKING NEWS</div>' +
+      '<div class="bn-corps"><div><h2 class="bn-titre">' + CC.esc(n.titre) + '</h2><p class="bn-texte">' + CC.esc(n.texte) + "</p>" +
+      '<p class="bn-source">Source : ' + CC.esc(n.source) + lien + "</p></div><div class=\"bn-logo\"></div></div>" +
+      '<div class="ticker" aria-hidden="true"><span class="lbl">INFO</span><div class="piste"><span class="defile"></span></div></div>' +
+      '<div class="bn-ctrl"><button type="button" class="btn" data-q>Afficher la question (Entrée)</button><button type="button" class="btn" data-x>Fermer (Échap)</button></div>';
+    document.body.appendChild(ecran);
+    if (MARQUE[n.n]) ecran.querySelector(".bn-logo").appendChild(CC.logo(MARQUE[n.n], "grand"));
+    ecran.querySelector("[data-q]").addEventListener("click", question);
+    ecran.querySelector("[data-x]").addEventListener("click", fermer);
+    document.addEventListener("keydown", touches);
+    ecran.querySelector("[data-q]").focus();
+    function heure() { var d = new Date(); var h = ecran && ecran.querySelector(".bn-heure"); if (h) h.textContent = CC.heure(d) + ":" + String(d.getSeconds()).padStart(2, "0"); }
+    heure(); tick = setInterval(heure, 1000);
+    // bandeau rouge qui balaie l'écran
+    CC.anim(ecran.querySelector(".bandeau"), [{ transform: "translateX(-105%)" }, { transform: "translateX(0)" }], { duration: 700, easing: "cubic-bezier(.2,.8,.2,1)" });
+    CC.anim(ecran.querySelector(".bn-corps"), [{ opacity: 0, transform: "translateY(16px)" }, { opacity: 1, transform: "none" }], { duration: 600, delay: 500, fill: "backwards" });
+    // texte défilant en bas
+    var def = ecran.querySelector(".defile");
+    var txt = (n.titre + " : " + n.texte + " (Source : " + n.source + ")").toUpperCase() + "     ●     ";
+    def.textContent = txt + txt;
+    requestAnimationFrame(function () {
+      var w = def.scrollWidth / 2;
+      if (CC.reduit()) return;
+      ticker = def.animate([{ transform: "translateX(0)" }, { transform: "translateX(" + (-w) + "px)" }], { duration: w * 14, iterations: Infinity });
+    });
+  }
+  function question() {
+    var n = courante;
+    if (!ecran || ecran.querySelector(".bn-question")) return;
+    var q = CC.el("div", { class: "bn-question" });
+    q.innerHTML = '<p class="q-et">La question · News n° ' + n.n + " · " + CC.esc(n.titre) + '</p><p class="q">' + CC.esc(n.question) + '</p><p class="q-min" role="timer">5:00</p>' +
+      '<div style="display:flex;gap:10px;flex-wrap:wrap"><button type="button" class="btn" data-go>Lancer les 5 minutes</button><button type="button" class="btn" data-ret>Revoir la news</button><button type="button" class="btn" data-x>Fermer (Échap)</button></div>';
+    ecran.appendChild(q);
+    CC.anim(q, [{ opacity: 0, transform: "scale(1.03)" }, { opacity: 1, transform: "none" }], { duration: 500 });
+    var fin = null, reste = 300, it = null, bip2 = false;
+    var m = q.querySelector(".q-min");
+    q.querySelector("[data-go]").addEventListener("click", function (e) {
+      if (fin) { reste = (fin - Date.now()) / 1000; fin = null; e.target.textContent = "Reprendre"; return; }
+      fin = Date.now() + reste * 1000; e.target.textContent = "Pause";
+      clearInterval(it);
+      it = setInterval(function () {
+        if (!fin) return;
+        var r = Math.max(0, (fin - Date.now()) / 1000);
+        m.textContent = CC.mmss(Math.ceil(r));
+        if (r <= 120 && !bip2) { bip2 = true; CC.bipDouble(); }
+        if (r <= 0) { clearInterval(it); fin = null; CC.bipFin(); m.textContent = "Temps écoulé"; }
+      }, 250);
+    });
+    q.querySelector("[data-ret]").addEventListener("click", function () { clearInterval(it); q.remove(); });
+    q.querySelector("[data-x]").addEventListener("click", function () { clearInterval(it); fermer(); });
+    q.querySelector("[data-go]").focus();
+  }
+})();
+</script>
+</body>
+</html>

@@ -186,8 +186,7 @@
   /* ---------------- Barre haute et pied de page ---------------- */
   var NAV = D.nav || [
     ["index.html", "Accueil"], ["equipe.html?e=1", "Cabinet 1"], ["equipe.html?e=2", "Cabinet 2"],
-    ["tresorerie.html", "Trésorerie"], ["chrono.html", "Chrono"], ["breaking.html", "Breaking news"],
-    ["quiz.html", "Quiz"], ["proces.html", "Procès"], ["badges.html", "Badges"], ["imprimer.html", "Imprimer"]
+    ["chrono.html", "Chrono"], ["breaking.html", "Breaking news"], ["quiz.html", "Quiz"], ["imprimer.html", "Imprimer"]
   ];
   CC.entete = function (sousTitre) {
     var h = CC.$("#cc-top");

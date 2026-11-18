@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Cold case GiFi · Breaking news</title>
-<link rel="stylesheet" href="css/cc.css?v=d5b68aeaf9">
-<script src="js/config.js?v=d5b68aeaf9"></script>
-<script src="js/donnees.js?v=d5b68aeaf9"></script>
-<script src="js/commun.js?v=d5b68aeaf9"></script>
+<link rel="stylesheet" href="css/cc.css?v=92ecc64a60">
+<script src="js/config.js?v=92ecc64a60"></script>
+<script src="js/donnees.js?v=92ecc64a60"></script>
+<script src="js/commun.js?v=92ecc64a60"></script>
 <style>
 .liste{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
 @media (max-width:900px){.liste{grid-template-columns:1fr}}
@@ -49,7 +49,7 @@
 <header id="cc-top"></header>
 <main class="wrap">
   <div class="liste" id="liste"><div class="p-tete"><div><p class="kick">Rebondissements · à projeter</p><h1 class="p-titre">Breaking news</h1><p class="p-sous">Trois vraies infos, avec leur date et leur source, à lancer pendant la journée.</p></div></div></div>
-  <p class="aide">Cliquez sur une news pour l'afficher en plein écran. Les cabinets ont 5 minutes pour répondre. Bonne réponse argumentée : +2 000 €. Échap pour revenir.</p>
+  <p class="aide">Les Breaking news s'affichent d'elles-mêmes sur l'écran des cabinets, à l'ouverture des pièces indiquées. Cette page sert à les projeter à la main si vous le souhaitez. Échap pour revenir.</p>
 </main>
 <footer id="cc-pied"></footer>
 <script>
@@ -62,7 +62,7 @@
   var liste = CC.$("#liste");
   D.breaking_news.forEach(function (n) {
     var b = CC.el("button", { type: "button", class: "feuille news-carte" });
-    b.innerHTML = '<span class="kick">News n° ' + n.n + "</span><span class=\"h\">" + n.heure.replace(":", "h") + '</span><span class="t">' + CC.esc(n.titre) + "</span>" +
+    b.innerHTML = '<span class="kick">News n° ' + n.n + "</span><span class=\"h\">Pièce " + n.piece + '</span><span class="t">' + CC.esc(n.titre) + "</span>" +
       "<span class=\"s\">Source : " + CC.esc(n.source) + "</span>";
     b.addEventListener("click", function () { ouvrir(n); });
     liste.appendChild(b);

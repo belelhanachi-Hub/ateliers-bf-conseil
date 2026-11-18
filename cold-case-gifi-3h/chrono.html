@@ -4,282 +4,107 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Cold case GiFi · Chrono</title>
-<link rel="stylesheet" href="../cold-case-gifi/css/cc.css?v=d5b87049da">
-<script src="../cold-case-gifi/js/config.js?v=d5b87049da"></script>
-<script src="js/donnees.js?v=d5b87049da"></script>
-<script src="../cold-case-gifi/js/commun.js?v=d5b87049da"></script>
+<title>Cold case GiFi · Chrono général</title>
+<link rel="stylesheet" href="../cold-case-gifi/css/cc.css?v=b6ec47bbfb">
+<script src="../cold-case-gifi/js/config.js?v=b6ec47bbfb"></script>
+<script src="js/donnees.js?v=b6ec47bbfb"></script>
+<script src="../cold-case-gifi/js/commun.js?v=b6ec47bbfb"></script>
 <style>
-.ecran{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(300px,1fr);gap:24px;padding:24px 20px 34px;max-width:1600px;margin:0 auto}
-.ecran > *{min-width:0}
-@media (max-width:980px){.ecran{grid-template-columns:1fr}}
-.choix{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px}
-.choix select{font-size:15px;font-weight:700;padding:9px 10px;background:#fff;border:1.5px solid var(--ink);border-radius:var(--r);max-width:100%;min-width:0;flex:1 1 260px}
-.etape-titre{font:400 clamp(28px,3.4vw,46px)/1.08 var(--fd);letter-spacing:-.01em}
-.phase-nom{font-size:clamp(18px,2vw,26px);font-weight:700;margin:10px 0 2px}
-.horaire-etape{font-size:14px;color:var(--ink2);margin:4px 0 0}
-.anneau{position:relative;width:min(50vh,100%);max-width:600px;margin:14px auto 8px;aspect-ratio:1}
-.anneau svg{width:100%;height:100%;transform:rotate(-90deg)}
-.anneau circle{fill:none;stroke-width:4}
-.anneau .fond{stroke:var(--line)}
-.anneau .arc{stroke:var(--ink);stroke-linecap:round;transition:stroke .4s}
-.anneau.orange .arc{stroke:var(--warn)}
-.anneau.rouge .arc{stroke:var(--err)}
-.anneau.orange .temps{color:var(--warn)}
-.anneau.rouge .temps{color:var(--err)}
-.anneau.rouge .temps,.anneau.rouge .arc{animation:cc-pulse 1s ease-in-out infinite}
-.anneau .centre{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
-.temps{font:400 clamp(70px,12vw,180px)/1 var(--fd);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
-.alerte-t{font-size:clamp(14px,1.5vw,20px);font-weight:700;min-height:1.4em;color:var(--ink2)}
-.ctrl{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:8px}
-.phases{list-style:none;padding:0;margin:16px 0 0;display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
-.phases li{font-size:13px;padding:5px 9px;border:1px solid var(--line2);border-radius:var(--r);color:var(--ink2);background:#fff}
-.phases li.on{background:var(--ink);color:#fff;border-color:var(--ink);font-weight:700}
-.phases li.fait{text-decoration:line-through;color:var(--ink3);background:var(--soft)}
-.auto{font-size:14px;color:var(--ink2);display:flex;align-items:center;gap:8px;justify-content:center;margin-top:10px}
-.journee{background:var(--paper);border:1px solid var(--line);padding:20px 20px 14px;align-self:start}
-.journee h2{font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px}
-.maintenant{display:flex;justify-content:space-between;align-items:baseline;gap:10px;border-bottom:2px solid var(--ink);padding-bottom:8px;margin-bottom:10px}
-.maintenant b{font:400 42px/1 var(--fd);font-variant-numeric:tabular-nums}
-.ecart{font-weight:700;font-size:14.5px;padding:9px 11px;margin:8px 0;border-left:3px solid var(--ink);background:var(--soft)}
-.ecart.retard{background:var(--errb);border-color:var(--err)}
-.ecart.avance{background:var(--okb);border-color:var(--ok)}
-.prevu{font-size:13.5px;color:var(--ink2);margin-bottom:8px}
-.prog{list-style:none;margin:0;padding:0;font-size:13.5px}
-.prog li{display:grid;grid-template-columns:92px 1fr;gap:8px;padding:6px 6px;border-bottom:1px solid var(--line)}
-.prog li.pause{background:var(--beige3);font-weight:700}
-.prog li.cur{background:var(--ink);color:#fff}
-.prog li.passe{color:var(--ink3)}
-.raccourcis{font-size:12.5px;color:var(--ink3);text-align:center;margin-top:10px}
-.carton{opacity:0}
+.chrono-g{text-align:center;padding:30px 20px 10px}
+.chrono-g .kick{margin-bottom:6px}
+.ecoule{font:400 clamp(90px,17vw,250px)/1 var(--fd);letter-spacing:-.02em;font-variant-numeric:tabular-nums;margin:10px 0 6px}
+.etat-c{font-size:clamp(16px,1.8vw,24px);font-weight:700;color:var(--ink2);min-height:1.4em}
+.etat-c.pause{color:var(--warn)}
+.commandes{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:22px 0 10px}
+.arrivees{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;max-width:1100px;margin:26px auto 0;padding:0 20px}
+@media (max-width:760px){.arrivees{grid-template-columns:1fr}}
+.cab{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--ink);padding:20px 22px;text-align:center}
+.cab .nom{font:400 clamp(26px,3vw,40px)/1.1 var(--fd);margin-bottom:8px}
+.cab .temps{font:400 clamp(40px,5vw,72px)/1 var(--fd);font-variant-numeric:tabular-nums;min-height:1em}
+.cab .rang{font-size:14px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin:8px 0 14px;min-height:1.3em}
+.cab.premier{background:var(--okb);border-top-color:var(--ok)}
+.cab.premier .rang{color:var(--ok)}
+.regle{max-width:900px;margin:26px auto 0;padding:0 20px;text-align:center;color:var(--ink2);font-size:15px}
+.reglages{max-width:900px;margin:22px auto 0;padding:0 20px;font-size:14px;color:var(--ink2);text-align:center}
+.reglages summary{cursor:pointer;font-weight:700}
 </style>
 </head>
-<body data-sous-titre="Le chrono · à projeter">
+<body data-sous-titre="Le chrono général · à projeter">
 <header id="cc-top"></header>
-<main class="ecran">
-  <section aria-label="Chrono">
-    <div class="choix">
-      <label for="etape" class="sr">Étape de la journée</label>
-      <select id="etape"></select>
-      <button class="btn petit" type="button" id="plein">Plein écran (F)</button>
+<main class="wrap large">
+  <section class="chrono-g" aria-label="Chrono général">
+    <p class="kick">Chrono général de l'enquête</p>
+    <div class="ecoule" id="ecoule" role="timer" aria-live="off">0:00:00</div>
+    <p class="etat-c" id="etat" aria-live="polite"></p>
+    <div class="commandes">
+      <button class="btn pri grand" type="button" id="lancer">Lancer l'enquête</button>
+      <button class="btn grand" type="button" id="pause" hidden>Pause</button>
     </div>
-    <h1 class="etape-titre" id="etape-titre"></h1>
-    <p class="horaire-etape" id="horaire-etape"></p>
-    <p class="phase-nom" id="phase-nom" aria-live="polite"></p>
-    <div class="anneau" id="anneau" role="timer" aria-live="off">
-      <svg viewBox="0 0 100 100" aria-hidden="true"><circle class="fond" cx="50" cy="50" r="44"/><circle class="arc" id="arc" cx="50" cy="50" r="44"/></svg>
-      <div class="centre"><div class="temps" id="temps">0:00</div><div class="alerte-t" id="alerte-t"></div></div>
-    </div>
-    <div class="ctrl">
-      <button class="btn" type="button" id="prec" aria-label="Phase précédente">← Phase</button>
-      <button class="btn pri grand" type="button" id="go">Démarrer</button>
-      <button class="btn" type="button" id="plus">+1 min</button>
-      <button class="btn" type="button" id="suiv" aria-label="Phase suivante">Phase →</button>
-      <button class="btn" type="button" id="recom">Recommencer l'étape</button>
-    </div>
-    <ol class="phases" id="phases" aria-label="Phases de l'étape"></ol>
-    <label class="auto"><input type="checkbox" id="auto" checked> Enchaîner les phases automatiquement</label>
-    <p class="raccourcis">Espace : démarrer / pause · flèches : phase précédente / suivante · + : une minute de plus · M : son · F : plein écran</p>
   </section>
-  <aside class="journee" aria-label="Horaire de la journée">
-    <h2>La journée</h2>
-    <div class="maintenant"><span>Il est</span><b id="heure"></b></div>
-    <div class="ecart" id="ecart"></div>
-    <p class="prevu" id="prevu"></p>
-    <ol class="prog" id="prog"></ol>
-  </aside>
+  <section class="arrivees" id="arrivees" aria-label="Arrivées des cabinets"></section>
+  <p class="regle">Le premier cabinet qui ouvre toutes ses pièces gagne. Quand un cabinet a trouvé son dernier code, cliquez sur « Arrivée » : son temps est noté.</p>
+  <details class="reglages">
+    <summary>Réglages</summary>
+    <p style="margin-top:10px"><button class="btn petit" type="button" id="raz">Tout remettre à zéro</button> <button class="btn petit" type="button" data-son aria-pressed="false">Activer le son</button></p>
+    <p>Pages à projeter à la main, si besoin : <a href="quiz.html">Quiz</a> · <a href="breaking.html">Breaking news</a></p>
+  </details>
 </main>
-<div class="carton" id="carton" aria-hidden="true"></div>
 <footer id="cc-pied"></footer>
 <script>
 (function () {
   "use strict";
-  var D = CC.data;
-  var F = (D.finale || {}).minuteurs_min || {};
-  /* Version 3 h : l'horaire part de l'heure de début choisie par le formateur */
-  if (D.meta.debut_reglable) {
-    var hmin = function (t) { var p = t.split(":"); return +p[0] * 60 + +p[1]; };
-    var fmt = function (m) { m = ((m % 1440) + 1440) % 1440; return (m < 600 ? "0" : "") + Math.floor(m / 60) + ":" + (m % 60 < 10 ? "0" : "") + (m % 60); };
-    var debut = CC.get("debut-seance", D.meta.horaires.debut);
-    var dec = hmin(debut) - hmin(D.meta.horaires.debut);
-    if (dec) {
-      D.deroule.forEach(function (s) { s.debut = fmt(hmin(s.debut) + dec); s.fin = fmt(hmin(s.fin) + dec); });
-      D.meta.horaires.debut = fmt(hmin(D.meta.horaires.debut) + dec); D.meta.horaires.fin = fmt(hmin(D.meta.horaires.fin) + dec);
-    }
-    var lab = CC.el("label", { style: "display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700" });
-    lab.innerHTML = 'Début de la séance <input type="time" id="debut-seance" value="' + D.meta.horaires.debut + '" style="font:inherit;padding:7px 8px;border:1.5px solid var(--ink);border-radius:3px">';
-    CC.$(".choix").appendChild(lab);
-    CC.$("#debut-seance").addEventListener("change", function (e) { if (e.target.value) { CC.set("debut-seance", e.target.value); CC.suppr("chrono"); location.reload(); } });
+  var st = CC.get("chrono-general", null) || { debut: null, pause: 0, enPause: null, arrivees: {} };
+  st.arrivees = st.arrivees || {};
+  function sauver() { CC.set("chrono-general", st); }
+  function ecoule(t) {
+    if (!st.debut) return 0;
+    t = t || Date.now();
+    return Math.max(0, t - st.debut - st.pause - (st.enPause ? t - st.enPause : 0));
   }
-  var ETAPES = D.deroule.map(function (s, i) { s.i = i; return s; }).filter(function (s) { return !s.pause; });
-
-  function hm(s) { var p = s.split(":"); var d = new Date(); d.setHours(+p[0], +p[1], 0, 0); return d; }
-  function hmTxt(s) { return s.replace(":", "h"); }
-
-  function phases(s) {
-    var n1 = CC.nomEquipe(1), n2 = CC.nomEquipe(2);
-    if (s.seance) {
-      var ph = [{ n: "Travail en cabinet", c: "Travail en cabinet", d: s.travail_min }];
-      if (s.news_min) ph.push({ n: "Breaking news n° 2", c: "Breaking news n° 2", d: s.news_min });
-      return ph.concat([{ n: "Débrief", c: "Débrief", d: s.debrief_min }]);
-    }
-    if (s.grand_oral) return [
-      { n: n1 + " présente son enquête", c: "Grand oral : " + n1, d: s.oral_min },
-      { n: n2 + " présente son enquête", c: "Grand oral : " + n2, d: s.oral_min }
-    ];
-    if (s.grand_oral) return [
-      { n: n1 + " présente son enquête", c: "Grand oral : " + n1, d: s.oral_min },
-      { n: n2 + " présente son enquête", c: "Grand oral : " + n2, d: s.oral_min }
-    ];
-    if (/^Finale/.test(s.etape)) return [
-      { n: "Breaking news n° 3 et tirage des camps", c: "Breaking news n° 3", d: F.breaking_news_et_tirage },
-      { n: "Préparation", c: "Préparation", d: F.preparation },
-      { n: "Plaidoirie de l\u0027accusation", c: "Plaidoirie de l'accusation", d: F.plaidoirie },
-      { n: "Plaidoirie de la défense", c: "Plaidoirie de la défense", d: F.plaidoirie },
-      { n: "Réplique de l\u0027accusation", c: "Réplique de l'accusation", d: F.replique },
-      { n: "Réplique de la défense", c: "Réplique de la défense", d: F.replique },
-      { n: "Délibération du jury et verdict", c: "Délibération", d: F.deliberation },
-      { n: "Débrief", c: "Débrief", d: F.debrief }
-    ];
-    if (/^Breaking news n° 1/.test(s.etape)) return [
-      { n: "Breaking news n° 1", c: "Breaking news n° 1", d: 5 },
-      { n: "Quiz flash S1-S2", c: "Quiz flash", d: 5 }
-    ];
-    return [{ n: s.etape, c: s.etape, d: s.duree_min }];
+  function hms(ms) {
+    var s = Math.floor(ms / 1000), h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), r = s % 60;
+    return h + ":" + (m < 10 ? "0" : "") + m + ":" + (r < 10 ? "0" : "") + r;
   }
 
-  /* ---------- État ---------- */
-  var st = CC.get("chrono", null) || { e: 0, p: 0, reste: null, fin: null };
-  if (!ETAPES[st.e]) st = { e: 0, p: 0, reste: null, fin: null };
-  var PH = phases(ETAPES[st.e]);
-  if (st.reste == null) st.reste = PH[st.p].d * 60;
-  var auto = CC.get("chrono-auto", true);
-  CC.$("#auto").checked = auto;
-  CC.$("#auto").addEventListener("change", function (e) { auto = e.target.checked; CC.set("chrono-auto", auto); });
-  function sauver() { CC.set("chrono", st); }
-  function reste() { return st.fin ? (st.fin - Date.now()) / 1000 : st.reste; }
-
-  var sel = CC.$("#etape");
-  sel.innerHTML = ETAPES.map(function (s, k) { return '<option value="' + k + '">' + hmTxt(s.debut) + " · " + CC.esc(s.etape) + "</option>"; }).join("");
-  sel.value = st.e;
-  sel.addEventListener("change", function () { choisir(+sel.value); });
-
-  function choisir(k) {
-    st = { e: k, p: 0, reste: null, fin: null };
-    PH = phases(ETAPES[k]);
-    st.reste = PH[0].d * 60;
-    sauver(); sel.value = k; dessinerEtape(); carton(PH[0].c);
-  }
-  function allerPhase(p, demarrer) {
-    if (p < 0 || p >= PH.length) return;
-    var tournait = !!st.fin;
-    st.p = p; st.reste = PH[p].d * 60; st.fin = (demarrer || tournait) ? Date.now() + st.reste * 1000 : null;
-    bip2 = false; bip0 = false;
-    sauver(); dessinerEtape(); carton(PH[p].c);
-  }
-
-  /* ---------- Carton plein écran ---------- */
-  var cartonEl = CC.$("#carton");
-  function carton(txt) {
-    var s = ETAPES[st.e];
-    cartonEl.innerHTML = CC.esc(txt) + "<small>" + CC.esc(s.etape) + " · " + PH[st.p].d + " min</small>";
-    CC.anim(cartonEl, [{ opacity: 0, transform: "scale(1.04)" }, { opacity: 1, transform: "none", offset: .2 }, { opacity: 1, offset: .8 }, { opacity: 0 }],
-      { duration: 1500, easing: "ease-out" });
-  }
-
-  /* ---------- Dessin ---------- */
-  var arc = CC.$("#arc"), CIRC = 2 * Math.PI * 44;
-  arc.style.strokeDasharray = CIRC;
-  function dessinerEtape() {
-    var s = ETAPES[st.e];
-    CC.$("#etape-titre").textContent = s.etape;
-    CC.$("#horaire-etape").textContent = "Prévu de " + hmTxt(s.debut) + " à " + hmTxt(s.fin) + (s.seance ? " · séance " + s.seance.slice(1) : "");
-    CC.$("#phases").innerHTML = PH.map(function (ph, k) {
-      return '<li class="' + (k === st.p ? "on" : k < st.p ? "fait" : "") + '">' + CC.esc(ph.n) + " · " + ph.d + " min</li>";
-    }).join("");
-    CC.$("#phase-nom").textContent = "Phase " + (st.p + 1) + "/" + PH.length + " : " + PH[st.p].n;
-    tickRendu();
-    programme();
-  }
-
-  var bip2 = reste() <= 120, bip0 = reste() <= 0;
-  function tickRendu() {
-    var r = reste();
-    var tot = PH[st.p].d * 60;
-    CC.$("#temps").textContent = CC.mmss(Math.max(0, Math.ceil(r)));
-    var frac = Math.max(0, Math.min(1, r / Math.max(tot, 1)));
-    arc.style.strokeDashoffset = CIRC * (1 - frac);
-    var a = CC.$("#anneau");
-    a.classList.toggle("orange", r <= 120 && r > 30);
-    a.classList.toggle("rouge", r <= 30);
-    CC.$("#alerte-t").textContent = r <= 0 ? "Temps écoulé" : r <= 30 ? "Moins de 30 secondes" : r <= 120 ? "Moins de 2 minutes" : st.fin ? "" : "En pause";
-    CC.$("#go").textContent = st.fin ? "Pause" : (r < tot ? "Reprendre" : "Démarrer");
-    if (st.fin && r <= 120 && !bip2 && tot > 120) { bip2 = true; CC.bipDouble(); }
-    if (st.fin && r <= 0 && !bip0) {
-      bip0 = true; CC.bipFin();
-      st.reste = 0; st.fin = null; sauver();
-      if (auto && st.p < PH.length - 1) setTimeout(function () { allerPhase(st.p + 1, true); }, 900);
-    }
-  }
-
-  /* ---------- Programme et écart ---------- */
-  function programme() {
-    var maintenant = new Date();
-    CC.$("#heure").textContent = CC.heure(maintenant);
-    var s = ETAPES[st.e];
-    var restant = Math.max(0, reste());
-    for (var k = st.p + 1; k < PH.length; k++) restant += PH[k].d * 60;
-    var finProjetee = new Date(maintenant.getTime() + restant * 1000);
-    var ecart = Math.round((finProjetee - hm(s.fin)) / 60000);
-    var el = CC.$("#ecart");
-    el.className = "ecart" + (ecart > 0 ? " retard" : ecart < 0 ? " avance" : "");
-    el.textContent = "Fin prévue de l\u0027étape : " + hmTxt(s.fin) + " · fin estimée : " + CC.heure(finProjetee) + " · " +
-      (ecart > 0 ? "retard de " + ecart + " min" : ecart < 0 ? "avance de " + (-ecart) + " min" : "à l\u0027heure");
-    var prevue = D.deroule.filter(function (x) { return hm(x.debut) <= maintenant && maintenant < hm(x.fin); })[0];
-    CC.$("#prevu").textContent = prevue ? "Selon le programme, maintenant : " + hmTxt(prevue.debut) + "-" + hmTxt(prevue.fin) + " · " + prevue.etape
-      : (maintenant < hm(D.meta.horaires.debut) ? "La journée commence à " + hmTxt(D.meta.horaires.debut) + "." : "La journée s\u0027est terminée à " + hmTxt(D.meta.horaires.fin) + ".");
-    CC.$("#prog").innerHTML = D.deroule.map(function (x) {
-      var cls = x.pause ? "pause" : "";
-      if (x.i === s.i) cls += " cur";
-      else if (hm(x.fin) <= maintenant) cls += " passe";
-      return '<li class="' + cls + '"' + (x.i === s.i ? ' aria-current="step"' : "") + "><span>" + hmTxt(x.debut) + "-" + hmTxt(x.fin) + "</span><span>" + CC.esc(x.etape) + "</span></li>";
+  /* Arrivées des cabinets */
+  function arrivees() {
+    var ordre = [1, 2].filter(function (e) { return st.arrivees[e] != null; }).sort(function (a, b) { return st.arrivees[a] - st.arrivees[b]; });
+    CC.$("#arrivees").innerHTML = [1, 2].map(function (e) {
+      var t = st.arrivees[e], rang = ordre.indexOf(e);
+      return '<div class="cab' + (rang === 0 ? " premier" : "") + '"><div class="nom">' + CC.esc(CC.nomEquipe(e)) + '</div><div class="temps">' + (t != null ? hms(t) : "") +
+        '</div><div class="rang">' + (rang === 0 ? "1er · remporte la mission" : rang === 1 ? "2e" : st.debut ? "en enquête" : "") + "</div>" +
+        (t != null ? '<button class="btn petit" type="button" data-annuler="' + e + '">Annuler l\x27arrivée</button>'
+                   : '<button class="btn pri" type="button" data-arrivee="' + e + '"' + (st.debut ? "" : " disabled") + ">Arrivée de " + CC.esc(CC.nomEquipe(e)) + "</button>") + "</div>";
     }).join("");
   }
-
-  /* ---------- Commandes ---------- */
-  function basculer() {
-    if (st.fin) { st.reste = reste(); st.fin = null; }
-    else { if (reste() <= 0) { allerPhase(Math.min(st.p + 1, PH.length - 1), true); return; } st.fin = Date.now() + reste() * 1000; }
-    sauver(); tickRendu();
-  }
-  function plusUne() {
-    if (st.fin) st.fin += 60000; else st.reste = Math.max(0, st.reste) + 60;
-    PH[st.p] = Object.assign({}, PH[st.p]);
-    if (reste() > PH[st.p].d * 60) PH[st.p].d = Math.ceil(reste() / 60);
-    bip2 = reste() <= 120; bip0 = false;
-    sauver(); tickRendu(); programme();
-  }
-  CC.$("#go").addEventListener("click", basculer);
-  CC.$("#plus").addEventListener("click", plusUne);
-  CC.$("#prec").addEventListener("click", function () { allerPhase(st.p - 1); });
-  CC.$("#suiv").addEventListener("click", function () { allerPhase(st.p + 1); });
-  CC.$("#recom").addEventListener("click", function () { choisir(st.e); });
-  function pleinEcran() {
-    try { if (!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); } catch (e) {}
-  }
-  CC.$("#plein").addEventListener("click", pleinEcran);
-  document.addEventListener("keydown", function (e) {
-    if (/INPUT|SELECT|TEXTAREA/.test(e.target.tagName) || e.ctrlKey || e.metaKey || e.altKey) return;
-    if (e.key === " ") { if (e.target.tagName === "BUTTON") return; e.preventDefault(); basculer(); }
-    else if (e.key === "ArrowRight") allerPhase(st.p + 1);
-    else if (e.key === "ArrowLeft") allerPhase(st.p - 1);
-    else if (e.key === "+") plusUne();
-    else if (e.key === "f" || e.key === "F") pleinEcran();
+  CC.$("#arrivees").addEventListener("click", function (ev) {
+    var a = ev.target.closest("[data-arrivee]"), x = ev.target.closest("[data-annuler]");
+    if (a) { st.arrivees[a.getAttribute("data-arrivee")] = ecoule(); sauver(); CC.gain(); arrivees(); }
+    if (x && confirm("Annuler l\x27arrivée de " + CC.nomEquipe(+x.getAttribute("data-annuler")) + " ?")) { delete st.arrivees[x.getAttribute("data-annuler")]; sauver(); arrivees(); }
   });
 
-  dessinerEtape();
-  setInterval(tickRendu, 250);
-  setInterval(programme, 5000);
+  /* Commandes */
+  CC.$("#lancer").addEventListener("click", function () { st.debut = Date.now(); st.pause = 0; st.enPause = null; sauver(); CC.bip(880, .2); maj(); arrivees(); });
+  CC.$("#pause").addEventListener("click", function () {
+    if (st.enPause) { st.pause += Date.now() - st.enPause; st.enPause = null; } else st.enPause = Date.now();
+    sauver(); maj();
+  });
+  CC.$("#raz").addEventListener("click", function () {
+    if (!confirm("Remettre le chrono général et les arrivées à zéro ?")) return;
+    st = { debut: null, pause: 0, enPause: null, arrivees: {} }; sauver(); maj(); arrivees();
+  });
+
+  function maj() {
+    CC.$("#ecoule").textContent = hms(ecoule());
+    CC.$("#lancer").hidden = !!st.debut;
+    CC.$("#pause").hidden = !st.debut;
+    CC.$("#pause").textContent = st.enPause ? "Reprendre" : "Pause";
+    var e = CC.$("#etat");
+    e.className = "etat-c" + (st.enPause ? " pause" : "");
+    e.textContent = !st.debut ? "Prêt : cliquez sur « Lancer l'enquête »." : st.enPause ? "En pause" : "L'enquête est en cours";
+  }
+  maj(); arrivees();
+  setInterval(maj, 250);
 })();
 </script>
 </body>

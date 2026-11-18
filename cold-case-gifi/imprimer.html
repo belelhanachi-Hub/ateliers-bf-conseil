@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Cold case GiFi · Tout imprimer</title>
-<link rel="stylesheet" href="css/cc.css?v=d5b68aeaf9">
-<script src="js/config.js?v=d5b68aeaf9"></script>
-<script src="js/donnees.js?v=d5b68aeaf9"></script>
-<script src="js/commun.js?v=d5b68aeaf9"></script>
+<link rel="stylesheet" href="css/cc.css?v=92ecc64a60">
+<script src="js/config.js?v=92ecc64a60"></script>
+<script src="js/donnees.js?v=92ecc64a60"></script>
+<script src="js/commun.js?v=92ecc64a60"></script>
 <style>
 .panneau{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--ink);padding:22px 24px;margin-bottom:24px}
 .panneau h1{font:400 clamp(32px,4vw,52px)/1 var(--fd);margin-bottom:6px}
@@ -113,6 +113,8 @@
     ["badges", "Les " + D.badges.length + " badges"]
   ].filter(function (s) {
     var piece = { indices: 8, p5: 5, p6: 6, parcours: 4, questionnaire: 2, grille: 7 }[s[0]];
+    if (s[0] === "p5") return false; // pièce 5 : les 6 informations sont à l'écran, rien à imprimer
+    if (s[0] === "badges" && !D.badges.length) return false;
     return !piece || IDS.indexOf(piece) >= 0;
   });
   var choix = CC.get("imprimer", null) || SECTIONS.reduce(function (o, s) { o[s[0]] = true; return o; }, {});
@@ -156,8 +158,8 @@
           '<span class="s">Séance ' + p.seance.slice(1) + (s ? " · prévue à " + s.debut.replace(":", "h") : "") + " · " +
           (k === 0 ? "s\u0027ouvre au signal du formateur" : "s\u0027ouvre avec le code de la pièce " + D.pieces[k - 1].id) + "</span></div>";
       });
-      h += '<div class="etiq"><span class="s">Cold case GiFi · Jeu ' + j + " · Cabinet ……………</span><b>" + (D.finale ? "Finale<br>" + esc(D.finale.titre) : "Le grand<br>oral") + '</b><span class="s">' + (D.finale ? "16h05" : "En fin de séance") + " · s\u0027ouvre avec le code de la pièce " + IDS[IDS.length - 1] + "</span></div>";
-      h += '<div class="etiq"><span class="s">Cold case GiFi · Jeu ' + j + '</span><b>Lettre<br>de mission</b><span class="s">Dossier scellé · ' + (D.meta.debut_reglable ? "à ouvrir au début de la séance" : "à ouvrir à 8h30") + '</span></div>';
+      h += '<div class="etiq"><span class="s">Cold case GiFi · Jeu ' + j + " · Cabinet ……………</span><b>" + (D.finale ? "Finale<br>" + esc(D.finale.titre) : "Le grand<br>oral") + '</b><span class="s">' + (D.finale ? "Finale" : "En fin d\u0027enquête") + " · s\u0027ouvre avec le code de la pièce " + IDS[IDS.length - 1] + "</span></div>";
+      h += '<div class="etiq"><span class="s">Cold case GiFi · Jeu ' + j + '</span><b>Lettre<br>de mission</b><span class="s">Dossier scellé · ' + "à ouvrir au signal du formateur" + '</span></div>';
       ap.appendChild(page("", entete("Étiquettes des enveloppes", "Jeu " + j) + '<div class="g25">' + h + "</div>"));
     });
 

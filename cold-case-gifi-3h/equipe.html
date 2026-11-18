@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Cold case GiFi · Espace du cabinet</title>
-<link rel="stylesheet" href="../cold-case-gifi/css/cc.css?v=d5b87049da">
-<script src="../cold-case-gifi/js/config.js?v=d5b87049da"></script>
-<script src="js/donnees.js?v=d5b87049da"></script>
-<script src="../cold-case-gifi/js/commun.js?v=d5b87049da"></script>
-<script src="../cold-case-gifi/js/une.js?v=d5b87049da"></script>
+<link rel="stylesheet" href="../cold-case-gifi/css/cc.css?v=b6ec47bbfb">
+<script src="../cold-case-gifi/js/config.js?v=b6ec47bbfb"></script>
+<script src="js/donnees.js?v=b6ec47bbfb"></script>
+<script src="../cold-case-gifi/js/commun.js?v=b6ec47bbfb"></script>
+<script src="../cold-case-gifi/js/une.js?v=b6ec47bbfb"></script>
 <style>
 .tete{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;padding-bottom:20px;border-bottom:2px solid var(--ink);margin-bottom:24px}
 .tete h1{font:400 clamp(34px,4.4vw,48px)/1.05 var(--fd);letter-spacing:-.01em;margin:6px 0 10px}
@@ -92,6 +92,28 @@
 .roles{margin:0;padding-left:18px;font-size:14.5px}
 .roles li{margin:4px 0}
 .reset{margin-top:28px;color:var(--ink3);font-size:13.5px}
+.bn-bloc{background:var(--ink);color:#fff;padding:16px 20px;margin:4px 0 18px;border-left:6px solid var(--err)}
+.bn-bloc h3{font:400 24px/1.15 var(--fd);margin:4px 0 8px}
+.bn-bloc p{margin:0 0 8px}
+.bn-et{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#ff9b93;margin:0}
+.bn-src{font-size:13.5px;color:var(--beige2)}
+.bn-plein{position:fixed;inset:0;z-index:500;background:var(--ink);color:#fff;display:flex;flex-direction:column;overflow:auto}
+.bn-bandeau{background:var(--err);font:400 clamp(44px,8vw,110px)/1 var(--fd);padding:14px 26px;white-space:nowrap}
+.bn-plein .bn-corps{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;padding:28px 32px;align-items:start}
+.bn-plein h2{font:400 clamp(32px,4.4vw,64px)/1.05 var(--fd);margin:6px 0 14px}
+.bn-txt{font-size:clamp(18px,1.8vw,26px);line-height:1.45;color:#e9e9e6}
+.bn-q{font:400 clamp(24px,2.6vw,38px)/1.2 var(--fd);margin:18px 0 10px;color:#fff}
+.bn-aide{color:var(--beige2);margin-bottom:18px}
+.bn-plein .btn{background:#fff;color:var(--ink);border-color:#fff}
+@media (max-width:700px){.bn-plein .bn-corps{grid-template-columns:1fr}}
+.fin-enquete{background:var(--okb);border:1.5px solid var(--ok);padding:12px 14px;margin:0 0 12px;font-weight:700;color:var(--ok)}
+.releve-total{font:400 30px/1.15 var(--fd);margin:0 0 8px}
+.releve-total small{display:block;font:14px var(--f);color:var(--ink2);margin-top:2px}
+.releve-liste{list-style:none;margin:0;padding:0;font-size:14px}
+.releve-liste li{display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-bottom:1px solid var(--line)}
+.releve-liste li b{font-variant-numeric:tabular-nums}
+.releve-liste li.ok b{color:var(--ok)}
+.releve-liste li.non{color:var(--ink3)}
 </style>
 </head>
 <body data-sous-titre="Espace du cabinet · les 4 pièces à conviction">
@@ -113,6 +135,12 @@
       <div class="scene"><div class="dossier" id="dossier"></div></div>
     </section>
     <aside>
+      <div class="aside-bloc bloc releve">
+        <p class="lib-sec">Le relevé de l'enquête</p>
+        <p class="releve-total" id="releve-total"></p>
+        <ol class="releve-liste" id="releve-liste"></ol>
+        <p class="note">Le premier cabinet qui ouvre toutes ses pièces gagne : son arrivée est notée au chrono général.</p>
+      </div>
       <div class="aside-bloc bloc">
         <p class="lib-sec">La une du dossier</p>
         <div class="puzzle" id="puzzle"></div>
@@ -204,6 +232,18 @@
       ol.appendChild(li);
     });
     CC.$("#nb").textContent = nbResolues();
+    releve();
+  }
+  function releve() {
+    var nb = nbResolues(), dernier = "";
+    CC.$("#releve-liste").innerHTML = PIECES.map(function (p, i) {
+      var k = i + 1, h = etat.resolues[k];
+      if (h) dernier = h;
+      return '<li class="' + (resolue(k) ? "ok" : "non") + '"><span>Pièce ' + p.id + " · " + CC.esc(p.titre) + "</span><b>" + (resolue(k) ? (h || "trouvé") : "·") + "</b></li>";
+    }).join("");
+    var fin = CC.$("#fin-enquete");
+    if (nb === N && !fin) { fin = CC.el("p", { class: "fin-enquete", id: "fin-enquete", text: "Enquête terminée ! Levez la main : le formateur note votre arrivée au chrono général." }); CC.$("#releve-total").before(fin); }
+    CC.$("#releve-total").innerHTML = nb + " / " + N + " pièce" + (nb > 1 ? "s" : "") + " ouverte" + (nb > 1 ? "s" : "") + (dernier ? "<small>Dernier code trouvé à " + dernier + "</small>" : "<small>Aucun code trouvé pour l'instant</small>");
   }
 
   /* ---------- Une en puzzle ---------- */
@@ -328,7 +368,7 @@
       if (!c) { f.innerHTML = "<p>Cette pièce est encore scellée.</p>"; return; }
       f.innerHTML = '<p class="kick">Pièce ' + p.id + " · séance " + CC.esc(p.seance.replace("S", "")) + " · lien dossier : " + CC.esc(p.lien_dossier) + "</p>" +
         '<h2 class="pt">' + CC.esc(p.titre) + "</h2>" + '<div class="entete">' + c.entete + "</div>";
-      chronoPiece(p, f);
+      if (bnDe(p.id)) f.appendChild(blocBreaking(bnDe(p.id)));
       c.sections.forEach(function (s) {
         var sec = CC.el("section");
         sec.innerHTML = "<h2>" + CC.esc(s.titre) + "</h2>" + s.html;
@@ -348,9 +388,33 @@
           : couv.animate([{ transform: "rotateY(0)" }, { transform: "rotateY(-165deg)", opacity: 1, offset: .85 }, { transform: "rotateY(-180deg)", opacity: 0 }],
             { duration: 1200, delay: 450, easing: "cubic-bezier(.5,0,.3,1)", fill: "forwards" });
         a.finished.then(function () { couv.remove(); });
+        if (bnDe(p.id) && !(etat.bn || {})[p.id]) setTimeout(function () { breakingPlein(bnDe(p.id)); }, 1700);
         setTimeout(function () { if (couv.parentNode) couv.remove(); }, 2600); // sécurité : la couverture ne reste jamais
       }
     });
+  }
+
+  /* ---------- Breaking news : sur l'écran du cabinet, à l'ouverture de la pièce ---------- */
+  function bnDe(id) { return (D.breaking_news || []).filter(function (b) { return b.piece === id; })[0]; }
+  var MARQUE_BN = { 2: "action", 3: "gifi" };
+  function blocBreaking(n) {
+    var d = CC.el("section", { class: "bn-bloc" });
+    d.innerHTML = '<p class="bn-et">Breaking news n° ' + n.n + "</p><h3>" + CC.esc(n.titre) + "</h3><p>" + CC.esc(n.texte) + '</p><p class="bn-src">Source : ' + CC.esc(n.source) + "</p><p><strong>La question :</strong> " + CC.esc(n.question) + "</p>";
+    return d;
+  }
+  function breakingPlein(n) {
+    etat.bn = etat.bn || {}; etat.bn[n.piece] = true; sauver();
+    var o = CC.el("div", { class: "bn-plein", role: "dialog", "aria-modal": "true", "aria-label": "Breaking news n° " + n.n });
+    o.innerHTML = '<div class="bn-bandeau">BREAKING NEWS</div><div class="bn-corps"><div><p class="bn-et">News n° ' + n.n + "</p><h2>" + CC.esc(n.titre) + "</h2><p class=\"bn-txt\">" + CC.esc(n.texte) + '</p><p class="bn-src">Source : ' + CC.esc(n.source) +
+      '</p><p class="bn-q">' + CC.esc(n.question) + '</p><p class="bn-aide">Parlez-en en cabinet, puis servez-vous-en au grand oral. La news reste en haut de la pièce.</p><button type="button" class="btn grand">Retour à l\u0027enquête</button></div><div class="bn-logo"></div></div>';
+    if (MARQUE_BN[n.n]) o.querySelector(".bn-logo").appendChild(CC.logo(MARQUE_BN[n.n], "grand"));
+    document.body.appendChild(o);
+    CC.jingle();
+    CC.anim(o.querySelector(".bn-bandeau"), [{ transform: "translateX(-105%)" }, { transform: "none" }], { duration: 700, easing: "cubic-bezier(.2,.8,.2,1)" });
+    var b = o.querySelector("button");
+    b.focus();
+    b.addEventListener("click", function () { o.remove(); });
+    o.addEventListener("keydown", function (e) { if (e.key === "Escape") o.remove(); });
   }
 
   function blocDebrief(html) {
