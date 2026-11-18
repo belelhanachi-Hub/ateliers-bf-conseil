@@ -12,9 +12,10 @@
 <style>
 body{background:#141210}
 .ecran{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(300px,1fr);gap:28px;padding:20px 16px 30px;max-width:1600px;margin:0 auto;color:var(--papier)}
+.ecran > *{min-width:0}
 @media (max-width:980px){.ecran{grid-template-columns:1fr}}
 .choix{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
-.choix select{font:700 17px var(--mono);padding:8px 10px;background:var(--papier);color:var(--encre);border:2px solid var(--kraft);max-width:100%}
+.choix select{font:700 17px var(--mono);padding:8px 10px;background:var(--papier);color:var(--encre);border:2px solid var(--kraft);max-width:100%;min-width:0;flex:1 1 260px}
 .etape-titre{font:900 clamp(30px,4vw,58px)/1 var(--titre);text-transform:uppercase;letter-spacing:.02em}
 .phase-nom{font:900 clamp(26px,3.4vw,50px)/1.05 var(--titre);text-transform:uppercase;color:var(--kraft);margin:8px 0 4px}
 .horaire-etape{font:700 16px var(--mono);color:#cdbb92}
