@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Cold case GiFi · Espace du cabinet</title>
-<link rel="stylesheet" href="css/cc.css?v=cc9502666e">
-<script src="js/config.js?v=cc9502666e"></script>
-<script src="js/donnees.js?v=cc9502666e"></script>
-<script src="js/commun.js?v=cc9502666e"></script>
-<script src="js/une.js?v=cc9502666e"></script>
+<link rel="stylesheet" href="css/cc.css?v=59dc2215b5">
+<script src="js/config.js?v=59dc2215b5"></script>
+<script src="js/donnees.js?v=59dc2215b5"></script>
+<script src="js/commun.js?v=59dc2215b5"></script>
+<script src="js/une.js?v=59dc2215b5"></script>
 <style>
 .tete{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;padding-bottom:20px;border-bottom:2px solid var(--ink);margin-bottom:24px}
 .tete h1{font:400 clamp(34px,4.4vw,48px)/1.05 var(--fd);letter-spacing:-.01em;margin:6px 0 10px}
@@ -41,7 +41,7 @@
 .scene{perspective:1600px}
 .dossier{position:relative}
 .couv{position:absolute;inset:0;z-index:5;transform-origin:left center;background:var(--beige);border:1.5px solid var(--ink);
-  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;backface-visibility:hidden}
+  display:flex;align-items:center;justify-content:flex-start;padding-top:min(16vh,130px);flex-direction:column;gap:12px;backface-visibility:hidden}
 .couv b{font:400 clamp(34px,4vw,52px)/1 var(--fd)}
 .couv span:last-child{font-size:18px;color:var(--ink2)}
 .piece-feuille{padding:0;border:0}
@@ -326,6 +326,7 @@
           : couv.animate([{ transform: "rotateY(0)" }, { transform: "rotateY(-165deg)", opacity: 1, offset: .85 }, { transform: "rotateY(-180deg)", opacity: 0 }],
             { duration: 1200, delay: 450, easing: "cubic-bezier(.5,0,.3,1)", fill: "forwards" });
         a.finished.then(function () { couv.remove(); });
+        setTimeout(function () { if (couv.parentNode) couv.remove(); }, 2600); // sécurité : la couverture ne reste jamais
       }
     });
   }
