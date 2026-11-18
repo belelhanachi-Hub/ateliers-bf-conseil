@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Cold case GiFi · Espace du cabinet</title>
-<link rel="stylesheet" href="css/cc.css">
-<script src="js/config.js"></script>
-<script src="js/donnees.js"></script>
-<script src="js/commun.js"></script>
-<script src="js/une.js"></script>
+<link rel="stylesheet" href="css/cc.css?v=cc9502666e">
+<script src="js/config.js?v=cc9502666e"></script>
+<script src="js/donnees.js?v=cc9502666e"></script>
+<script src="js/commun.js?v=cc9502666e"></script>
+<script src="js/une.js?v=cc9502666e"></script>
 <style>
 .tete{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;padding-bottom:20px;border-bottom:2px solid var(--ink);margin-bottom:24px}
 .tete h1{font:400 clamp(34px,4.4vw,48px)/1.05 var(--fd);letter-spacing:-.01em;margin:6px 0 10px}
@@ -156,7 +156,7 @@
     majNom(); CC.entete(document.body.getAttribute("data-sous-titre")); CC.activerSon(CC.son.actif);
   });
   majNom();
-  CC.$("#roles").innerHTML = D.organisation.map(function (r) { return "<li>" + CC.esc(r) + "</li>"; }).join("");
+  CC.$("#roles").innerHTML = (D.organisation || []).map(function (r) { return "<li>" + CC.esc(r) + "</li>"; }).join("");
 
   /* ---------- États ---------- */
   function resolue(n) { return !!etat.codes[n]; }
