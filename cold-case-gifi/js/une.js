@@ -1,4 +1,4 @@
-/* La une du 3 novembre 2026 — « La Gazette du Commerce », journal fictif créé pour l'exercice.
+/* La une du 3 novembre 2026 : « La Gazette du Commerce », journal fictif créé pour l'exercice.
  * Maquette originale (n'imite aucun journal réel). Aucun logo de marque ni de média en en-tête.
  */
 (function () {
@@ -8,22 +8,22 @@
 
   CC.creerUne = function () {
     var u = D.une || {};
-    var titre = String(u.titre || "").split("—").pop().trim();
+    var titre = String(u.titre || "").replace(/^[^:]*:\s*/, "").trim();
     var e = CC.el("article", { class: "une", "aria-label": "La une du 3 novembre 2026, journal fictif" });
     e.innerHTML =
       '<header class="u-tete"><div class="u-nom">La Gazette<br>du Commerce</div>' +
       '<div class="u-date">Mardi 3 novembre 2026<br>Édition spéciale</div></header>' +
-      '<div class="u-bandeau"><span>Distribution · Bazar discount</span><span>Journal fictif créé pour l’exercice</span></div>' +
+      '<div class="u-bandeau"><span>Distribution · Bazar discount</span><span>Journal fictif créé pour l\u0027exercice</span></div>' +
       '<h2 class="u-titre">' + CC.esc(titre) + "</h2>" +
       '<div class="u-corps"><div><p class="u-texte">' + CC.esc(u.texte || "[À COMPLÉTER]") + "</p>" +
       '<p class="u-rappel">' + CC.esc(u.rappel || "") + "</p></div>" +
       '<div class="u-chiffres">' +
       '<div class="u-ch"><b>≈ 500</b><span>magasins en France</span></div>' +
       '<div class="u-ch"><b>6 000</b><span>salariés en France</span></div>' +
-      '<div class="u-ch"><b>6 mois</b><span>de période d’observation</span></div>' +
+      '<div class="u-ch"><b>6 mois</b><span>de période d\u0027observation</span></div>' +
       '<div class="u-ch"><b>8 janv. 2027</b><span>prochaine audience</span></div>' +
       "</div></div>" +
-      '<footer class="u-pied"><span>Source : ' + CC.esc(u.source || "") + '</span><span>Journal fictif créé pour l’exercice. Les faits rapportés sont réels et sourcés.</span></footer>';
+      '<footer class="u-pied"><span>Source : ' + CC.esc(u.source || "") + '</span><span>Journal fictif créé pour l\u0027exercice. Les faits rapportés sont réels et sourcés.</span></footer>';
     return e;
   };
 

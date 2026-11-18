@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Cold case GiFi · Chrono</title>
-<link rel="stylesheet" href="css/cc.css?v=59dc2215b5">
-<script src="js/config.js?v=59dc2215b5"></script>
-<script src="js/donnees.js?v=59dc2215b5"></script>
-<script src="js/commun.js?v=59dc2215b5"></script>
+<link rel="stylesheet" href="css/cc.css?v=5219352fac">
+<script src="js/config.js?v=5219352fac"></script>
+<script src="js/donnees.js?v=5219352fac"></script>
+<script src="js/commun.js?v=5219352fac"></script>
 <style>
 .ecran{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(300px,1fr);gap:24px;padding:24px 20px 34px;max-width:1600px;margin:0 auto}
 .ecran > *{min-width:0}
@@ -75,7 +75,7 @@
       <button class="btn pri grand" type="button" id="go">Démarrer</button>
       <button class="btn" type="button" id="plus">+1 min</button>
       <button class="btn" type="button" id="suiv" aria-label="Phase suivante">Phase →</button>
-      <button class="btn" type="button" id="recom">Recommencer l’étape</button>
+      <button class="btn" type="button" id="recom">Recommencer l'étape</button>
     </div>
     <ol class="phases" id="phases" aria-label="Phases de l'étape"></ol>
     <label class="auto"><input type="checkbox" id="auto" checked> Enchaîner les phases automatiquement</label>
@@ -107,20 +107,20 @@
       var ph = [{ n: "Travail en cabinet", c: "Travail en cabinet", d: s.travail_min }];
       if (s.news_min) ph.push({ n: "Breaking news n° 2", c: "Breaking news n° 2", d: s.news_min });
       return ph.concat([
-        { n: "Restitution — " + n1, c: "Restitution — " + n1, d: 3 },
-        { n: "Question de " + n2, c: "Question — " + n2, d: 1 },
-        { n: "Restitution — " + n2, c: "Restitution — " + n2, d: 3 },
-        { n: "Question de " + n1, c: "Question — " + n1, d: 1 },
+        { n: n1 + " présente", c: n1 + " présente", d: 3 },
+        { n: n2 + " pose sa question", c: n2 + " pose sa question", d: 1 },
+        { n: n2 + " présente", c: n2 + " présente", d: 3 },
+        { n: n1 + " pose sa question", c: n1 + " pose sa question", d: 1 },
         { n: "Débrief", c: "Débrief", d: s.debrief_min }
       ]);
     }
     if (/^Finale/.test(s.etape)) return [
       { n: "Breaking news n° 3 et tirage des camps", c: "Breaking news n° 3", d: F.breaking_news_et_tirage },
       { n: "Préparation", c: "Préparation", d: F.preparation },
-      { n: "Plaidoirie de l’accusation", c: "Plaidoirie — accusation", d: F.plaidoirie },
-      { n: "Plaidoirie de la défense", c: "Plaidoirie — défense", d: F.plaidoirie },
-      { n: "Réplique de l’accusation", c: "Réplique — accusation", d: F.replique },
-      { n: "Réplique de la défense", c: "Réplique — défense", d: F.replique },
+      { n: "Plaidoirie de l\u0027accusation", c: "Plaidoirie de l'accusation", d: F.plaidoirie },
+      { n: "Plaidoirie de la défense", c: "Plaidoirie de la défense", d: F.plaidoirie },
+      { n: "Réplique de l\u0027accusation", c: "Réplique de l'accusation", d: F.replique },
+      { n: "Réplique de la défense", c: "Réplique de la défense", d: F.replique },
       { n: "Délibération du jury et verdict", c: "Délibération", d: F.deliberation },
       { n: "Débrief", c: "Débrief", d: F.debrief }
     ];
@@ -216,11 +216,11 @@
     var ecart = Math.round((finProjetee - hm(s.fin)) / 60000);
     var el = CC.$("#ecart");
     el.className = "ecart" + (ecart > 0 ? " retard" : ecart < 0 ? " avance" : "");
-    el.textContent = "Fin prévue de l’étape : " + hmTxt(s.fin) + " · fin estimée : " + CC.heure(finProjetee) + " · " +
-      (ecart > 0 ? "retard de " + ecart + " min" : ecart < 0 ? "avance de " + (-ecart) + " min" : "à l’heure");
+    el.textContent = "Fin prévue de l\u0027étape : " + hmTxt(s.fin) + " · fin estimée : " + CC.heure(finProjetee) + " · " +
+      (ecart > 0 ? "retard de " + ecart + " min" : ecart < 0 ? "avance de " + (-ecart) + " min" : "à l\u0027heure");
     var prevue = D.deroule.filter(function (x) { return hm(x.debut) <= maintenant && maintenant < hm(x.fin); })[0];
     CC.$("#prevu").textContent = prevue ? "Selon le programme, maintenant : " + hmTxt(prevue.debut) + "-" + hmTxt(prevue.fin) + " · " + prevue.etape
-      : (maintenant < hm(D.meta.horaires.debut) ? "La journée commence à " + hmTxt(D.meta.horaires.debut) + "." : "La journée s’est terminée à " + hmTxt(D.meta.horaires.fin) + ".");
+      : (maintenant < hm(D.meta.horaires.debut) ? "La journée commence à " + hmTxt(D.meta.horaires.debut) + "." : "La journée s\u0027est terminée à " + hmTxt(D.meta.horaires.fin) + ".");
     CC.$("#prog").innerHTML = D.deroule.map(function (x) {
       var cls = x.pause ? "pause" : "";
       if (x.i === s.i) cls += " cur";

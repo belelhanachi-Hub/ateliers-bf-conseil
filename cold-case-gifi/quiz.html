@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Cold case GiFi · Quiz flash</title>
-<link rel="stylesheet" href="css/cc.css?v=59dc2215b5">
-<script src="js/config.js?v=59dc2215b5"></script>
-<script src="js/donnees.js?v=59dc2215b5"></script>
-<script src="js/commun.js?v=59dc2215b5"></script>
+<link rel="stylesheet" href="css/cc.css?v=5219352fac">
+<script src="js/config.js?v=5219352fac"></script>
+<script src="js/donnees.js?v=5219352fac"></script>
+<script src="js/commun.js?v=5219352fac"></script>
 <style>
 .onglets{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
 .onglets button{border:1.5px solid var(--line2);background:#fff;padding:7px 12px;font-size:14px;font-weight:700;border-radius:var(--r)}
@@ -29,7 +29,7 @@
 <body data-sous-titre="Les quiz flash · à projeter">
 <header id="cc-top"></header>
 <main class="wrap">
-  <div class="p-tete"><div><p class="kick">Entre les pièces · à projeter</p><h1 class="p-titre">Quiz flash</h1><p class="p-sous">Une question à la fois, vote à main levée. +500 € par bonne réponse au premier cabinet qui répond juste. Aucune réponse n’est collectée.</p></div></div>
+  <div class="p-tete"><div><p class="kick">Entre les pièces · à projeter</p><h1 class="p-titre">Quiz flash</h1><p class="p-sous">Une question à la fois, vote à main levée. +500 € par bonne réponse au premier cabinet qui répond juste. Aucune réponse n'est collectée.</p></div></div>
   <div class="onglets" role="tablist" id="onglets"></div>
   <section class="bloc carte-q" id="carte" aria-live="polite"></section>
   <p class="raccourcis">Flèches : question précédente / suivante · Entrée ou R : révéler la réponse</p>
@@ -39,7 +39,7 @@
 (function () {
   "use strict";
   var D = CC.data;
-  var SERIES = [{ id: "vf", lib: "Vrai ou faux ? (8h35)", titre: "Le « Vrai ou faux ? » d’ouverture",
+  var SERIES = [{ id: "vf", lib: "Vrai ou faux ? (8h35)", titre: "Le « Vrai ou faux ? » d\u0027ouverture",
     questions: D.vrai_faux.map(function (v) {
       return { q: CC.esc(v.affirmation), r: '<span class="vf ' + (v.reponse ? "v" : "f") + '">' + (v.reponse ? "Vrai" : "Faux") + "</span>" + CC.esc(v.explication) };
     }) }].concat(D.quiz.map(function (s) {

@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Cold case GiFi · Tout imprimer</title>
-<link rel="stylesheet" href="css/cc.css?v=59dc2215b5">
-<script src="js/config.js?v=59dc2215b5"></script>
-<script src="js/donnees.js?v=59dc2215b5"></script>
-<script src="js/commun.js?v=59dc2215b5"></script>
+<link rel="stylesheet" href="css/cc.css?v=5219352fac">
+<script src="js/config.js?v=5219352fac"></script>
+<script src="js/donnees.js?v=5219352fac"></script>
+<script src="js/commun.js?v=5219352fac"></script>
 <style>
 .panneau{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--ink);padding:22px 24px;margin-bottom:24px}
 .panneau h1{font:400 clamp(32px,4vw,52px)/1 var(--fd);margin-bottom:6px}
@@ -81,14 +81,14 @@
 <main class="wrap">
   <section class="panneau no-print">
     <h1>Tout imprimer</h1>
-    <p>Choisissez ce qu’il faut imprimer. Chaque élément est prévu en 2 jeux, un par cabinet (« Jeu 1 », « Jeu 2 »).</p>
+    <p>Choisissez ce qu'il faut imprimer. Chaque élément est prévu en 2 jeux, un par cabinet (« Jeu 1 », « Jeu 2 »).</p>
     <div class="choix" id="choix"></div>
     <div class="reglages">
       <label>Fiches « Et chez moi ? » : <input type="number" id="nb-fiches" min="1" max="20" value="8"></label>
       <button class="btn pri grand" type="button" id="imprimer">Imprimer</button>
       <span id="nb-pages" class="conseil"></span>
     </div>
-    <p class="conseil">Réglages de l’impression : format A4, marges « Aucune », échelle 100 %, cocher « Graphiques d’arrière-plan ». Les cartes parcours se font en recto verso (retournement sur le bord long) : la page des lettres suit celle des situations. Toutes les autres cartes sont en recto seul.</p>
+    <p class="conseil">Réglages de l'impression : format A4, marges « Aucune », échelle 100 %, cocher « Graphiques d'arrière-plan ». Les cartes parcours se font en recto verso (retournement sur le bord long) : la page des lettres suit celle des situations. Toutes les autres cartes sont en recto seul.</p>
   </section>
   <div id="apercu"></div>
 </main>
@@ -140,7 +140,7 @@
         '<p style="text-align:right">À remettre sous enveloppe scellée</p>' +
         "<p><strong>Cabinet ………………………………………,</strong></p>" +
         paras.map(function (p) { return "<p>" + esc(p.join(" ")) + "</p>"; }).join("") +
-        '<p style="text-align:right;margin-top:8mm">L’administrateur judiciaire<br><em>(lettre d’exercice)</em></p>' +
+        '<p style="text-align:right;margin-top:8mm">L\u0027administrateur judiciaire<br><em>(lettre d\u0027exercice)</em></p>' +
         '<div style="position:absolute;bottom:8mm;left:8mm;right:8mm">' + pied() + "</div>"));
     });
 
@@ -150,9 +150,9 @@
         var s = D.deroule.filter(function (x) { return x.seance === p.seance; })[0];
         h += '<div class="etiq"><span class="s">Cold case GiFi · Jeu ' + j + " · Cabinet ……………</span><b>Pièce " + p.id + "<br>" + esc(p.titre) + "</b>" +
           '<span class="s">Séance ' + p.seance.slice(1) + (s ? " · prévue à " + s.debut.replace(":", "h") : "") + " · " +
-          (p.id === 1 ? "s’ouvre au signal du formateur" : "s’ouvre avec le code de la pièce " + (p.id - 1)) + "</span></div>";
+          (p.id === 1 ? "s\u0027ouvre au signal du formateur" : "s\u0027ouvre avec le code de la pièce " + (p.id - 1)) + "</span></div>";
       });
-      h += '<div class="etiq"><span class="s">Cold case GiFi · Jeu ' + j + " · Cabinet ……………</span><b>Finale<br>" + esc(D.finale.titre) + '</b><span class="s">16h00 · s’ouvre avec le code de la pièce 8</span></div>';
+      h += '<div class="etiq"><span class="s">Cold case GiFi · Jeu ' + j + " · Cabinet ……………</span><b>Finale<br>" + esc(D.finale.titre) + '</b><span class="s">16h00 · s\u0027ouvre avec le code de la pièce 8</span></div>';
       h += '<div class="etiq"><span class="s">Cold case GiFi · Jeu ' + j + '</span><b>Lettre<br>de mission</b><span class="s">Dossier scellé · à ouvrir à 8h30</span></div>';
       ap.appendChild(page("", entete("Étiquettes des enveloppes", "Jeu " + j) + '<div class="g25">' + h + "</div>"));
     });
@@ -214,7 +214,7 @@
         [1, 2, 3, 4, 5, 6].map(function () { return "<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>"; }).join("") +
         "<tr><td><strong>Total / score pondéré</strong></td><td></td><td>100 %</td><td></td><td></td><td></td><td></td></tr></tbody></table>";
       ap.appendChild(page("doc-a4", entete("Pièce 7 · Les facteurs clés de succès", "Jeu " + j) +
-        "<h2>La grille pondérée d’exercice</h2>" + ex + "<h3>Votre grille</h3><p>Origine : clients, leaders, échecs, experts. Notes de 1 à 5.</p>" + vierge +
+        "<h2>La grille pondérée d\u0027exercice</h2>" + ex + "<h3>Votre grille</h3><p>Origine : clients, leaders, échecs, experts. Notes de 1 à 5.</p>" + vierge +
         '<div style="position:absolute;bottom:8mm;left:8mm;right:8mm">' + pied() + "</div>"));
     });
 
@@ -223,12 +223,12 @@
       for (var f = 0; f < nb; f++) {
         ap.appendChild(page("doc-a4", entete("Et chez moi ?", "Fiche individuelle") +
           "<h2>Et chez moi ?</h2><p>Nom : ……………………………………… · " + esc(D.transfert.quand.charAt(0).toUpperCase() + D.transfert.quand.slice(1)) + ".</p>" +
-          "<p>Ce que vous avez fait pour GiFi aujourd’hui, faites-le pour votre entreprise, en une page.</p>" +
-          '<table><thead><tr><th style="width:26%">Ce que j’ai appris sur GiFi</th><th>Ce que j’applique à mon entreprise</th><th style="width:18%">Où ça va dans mon dossier</th></tr></thead><tbody>' +
+          "<p>Ce que vous avez fait pour GiFi aujourd\u0027hui, faites-le pour votre entreprise, en une page.</p>" +
+          '<table><thead><tr><th style="width:26%">Ce que j\u0027ai appris sur GiFi</th><th>Ce que j\u0027applique à mon entreprise</th><th style="width:18%">Où ça va dans mon dossier</th></tr></thead><tbody>' +
           D.transfert.lignes.map(function (l) {
             return "<tr><td>" + esc(l[0]) + '</td><td><em style="font-size:9pt">' + esc(l[1]) + '</em><div class="lignes"></div><div class="lignes"></div></td><td>' + esc(l[2]) + "</td></tr>";
           }).join("") + "</tbody></table>" +
-          '<p style="margin-top:6mm"><strong>Mon engagement :</strong> d’ici la prochaine séance, j’ajoute à mon dossier …………………………………………………………………………</p><div class="lignes"></div>' +
+          '<p style="margin-top:6mm"><strong>Mon engagement :</strong> d\u0027ici la prochaine séance, j\u0027ajoute à mon dossier …………………………………………………………………………</p><div class="lignes"></div>' +
           '<div style="position:absolute;bottom:8mm;left:8mm;right:8mm">' + pied() + "</div>"));
       }
     }

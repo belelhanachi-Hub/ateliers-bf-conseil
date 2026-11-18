@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Cold case GiFi · Trésorerie</title>
-<link rel="stylesheet" href="css/cc.css?v=59dc2215b5">
-<script src="js/config.js?v=59dc2215b5"></script>
-<script src="js/donnees.js?v=59dc2215b5"></script>
-<script src="js/commun.js?v=59dc2215b5"></script>
+<link rel="stylesheet" href="css/cc.css?v=5219352fac">
+<script src="js/config.js?v=5219352fac"></script>
+<script src="js/donnees.js?v=5219352fac"></script>
+<script src="js/commun.js?v=5219352fac"></script>
 <style>
 .tete{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:10px;padding-bottom:20px;border-bottom:2px solid var(--ink);margin-bottom:24px}
 .tete h1{font:400 clamp(34px,4.4vw,52px)/1.05 var(--fd);letter-spacing:-.01em;margin-top:8px}
@@ -75,7 +75,7 @@
       </div>
     </div>
     <div class="tbl"><table class="cc"><thead><tr><th>Heure</th><th>Cabinet</th><th>Motif</th><th>Montant</th><th>Solde après</th></tr></thead><tbody id="histo"></tbody></table></div>
-    <p style="font-size:14px;margin-top:8px">Les opérations restent sur cet appareil (celui du formateur). Rien n’est envoyé.</p>
+    <p style="font-size:14px;margin-top:8px">Les opérations restent sur cet appareil (celui du formateur). Rien n'est envoyé.</p>
   </section>
 </main>
 <footer id="cc-pied"></footer>
@@ -209,7 +209,7 @@
     });
     if (eAnim) animer(eAnim, montant, avant);
     var tb = CC.$("#histo");
-    if (!etat.ops.length) { tb.innerHTML = '<tr><td colspan="5" class="vide">Aucune opération pour l’instant.</td></tr>'; }
+    if (!etat.ops.length) { tb.innerHTML = '<tr><td colspan="5" class="vide">Aucune opération pour l\u0027instant.</td></tr>'; }
     else tb.innerHTML = etat.ops.map(function (o, i) {
       return "<tr><td>" + o.t + "</td><td>" + CC.esc(CC.nomEquipe(o.e)) + "</td><td>" + CC.esc(o.motif) + '</td><td class="m">' + (o.montant > 0 ? "Gain " : "Perte ") + CC.signe(o.montant) +
         '</td><td class="m">' + CC.euros(solde(o.e, i)) + "</td></tr>";
@@ -227,7 +227,7 @@
     rendu(o.e, -o.montant, avant);
   });
   CC.$("#raz").addEventListener("click", function () {
-    if (!confirm("Effacer tout l’historique et remettre les deux cabinets à " + CC.euros(INIT) + " ?")) return;
+    if (!confirm("Effacer tout l\u0027historique et remettre les deux cabinets à " + CC.euros(INIT) + " ?")) return;
     etat = { ops: [] }; CC.set("tresor", etat); rendu();
   });
   CC.ecouter("tresor", function (v) { etat = v || { ops: [] }; rendu(); });

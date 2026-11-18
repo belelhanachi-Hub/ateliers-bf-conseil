@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Cold case GiFi · L'enquête</title>
-<link rel="stylesheet" href="css/cc.css?v=59dc2215b5">
-<script src="js/config.js?v=59dc2215b5"></script>
-<script src="js/donnees.js?v=59dc2215b5"></script>
-<script src="js/commun.js?v=59dc2215b5"></script>
-<script src="js/une.js?v=59dc2215b5"></script>
+<link rel="stylesheet" href="css/cc.css?v=5219352fac">
+<script src="js/config.js?v=5219352fac"></script>
+<script src="js/donnees.js?v=5219352fac"></script>
+<script src="js/commun.js?v=5219352fac"></script>
+<script src="js/une.js?v=5219352fac"></script>
 <style>
 .d-chiffres{display:flex;gap:30px;margin-top:16px;flex-wrap:wrap}
 .d-chiffres div{font-size:13.5px;color:var(--ink2);line-height:1.25}
@@ -38,16 +38,16 @@
 @media (max-width:640px){.noms{grid-template-columns:1fr}}
 </style>
 </head>
-<body data-avec-logos data-sous-titre="L’enquête · Mastère MA28 · Bloc 1, C1.1">
+<body data-avec-logos data-sous-titre="L'enquête · Mastère MA28 · Bloc 1, C1.1">
 <header id="cc-top"></header>
 <main class="wrap">
   <div class="p-tete">
     <img src="img/bf-conseil.png" alt="BF Conseil" width="140" height="103">
     <div>
       <p class="kick" id="meta-sous"></p>
-      <h1 class="p-titre">Cold case GiFi : l’enquête</h1>
-      <p class="p-sous">Une journée pour comprendre ce que l’étude de marché et la veille n’ont pas vu : huit pièces à conviction, deux cabinets, une question pour le tribunal.</p>
-      <div class="d-chiffres"><div><b>8</b>pièces à conviction</div><div><b>2</b>cabinets d’enquête</div><div><b>30 000 €</b>de trésorerie au départ</div><div><b>16h00</b>le procès</div></div>
+      <h1 class="p-titre">Cold case GiFi : l'enquête</h1>
+      <p class="p-sous">Le 3 novembre 2026, GiFi a été placé en redressement judiciaire. Vous avez la journée pour comprendre ce que l'étude de marché et la veille n'ont pas vu.</p>
+      <div class="d-chiffres"><div><b>8</b>pièces à conviction</div><div><b>2</b>cabinets d'enquête</div><div><b>30 000 €</b>de trésorerie au départ</div><div><b>16h00</b>le procès</div></div>
     </div>
   </div>
 
@@ -68,7 +68,7 @@
       <label class="champ"><span>Nom du cabinet 1</span><input id="nom1" maxlength="40" autocomplete="off" placeholder="Cabinet 1"></label>
       <label class="champ"><span>Nom du cabinet 2</span><input id="nom2" maxlength="40" autocomplete="off" placeholder="Cabinet 2"></label>
     </div>
-    <p style="font-size:13.5px;color:var(--ink3);margin-top:8px">Les noms restent sur cet appareil. Rien n’est envoyé.</p>
+    <p style="font-size:13.5px;color:var(--ink3);margin-top:8px">Les noms restent sur cet appareil. Rien n'est envoyé.</p>
     <div class="ouvrir">
       <a class="btn pri grand" id="go1" href="equipe.html?e=1">Ouvrir le dossier · Cabinet 1</a>
       <a class="btn pri grand" id="go2" href="equipe.html?e=2">Ouvrir le dossier · Cabinet 2</a>
@@ -106,7 +106,7 @@
   CC.monterUne(CC.$("#une"));
 
   var p = CC.$("#protag");
-  [["gifi", "L’enseigne placée en redressement judiciaire le 3 novembre 2026"],
+  [["gifi", "L\u0027enseigne placée en redressement judiciaire le 3 novembre 2026"],
    ["action", "Le discounter concurrent"],
    ["temu", "La plateforme lancée en France en avril 2023"]].forEach(function (m, i) {
     var f = CC.el("figure");
@@ -126,7 +126,7 @@
         if (coupe || i === 0) acc.push([phr]); else acc[acc.length - 1].push(phr);
         return acc;
       }, []).map(function (para) { return "<p>" + CC.esc(para.join(" ")) + "</p>"; }).join("") +
-      '<p class="sign">L’administrateur judiciaire<br><em>(lettre d’exercice)</em></p>';
+      '<p class="sign">L\u0027administrateur judiciaire<br><em>(lettre d\u0027exercice)</em></p>';
   }
   lettre();
   CC.$("#compo").textContent = D.equipes.composition + ". " + (D.organisation || []).slice(0, 2).join(" ");

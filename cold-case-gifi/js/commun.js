@@ -1,4 +1,4 @@
-/* Cold case GiFi — outils communs à toutes les pages
+/* Cold case GiFi : outils communs à toutes les pages
  * Stockage (localStorage protégé, repli en mémoire), sons Web Audio (coupés par défaut, touche M),
  * logos avec repli texte, codes (SHA-256 + déchiffrement AES-GCM), barre haute et pied de page.
  */
@@ -211,7 +211,7 @@
     f.className = "pied no-print";
     var m = avecLogos && CC.logosActifs() && D.logos ? '<span class="mention">' + CC.esc(D.logos.mention) + "</span>" : "";
     f.innerHTML = "Belel Hanachi · BF Conseil · " + CC.esc((D.meta && D.meta.groupe) || "") +
-      ' · <a href="sources.html">Sources</a> · Rien n’est envoyé : tout reste sur cet appareil.<br>Un redressement judiciaire n’est pas une liquidation : on analyse un marché et des décisions, avec respect pour les 6 000 salariés de GiFi.' + m;
+      ' · <a href="sources.html">Sources</a> · Rien n\u0027est envoyé : tout reste sur cet appareil.<br>Un redressement judiciaire n\u0027est pas une liquidation : on analyse un marché et des décisions, avec respect pour les 6 000 salariés de GiFi.' + m;
   };
 
   document.addEventListener("DOMContentLoaded", function () {

@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Cold case GiFi · Breaking news</title>
-<link rel="stylesheet" href="css/cc.css?v=59dc2215b5">
-<script src="js/config.js?v=59dc2215b5"></script>
-<script src="js/donnees.js?v=59dc2215b5"></script>
-<script src="js/commun.js?v=59dc2215b5"></script>
+<link rel="stylesheet" href="css/cc.css?v=5219352fac">
+<script src="js/config.js?v=5219352fac"></script>
+<script src="js/donnees.js?v=5219352fac"></script>
+<script src="js/commun.js?v=5219352fac"></script>
 <style>
 .liste{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
 @media (max-width:900px){.liste{grid-template-columns:1fr}}
@@ -48,8 +48,8 @@
 <body data-avec-logos data-sous-titre="Les Breaking news · à projeter">
 <header id="cc-top"></header>
 <main class="wrap">
-  <div class="liste" id="liste"><div class="p-tete"><div><p class="kick">Rebondissements · à projeter</p><h1 class="p-titre">Breaking news</h1><p class="p-sous">Trois faits réels, datés et sourcés, qui tombent pendant la journée.</p></div></div></div>
-  <p class="aide">Cliquez sur une news pour l’afficher en plein écran. Les cabinets ont 5 minutes pour répondre. Bonne réponse argumentée : +2 000 €. Échap pour revenir.</p>
+  <div class="liste" id="liste"><div class="p-tete"><div><p class="kick">Rebondissements · à projeter</p><h1 class="p-titre">Breaking news</h1><p class="p-sous">Trois vraies infos, avec leur date et leur source, à lancer pendant la journée.</p></div></div></div>
+  <p class="aide">Cliquez sur une news pour l'afficher en plein écran. Les cabinets ont 5 minutes pour répondre. Bonne réponse argumentée : +2 000 €. Échap pour revenir.</p>
 </main>
 <footer id="cc-pied"></footer>
 <script>
@@ -106,7 +106,7 @@
     CC.anim(ecran.querySelector(".bn-corps"), [{ opacity: 0, transform: "translateY(16px)" }, { opacity: 1, transform: "none" }], { duration: 600, delay: 500, fill: "backwards" });
     // texte défilant en bas
     var def = ecran.querySelector(".defile");
-    var txt = (n.titre + " — " + n.texte + " (Source : " + n.source + ")").toUpperCase() + "     ●     ";
+    var txt = (n.titre + " : " + n.texte + " (Source : " + n.source + ")").toUpperCase() + "     ●     ";
     def.textContent = txt + txt;
     requestAnimationFrame(function () {
       var w = def.scrollWidth / 2;

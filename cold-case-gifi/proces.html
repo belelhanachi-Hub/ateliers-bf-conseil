@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Cold case GiFi · Le procès</title>
-<link rel="stylesheet" href="css/cc.css?v=59dc2215b5">
-<script src="js/config.js?v=59dc2215b5"></script>
-<script src="js/donnees.js?v=59dc2215b5"></script>
-<script src="js/commun.js?v=59dc2215b5"></script>
+<link rel="stylesheet" href="css/cc.css?v=5219352fac">
+<script src="js/config.js?v=5219352fac"></script>
+<script src="js/donnees.js?v=5219352fac"></script>
+<script src="js/commun.js?v=5219352fac"></script>
 <style>
 .p-tete .lg{flex:none}
 .question{font:400 clamp(22px,2.6vw,34px)/1.2 var(--fd);margin:0 0 26px;max-width:1200px;padding:16px 20px;background:var(--beige3);border-left:3px solid var(--ink)}
@@ -61,7 +61,7 @@
 <body data-avec-logos data-sous-titre="La finale · le procès de GiFi">
 <header id="cc-top"></header>
 <main class="wrap large">
-  <div class="p-tete"><span class="lg" id="logo-gifi"></span><div><p class="kick">La finale · 16h00 · 25 minutes</p><h1 class="p-titre">Le procès de GiFi</h1><p class="p-sous">Deux camps tirés au sort, des preuves datées, un jury, un verdict.</p></div></div>
+  <div class="p-tete"><span class="lg" id="logo-gifi"></span><div><p class="kick">La finale · 16h00 · 25 minutes</p><h1 class="p-titre">Le procès de GiFi</h1><p class="p-sous">Les camps sont tirés au sort. Chaque cabinet plaide avec des preuves datées, puis le jury tranche.</p></div></div>
   <p class="question" id="question"></p>
 
   <section class="etape">
@@ -72,7 +72,7 @@
         <p style="text-align:center;margin-top:12px"><button class="btn pri" type="button" id="tirer">Lancer la pièce</button></p>
       </div>
       <div>
-        <p style="color:var(--ink2)">La face visible désigne l’accusation. Le camp ne dépend pas de ce que pense l’équipe : on plaide la thèse qu’on a tirée, avec des preuves.</p>
+        <p style="color:var(--ink2)">La face visible désigne l'accusation. Le camp ne dépend pas de ce que pense l'équipe : on plaide la thèse qu'on a tirée, avec des preuves.</p>
         <div class="camps" id="camps" aria-live="polite"></div>
       </div>
     </div>
@@ -134,7 +134,7 @@
   CC.$("#face-b").textContent = n2;
   function camps() {
     var h = "";
-    [["acc", "L’accusation", F.camps.accusation], ["def", "La défense", F.camps.defense]].forEach(function (c) {
+    [["acc", "L\u0027accusation", F.camps.accusation], ["def", "La défense", F.camps.defense]].forEach(function (c) {
       var e = equipeDe(c[0]);
       h += '<div class="camp"><div class="role">' + c[1] + '</div><div class="qui">' + (e ? CC.esc(CC.nomEquipe(e)) : "?") + '</div><p class="these">« ' + CC.esc(c[2]) + " »</p></div>";
     });
@@ -161,8 +161,8 @@
   var M = F.minuteurs_min;
   var ETAPES = [
     ["Breaking news n° 3 et tirage", M.breaking_news_et_tirage], ["Préparation", M.preparation],
-    ["Plaidoirie de l’accusation", M.plaidoirie], ["Plaidoirie de la défense", M.plaidoirie],
-    ["Réplique de l’accusation", M.replique], ["Réplique de la défense", M.replique],
+    ["Plaidoirie de l\u0027accusation", M.plaidoirie], ["Plaidoirie de la défense", M.plaidoirie],
+    ["Réplique de l\u0027accusation", M.replique], ["Réplique de la défense", M.replique],
     ["Délibération du jury", M.deliberation], ["Débrief", M.debrief]
   ];
   var mi = 2, fin = null, reste = ETAPES[2][1] * 60, bip0 = false, bip30 = false;
@@ -228,7 +228,7 @@
     st.gagnant = e; sauver();
     var lignes = "Victoire au procès : " + CC.signe(GAIN) + " pour " + CC.nomEquipe(e) + ".";
     [1, 2].forEach(function (k) { if (st.cess[k]) lignes += " " + CC.nomEquipe(k) + " : pénalité de cessation de paiements, " + CC.signe(PEN) + "."; });
-    CC.$("#annonce").innerHTML = "Le tribunal donne raison à " + CC.esc(CC.nomEquipe(e)) + " (" + (camp(e) === "acc" ? "l’accusation" : "la défense") + ")<small>" + CC.esc(lignes) + "</small>";
+    CC.$("#annonce").innerHTML = "Le tribunal donne raison à " + CC.esc(CC.nomEquipe(e)) + " (" + (camp(e) === "acc" ? "l\u0027accusation" : "la défense") + ")<small>" + CC.esc(lignes) + "</small>";
     CC.$("#inscrire").hidden = false;
     CC.$("#inscrit").textContent = st.inscrit ? "Déjà inscrit dans la trésorerie." : "";
     // la jauge monte jusqu'au gain
@@ -242,7 +242,7 @@
     })(t0);
   }
   CC.$("#verdict").addEventListener("click", function () {
-    if (!st.acc) { CC.$("#annonce").textContent = "Tirez d’abord les camps."; return; }
+    if (!st.acc) { CC.$("#annonce").textContent = "Tirez d\u0027abord les camps."; return; }
     var a = total("acc"), d = total("def");
     CC.$("#egalite").hidden = true;
     frapper().then(function () {
@@ -261,7 +261,7 @@
   });
   CC.$("#inscrire").addEventListener("click", function () {
     if (!st.gagnant) return;
-    if (st.inscrit && !confirm("Le résultat est déjà inscrit. L’inscrire une deuxième fois ?")) return;
+    if (st.inscrit && !confirm("Le résultat est déjà inscrit. L\u0027inscrire une deuxième fois ?")) return;
     var T2 = CC.get("tresor", null) || { ops: [] };
     var d = new Date();
     T2.ops.push({ e: st.gagnant, motif: "Victoire au procès", montant: GAIN, t: CC.heure(d), ts: d.getTime() });
