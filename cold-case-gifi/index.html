@@ -129,8 +129,7 @@
       '<p class="sign">L’administrateur judiciaire<br><em>(lettre d’exercice)</em></p>';
   }
   lettre();
-  CC.$("#compo").textContent = D.equipes.composition + ". 4 rôles qui tournent à chaque pièce : " +
-    D.roles.map(function (r) { return r.role; }).join(", ") + ".";
+  CC.$("#compo").textContent = D.equipes.composition + ". " + D.organisation.slice(0, 2).join(" ");
 
   var noms = CC.get("noms", ["", ""]);
   ["nom1", "nom2"].forEach(function (id, i) {

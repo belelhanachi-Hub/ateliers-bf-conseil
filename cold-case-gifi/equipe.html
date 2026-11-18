@@ -119,9 +119,8 @@
         <button class="btn petit" id="voir-une" hidden type="button">Voir la une en grand</button>
       </div>
       <div class="aside-bloc bloc beige">
-        <p class="lib-sec">Les rôles</p>
-        <div><ul class="roles" id="roles"></ul>
-          <p style="margin:8px 0 0"><strong>Règle :</strong> personne ne garde le même rôle deux pièces de suite. Dans un cabinet de 3, le chef d’enquête est aussi greffier.</p></div>
+        <p class="lib-sec">L’organisation du cabinet</p>
+        <div><ul class="roles" id="roles"></ul></div>
       </div>
     </aside>
   </div>
@@ -157,7 +156,7 @@
     majNom(); CC.entete(document.body.getAttribute("data-sous-titre")); CC.activerSon(CC.son.actif);
   });
   majNom();
-  CC.$("#roles").innerHTML = D.roles.map(function (r) { return "<li><strong>" + CC.esc(r.role) + "</strong> : " + CC.esc(r.mission) + "</li>"; }).join("");
+  CC.$("#roles").innerHTML = D.organisation.map(function (r) { return "<li>" + CC.esc(r) + "</li>"; }).join("");
 
   /* ---------- États ---------- */
   function resolue(n) { return !!etat.codes[n]; }
