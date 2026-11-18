@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Cold case GiFi · Espace du cabinet</title>
-<link rel="stylesheet" href="css/cc.css?v=5219352fac">
-<script src="js/config.js?v=5219352fac"></script>
-<script src="js/donnees.js?v=5219352fac"></script>
-<script src="js/commun.js?v=5219352fac"></script>
-<script src="js/une.js?v=5219352fac"></script>
+<link rel="stylesheet" href="css/cc.css?v=0d489fcd4b">
+<script src="js/config.js?v=0d489fcd4b"></script>
+<script src="js/donnees.js?v=0d489fcd4b"></script>
+<script src="js/commun.js?v=0d489fcd4b"></script>
+<script src="js/une.js?v=0d489fcd4b"></script>
 <style>
 .tete{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;padding-bottom:20px;border-bottom:2px solid var(--ink);margin-bottom:24px}
 .tete h1{font:400 clamp(34px,4.4vw,48px)/1.05 var(--fd);letter-spacing:-.01em;margin:6px 0 10px}
@@ -118,6 +118,12 @@
         <p class="note">Chaque code trouvé révèle un morceau de la une. Complète à la fin de la pièce 8.</p>
         <button class="btn petit" id="voir-une" hidden type="button">Voir la une en grand</button>
       </div>
+      <div class="aside-bloc bloc">
+        <p class="lib-sec">Le grand oral · 15h45</p>
+        <p style="font-size:14.5px;color:var(--ink2);margin:0 0 12px" id="go-consigne"></p>
+        <a class="btn pri" href="masque-grand-oral.pptx" download>Télécharger le masque PowerPoint</a>
+        <p class="note">Après chaque pièce, complétez sa diapositive. À 15h45, votre diaporama est prêt.</p>
+      </div>
       <div class="aside-bloc bloc beige">
         <p class="lib-sec">L'organisation du cabinet</p>
         <div><ul class="roles" id="roles"></ul></div>
@@ -156,6 +162,7 @@
     majNom(); CC.entete(document.body.getAttribute("data-sous-titre")); CC.activerSon(CC.son.actif);
   });
   majNom();
+  CC.$("#go-consigne").textContent = (D.grand_oral || {}).consigne || "";
   CC.$("#roles").innerHTML = (D.organisation || []).map(function (r) { return "<li>" + CC.esc(r) + "</li>"; }).join("");
 
   /* ---------- États ---------- */
@@ -437,7 +444,7 @@
     var ch = CC.el("div", { class: "chemise" });
 
     var f = CC.el("div", { class: "feuille doc piece-feuille" });
-    f.innerHTML = '<p class="kick">Finale · 16h00</p><h2 class="pt">' + CC.esc(F.titre) + "</h2>" + '<div class="entete">' + F.entete + "</div>" +
+    f.innerHTML = '<p class="kick">Finale · 16h05</p><h2 class="pt">' + CC.esc(F.titre) + "</h2>" + '<div class="entete">' + F.entete + "</div>" +
       F.sections.map(function (s) { return "<section><h2>" + CC.esc(s.titre) + "</h2>" + s.html + "</section>"; }).join("");
     ch.appendChild(f);
     dos.appendChild(ch);

@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Cold case GiFi · Chrono</title>
-<link rel="stylesheet" href="css/cc.css?v=5219352fac">
-<script src="js/config.js?v=5219352fac"></script>
-<script src="js/donnees.js?v=5219352fac"></script>
-<script src="js/commun.js?v=5219352fac"></script>
+<link rel="stylesheet" href="css/cc.css?v=0d489fcd4b">
+<script src="js/config.js?v=0d489fcd4b"></script>
+<script src="js/donnees.js?v=0d489fcd4b"></script>
+<script src="js/commun.js?v=0d489fcd4b"></script>
 <style>
 .ecran{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(300px,1fr);gap:24px;padding:24px 20px 34px;max-width:1600px;margin:0 auto}
 .ecran > *{min-width:0}
@@ -106,14 +106,16 @@
     if (s.seance) {
       var ph = [{ n: "Travail en cabinet", c: "Travail en cabinet", d: s.travail_min }];
       if (s.news_min) ph.push({ n: "Breaking news n° 2", c: "Breaking news n° 2", d: s.news_min });
-      return ph.concat([
-        { n: n1 + " présente", c: n1 + " présente", d: 3 },
-        { n: n2 + " pose sa question", c: n2 + " pose sa question", d: 1 },
-        { n: n2 + " présente", c: n2 + " présente", d: 3 },
-        { n: n1 + " pose sa question", c: n1 + " pose sa question", d: 1 },
-        { n: "Débrief", c: "Débrief", d: s.debrief_min }
-      ]);
+      return ph.concat([{ n: "Débrief", c: "Débrief", d: s.debrief_min }]);
     }
+    if (s.grand_oral) return [
+      { n: n1 + " présente son enquête", c: "Grand oral : " + n1, d: s.oral_min },
+      { n: n2 + " présente son enquête", c: "Grand oral : " + n2, d: s.oral_min }
+    ];
+    if (s.grand_oral) return [
+      { n: n1 + " présente son enquête", c: "Grand oral : " + n1, d: s.oral_min },
+      { n: n2 + " présente son enquête", c: "Grand oral : " + n2, d: s.oral_min }
+    ];
     if (/^Finale/.test(s.etape)) return [
       { n: "Breaking news n° 3 et tirage des camps", c: "Breaking news n° 3", d: F.breaking_news_et_tirage },
       { n: "Préparation", c: "Préparation", d: F.preparation },

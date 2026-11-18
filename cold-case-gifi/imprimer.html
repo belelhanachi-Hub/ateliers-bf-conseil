@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Cold case GiFi · Tout imprimer</title>
-<link rel="stylesheet" href="css/cc.css?v=5219352fac">
-<script src="js/config.js?v=5219352fac"></script>
-<script src="js/donnees.js?v=5219352fac"></script>
-<script src="js/commun.js?v=5219352fac"></script>
+<link rel="stylesheet" href="css/cc.css?v=0d489fcd4b">
+<script src="js/config.js?v=0d489fcd4b"></script>
+<script src="js/donnees.js?v=0d489fcd4b"></script>
+<script src="js/commun.js?v=0d489fcd4b"></script>
 <style>
 .panneau{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--ink);padding:22px 24px;margin-bottom:24px}
 .panneau h1{font:400 clamp(32px,4vw,52px)/1 var(--fd);margin-bottom:6px}
@@ -152,7 +152,7 @@
           '<span class="s">Séance ' + p.seance.slice(1) + (s ? " · prévue à " + s.debut.replace(":", "h") : "") + " · " +
           (p.id === 1 ? "s\u0027ouvre au signal du formateur" : "s\u0027ouvre avec le code de la pièce " + (p.id - 1)) + "</span></div>";
       });
-      h += '<div class="etiq"><span class="s">Cold case GiFi · Jeu ' + j + " · Cabinet ……………</span><b>Finale<br>" + esc(D.finale.titre) + '</b><span class="s">16h00 · s\u0027ouvre avec le code de la pièce 8</span></div>';
+      h += '<div class="etiq"><span class="s">Cold case GiFi · Jeu ' + j + " · Cabinet ……………</span><b>Finale<br>" + esc(D.finale.titre) + '</b><span class="s">16h05 · s\u0027ouvre avec le code de la pièce 8</span></div>';
       h += '<div class="etiq"><span class="s">Cold case GiFi · Jeu ' + j + '</span><b>Lettre<br>de mission</b><span class="s">Dossier scellé · à ouvrir à 8h30</span></div>';
       ap.appendChild(page("", entete("Étiquettes des enveloppes", "Jeu " + j) + '<div class="g25">' + h + "</div>"));
     });
