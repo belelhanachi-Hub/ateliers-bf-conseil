@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Cold case GiFi · en autonomie</title>
+<link rel="stylesheet" href="../cold-case-gifi/css/cc.css?v=a2">
+<style>
+.wrap{max-width:1180px}
+.topbar{position:static}
+.livrable{background:#fff;border:2px solid var(--ink);padding:16px 20px;margin-bottom:22px}
+.livrable ul{list-style:none;padding:0;margin:8px 0 0}
+.livrable li{padding:7px 0;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
+.livrable .pastille{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border:1.5px solid var(--warn);color:var(--warn);border-radius:var(--r);white-space:nowrap}
+.livrable li.ok .pastille{border-color:var(--ok);color:var(--ok);background:var(--okb)}
+.livrable .lien{font-size:13px;color:var(--ink2)}
+@media (max-width:700px){.statut{position:static}}
+.grille td select{min-width:120px}
+.mt{margin-top:22px}
+/* Barre de statut */
+.statut{position:sticky;top:0;z-index:40;background:var(--ink);color:#fff;display:flex;flex-wrap:wrap;align-items:center;gap:6px 22px;padding:8px 20px;font-size:14px}
+.statut b{font-weight:700}
+.st-item{display:flex;flex-direction:column;line-height:1.15}
+.st-item small{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--beige2)}
+.st-item .v{font-size:19px;font-weight:700;font-variant-numeric:tabular-nums}
+#st-treso.neg{color:#ffb3b3}
+.st-plan{flex:1;min-width:240px;font-size:13.5px;color:#e9e6df}
+.st-plan.orange{color:#ffd28a;font-weight:700}
+.st-plan.rouge{color:#ffb3b3;font-weight:700}
+.faillite{background:var(--err);color:#fff;text-align:center;font-weight:700;padding:6px 12px;letter-spacing:.06em;animation:cc-pulse 2s ease-in-out infinite}
+/* Frise */
+.frise{list-style:none;margin:0 0 24px;padding:0;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:6px}
+.fr{width:100%;min-height:78px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:7px 4px;border:1px solid var(--line);border-radius:var(--r);background:var(--soft);color:var(--ink3);font-size:12px;line-height:1.2;text-align:center}
+.fr .n{font:400 22px/1 var(--fd)}
+.fr .t{font-size:11.5px}
+.fr .e{font-size:10px;letter-spacing:.06em;text-transform:uppercase;font-weight:700}
+.fr[data-etat="ouverte"]{background:var(--paper);color:var(--ink);border:1.5px solid var(--ink)}
+.fr[data-etat="trouve"]{background:var(--okb);color:var(--ink);border:1.5px solid var(--ok)}
+.fr[data-etat="trouve"] .e{color:var(--ok)}
+.fr[data-etat="passe"]{background:var(--warnb);color:var(--ink);border:1.5px solid var(--warn)}
+.fr[data-etat="passe"] .e{color:var(--warn)}
+.fr[aria-current="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.fr[aria-current="true"] .e{color:#fff}
+.fr:disabled{cursor:not-allowed;opacity:.7}
+@media (max-width:980px){.frise{grid-template-columns:repeat(6,minmax(0,1fr))}}
+@media (max-width:480px){.frise{grid-template-columns:repeat(4,minmax(0,1fr))}.fr .t{display:none}}
+/* Titres de vue */
+.titre-vue{border-bottom:2px solid var(--ink);padding-bottom:16px;margin-bottom:22px}
+.titre-vue h1{font:400 clamp(30px,4vw,44px)/1.05 var(--fd);margin:6px 0 8px;letter-spacing:-.01em}
+.temps{font-size:14px;color:var(--ink2);margin:8px 0 0;font-variant-numeric:tabular-nums}
+.temps.retard{color:var(--warn);font-weight:700}
+.h-mini{font-size:15px;margin:4px 0 8px}
+/* Champs */
+.ch{display:block;margin:0 0 14px}
+.ch .lab{display:block;font-size:14px;font-weight:700;margin-bottom:5px}
+.ch .lab i{font-weight:400;color:var(--ink3)}
+.ch input[type=text],.ch input[type=number],.ch textarea,.ch select,.grille input,.grille select,.grille textarea{width:100%;padding:8px 10px;border:1.5px solid var(--line2);border-radius:var(--r);background:#fff;font-size:15px}
+.ch textarea{resize:vertical;min-height:64px;line-height:1.45}
+.grille textarea.cel{min-height:38px;resize:vertical;font-size:14px;padding:6px 8px;overflow:hidden}
+.ch input:focus,.ch textarea:focus,.ch select:focus,.grille input:focus,.grille select:focus,.grille textarea:focus{outline:none;border-color:var(--ink);box-shadow:0 0 0 2px var(--beige)}
+.ch :disabled,.grille :disabled{background:var(--soft);color:var(--ink2)}
+table.grille{border-collapse:collapse;width:100%;font-size:14px;background:#fff}
+.grille th,.grille td{border:1px solid var(--line);padding:5px;vertical-align:top;text-align:left}
+.grille thead th{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);background:var(--soft)}
+.grille tbody th{font-size:13.5px;min-width:110px;max-width:240px;background:var(--beige3)}
+.etape .consigne{color:var(--ink2);margin-bottom:14px}
+.consigne{max-width:860px}
+.compte{font-weight:700;margin-top:18px}
+.note{font-size:13px;color:var(--ink3)}
+.formule{font:700 18px/1.4 "Courier New",Courier,monospace;background:var(--soft);padding:8px 12px;display:inline-block}
+.pied-carte{font-size:11px;color:var(--ink3);margin:6px 0 0;letter-spacing:.03em}
+/* Cartes */
+.cartes-p4,.cartes-p6,.cartes-p8{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin:10px 0 12px}
+.carte-doc,.carte4{background:#fff;border:1px solid var(--line2);border-top:3px solid var(--ink);padding:12px 14px;font-family:"Courier New",Courier,monospace;font-size:14px;line-height:1.45;display:flex;flex-direction:column}
+.carte-doc .lettre{font:400 26px/1 var(--fd);display:block;margin-bottom:6px}
+.carte-doc h4{font:700 15px/1.25 var(--f);margin:0 0 6px}
+.carte-doc .src{font-size:12.5px;color:var(--ink2);margin-top:auto;padding-top:8px}
+.carte4{min-height:180px;gap:8px;justify-content:space-between}
+.c4-n{font:700 11.5px var(--f);letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
+.c4-dos{background:var(--beige);flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:var(--r)}
+.c4-l{font:400 64px/1 var(--fd)}
+.carte4 .btn{align-self:flex-start}
+/* Code */
+.codebox{background:var(--beige3);border:1.5px solid var(--ink);border-radius:var(--r);padding:20px 22px}
+.code-form{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0 6px}
+.code-form input{font:700 24px/1 "Courier New",Courier,monospace;letter-spacing:.18em;text-transform:uppercase;padding:10px 14px;border:2px solid var(--ink);border-radius:var(--r);width:220px;background:#fff}
+.msg{min-height:1.4em;font-weight:700;color:var(--err)}
+#m-pdf,#m-lancer{color:var(--ink)}
+.secours{border-top:1px solid var(--beige2);margin-top:14px;padding-top:12px}
+.indice{background:#fff;border-left:4px solid var(--warn);padding:10px 14px;margin:12px 0}
+.indice b{display:block;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--warn)}
+.resultat{font-size:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.correction{background:#fff;border:1.5px solid var(--ok);padding:14px 18px;margin-top:16px}
+.correction-av{background:#fff;border:1px dashed var(--ink3);padding:12px 16px;margin-top:16px}
+/* Breaking news */
+.breaking-bloc{background:#fff;border:2px solid var(--err);padding:0 20px 14px;margin-bottom:22px}
+.breaking-bloc h2{font:400 26px/1.15 var(--fd);margin:12px 0 8px}
+.bk-bandeau{background:var(--err);color:#fff;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:6px 20px;margin:0 -20px;font-size:13px}
+.bk-bandeau.grand{font-size:clamp(26px,5vw,48px);letter-spacing:.08em;padding:14px 24px;margin:0 -28px 0}
+.src{font-size:13px;color:var(--ink2);font-style:italic}
+.bk-over{position:fixed;inset:0;z-index:300;background:rgba(21,21,21,.82);display:flex;align-items:center;justify-content:center;padding:16px}
+.bk-boite{background:#fff;max-width:760px;width:100%;padding:0 28px 22px;border:3px solid var(--err);max-height:92vh;overflow:auto;animation:bk-in .5s ease-out}
+.bk-boite h2{font:400 clamp(26px,4vw,40px)/1.1 var(--fd);margin:8px 0 12px}
+.bk-heure{text-align:right;font-weight:700;margin:8px 0 0;font-variant-numeric:tabular-nums}
+.bk-q{font-size:18px;background:var(--beige3);padding:10px 14px}
+@keyframes bk-in{from{opacity:0;transform:translateY(-30px)}to{opacity:1;transform:none}}
+/* Accueil */
+.une-mini{background:#fff;border:1px solid var(--line2);padding:18px 22px}
+.une-mini .u-tete{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px double var(--ink);padding-bottom:8px;gap:10px;flex-wrap:wrap}
+.une-mini .u-nom{font:400 28px/1 var(--fd)}
+.une-mini .u-date{font:700 12px var(--f);text-transform:uppercase;letter-spacing:.12em;color:var(--ink2)}
+.une-mini .u-titre{font:400 clamp(26px,3vw,36px)/1.05 var(--fd);margin:14px 0 10px}
+.une-mini .u-rappel{border-left:3px solid var(--ink);background:var(--beige3);padding:8px 12px;font-weight:700}
+.une-mini .u-fictif{font-size:12px;color:var(--ink3);margin:8px 0 0}
+.form-cab{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:0 18px;margin-top:12px}
+.coche{display:flex;gap:8px;align-items:center;font-weight:700;margin:10px 0 14px}
+.coche input{width:20px;height:20px}
+.regles li{margin-bottom:8px}
+table.bareme td.g,table.cc td.g{color:var(--ok);font-weight:700;white-space:nowrap}
+table.bareme td.p,table.cc td.p{color:var(--err);font-weight:700;white-space:nowrap}
+.quiz{list-style:none;padding:0;margin:0;display:grid;gap:12px;counter-reset:q}
+.quiz .q{counter-increment:q}
+.q-t{font-size:19px;font-weight:700}
+.q-t::before{content:counter(q) ". "}
+.q-res.ok{color:var(--ok)}.q-res.ko{color:var(--err)}
+.rappel-preuves li{margin-bottom:4px}
+.adresses{list-style:none;padding:0}
+.adresses li{margin-bottom:8px;font-size:17px}
+.etape-envoi{border-left:4px solid var(--ink)}
+.scores{font-size:14.5px}
+.radar-zone svg{max-width:620px;width:100%;height:auto;background:#fff;border:1px solid var(--line)}
+.sauve{font-size:12px;color:var(--ink3)}
+.sauve.ko{color:var(--err);font-weight:700}
+.alerte{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:400;background:var(--err);color:#fff;padding:12px 18px;border-radius:var(--r);max-width:min(680px,92vw);font-weight:700;box-shadow:0 6px 24px rgba(0,0,0,.25)}
+details summary{cursor:pointer;font-weight:700;margin:8px 0}
+/* Impression de secours (Enregistrer au format PDF) */
+#impression{display:none}
+@media print{
+  body.imprime > *:not(#impression){display:none!important}
+  body.imprime #impression{display:block;font:10.5pt/1.4 Arial,sans-serif;color:#000}
+  #impression h1{font-size:20pt}
+  #impression h2{font-size:14pt;border-bottom:1.5px solid #000;margin-top:18pt;break-after:avoid}
+  #impression h3{font-size:11.5pt;margin-top:10pt;break-after:avoid}
+  #impression table{border-collapse:collapse;width:100%;margin:4pt 0 10pt;font-size:9pt}
+  #impression th,#impression td{border:1px solid #bbb;padding:3pt 4pt;text-align:left;vertical-align:top}
+  #impression tr{break-inside:avoid}
+  #impression .lab-i{font-weight:700;color:#444;font-size:9pt;margin:6pt 0 1pt}
+  #impression .val-i{margin:0 0 6pt;white-space:normal}
+  #impression .gris{color:#555;font-size:9pt}
+  #impression .enc{border:1px solid #aaa;padding:6pt 10pt;background:#f4f2ed}
+  #impression img{max-width:100%;max-height:9cm}
+  #impression .radar-imp svg{width:14cm;height:auto}
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="tb-logo" href="../"><img src="../cold-case-gifi/img/bf-conseil.png" alt="BF Conseil"></a>
+  <div class="tb-t"><b>Cold case GiFi · en autonomie</b>MA28 · Bloc 1, C1.1 · Étude de marché et veille stratégique</div>
+  <nav class="tb-nav" aria-label="Aide"><a href="mode-emploi.html" target="_blank" rel="noopener">Mode d'emploi</a></nav>
+</header>
+<div id="statut" class="statut" hidden>
+  <div class="st-item"><small>Cabinet</small><span class="v" id="st-cab"></span></div>
+  <div class="st-item"><small>Trésorerie</small><span class="v" id="st-treso"></span></div>
+  <div class="st-item"><small>Chrono · <span id="st-reste"></span></small><span class="v" id="st-chrono"></span></div>
+  <p class="st-plan" id="st-plan" aria-live="polite"></p>
+</div>
+<div id="bandeau-faillite" class="faillite" hidden>Cessation de paiements : la trésorerie du cabinet est négative. Continuez quand même : chaque code trouvé vous renfloue.</div>
+<main class="wrap">
+  <nav aria-label="Les étapes de l'enquête"><ul class="frise" id="frise"></ul></nav>
+  <div id="vue"></div>
+</main>
+<footer class="pied">
+  <span id="etat-sauve" class="sauve"></span> ·
+  Cold case GiFi, version autonome · Belel Hanachi, BF Conseil · Faits réels et sourcés (consultés le 18 novembre 2026) ; certaines cartes sont des situations d'exercice. Un redressement judiciaire n'est pas une liquidation : 6 000 salariés sont concernés, on analyse des décisions et un marché, avec respect.
+  <span class="mention">Les marques citées appartiennent à leurs titulaires. Usage d'illustration pédagogique, sans lien avec les entreprises citées. Aucune donnée n'est envoyée à un serveur : tout reste sur cet ordinateur. · <button type="button" class="lien" id="b-raz">Tout effacer sur cet ordinateur</button></span>
+</footer>
+<div id="alerte" class="alerte" role="alert" hidden></div>
+<div id="impression"></div>
+<script src="js/donnees.js?v=a2"></script>
+<script src="js/secret.js?v=a2"></script>
+<script src="js/pdf.js?v=a2"></script>
+<script src="js/app.js?v=a2"></script>
+</body>
+</html>
